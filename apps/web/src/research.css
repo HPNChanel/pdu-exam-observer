@@ -1,0 +1,47 @@
+.researchPreparation {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid currentColor;
+  border-radius: 1rem;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.researchHeading,
+.researchGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.researchHeading { grid-template-columns: minmax(0, 1fr) minmax(14rem, .8fr); align-items: start; }
+.researchBlocker, .researchUnavailable { border-left: .3rem solid #b54a2d; padding-left: .75rem; }
+.researchGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.researchGrid > section, .researchRecovery, .researchReadiness, .withdrawalPanel { display: grid; gap: .65rem; min-width: 0; }
+.researchRecovery input { min-width: 0; width: 100%; min-height: 2.75rem; box-sizing: border-box; }
+.researchGrid input { min-width: 0; width: 100%; min-height: 2.75rem; box-sizing: border-box; }
+.researchGrid label { display: grid; gap: .35rem; }
+.researchGrid label:has(input[type="radio"]) { grid-template-columns: auto 1fr; align-items: center; }
+.researchGrid input[type="radio"] { width: 1.1rem; min-height: 1.1rem; }
+.researchReadiness ul { margin: 0; padding-inline-start: 1.25rem; }
+.readinessBlocked { color: #9a3e27; font-weight: 700; }
+.readinessReady { color: #226841; font-weight: 700; }
+.researchUnavailable { margin: 1rem 0; }
+.researchStatusBanner { margin: 0; padding: .7rem .8rem; border-left: .3rem solid #9a3e27; background: #f6e5d8; color: #57372b; font-weight: 650; line-height: 1.45; }
+.withdrawalPanel { overflow: visible; padding-bottom: .2rem; }
+.reconciliationPanel { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid currentColor; }
+.reconciliationCounts { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: .6rem; }
+.reconciliationCounts div { padding: .65rem; border: 1px solid currentColor; border-radius: .5rem; }
+.reconciliationCounts dt { font-size: .8rem; }
+.reconciliationCounts dd { margin: .2rem 0 0; font-size: 1.35rem; font-weight: 700; }
+.withdrawalWarning { margin: 0; padding: .75rem .8rem; border: 1px solid #c89475; background: #f8ece3; color: #653b2c; font-weight: 650; line-height: 1.5; }
+.researchPreparation :is(button, input):focus-visible { outline: 3px solid #14263b; outline-offset: 3px; box-shadow: 0 0 0 2px #fffdf7; }
+
+@media (max-width: 680px) {
+  .researchHeading, .researchGrid { grid-template-columns: 1fr; }
+  .researchPreparation button { min-height: 2.75rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .researchPreparation * { scroll-behavior: auto; transition: none !important; animation: none !important; }
+}

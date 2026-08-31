@@ -1,0 +1,108 @@
+:root { font-family: "Trebuchet MS", "Segoe UI", sans-serif; color: #14263b; background: #f6f0e5; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; background: radial-gradient(circle at 8% 12%, #fffdf5 0 18%, transparent 40%), repeating-linear-gradient(0deg, rgb(20 38 59 / 0.025) 0 1px, transparent 1px 5px), #f6f0e5; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: 1; color: #565b56; background: #e6e3dc; border: 1px solid #b8b2a6; box-shadow: none; }
+.appShell { min-height: 100vh; padding: 2.5rem clamp(1rem, 5vw, 5rem) 1rem; }
+.appHeader { max-width: 1200px; margin: 0 auto 2rem; border-bottom: 1px solid #b8ab98; padding-bottom: 1.2rem; }
+.appHeader h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.025em; margin: .25rem 0; }
+.appHeader h1 { font-size: clamp(2.2rem, 5vw, 4.7rem); }
+.appHeader p:not(.eyebrow) { margin: .35rem 0 0; color: #536475; }
+.eyebrow { margin: 0; color: #b64e20; font-size: .72rem; font-weight: 700; letter-spacing: .14em; }
+.offlineBanner { max-width: 1200px; margin: 0 auto 1rem; padding: .7rem 1rem; background: #f9dfc7; border-left: 4px solid #d25e26; font-weight: 700; }
+.demoBanner { background: #dce9e3; border-color: #3c8057; }
+.blockingSheet, .lifecycleSheet, .confirmation { max-width: 620px; margin: 3rem auto; padding: clamp(1.25rem, 4vw, 2.4rem); background: #fffdf7; border: 1px solid #cfc0aa; box-shadow: 10px 10px 0 #e6dac5; }
+.blockingSheet h1, .lifecycleSheet h2, .confirmation h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+.lifecycleSheet { margin: 2rem auto; }.lifecycleSheet p, .confirmation p { line-height: 1.55; color: #536475; }.lifecycleSheet button, .sessionControls button { margin: .4rem .45rem .1rem 0; }
+.confirmation { position: fixed; z-index: 2; inset: auto 1rem 1rem; margin: 0 auto; background: #fffdf7; border-left: 5px solid #d25e26; }
+.linkButton { padding: 0; border: 0; background: transparent; color: #b64e20; font-weight: 700; text-decoration: underline; }.submitButton { margin-top: 2rem; float: right; }.technicalStatus.pending { color: #9c5a1e; }.technicalStatus.pending span { background: #c18125; }
+.examSurface { max-width: 900px; margin: 0 auto; }
+.pairingSheet { display: grid; gap: .8rem; max-width: 500px; padding: 1.25rem; background: #fffdf7; border: 1px solid #cfc0aa; }
+.pairingSheet input { border: 1px solid #8c9a9b; padding: .7rem; background: #fffdf7; }
+.examMeta { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; color: #31465c; }
+.examMeta strong { font-family: Georgia, serif; font-size: 1.45rem; color: #14263b; }
+.disclosure { max-width: 31rem; font-size: .88rem; line-height: 1.55; }
+.questionPaper { background: #fffdf7; border: 1px solid #cfc0aa; box-shadow: 12px 12px 0 #e6dac5; margin: 2rem 0; padding: clamp(1.5rem, 5vw, 4rem); }
+.questionCounter { color: #b64e20; font-weight: 700; margin: 0 0 1rem; }
+.questionPaper h2 { font-size: clamp(1.6rem, 3vw, 2.45rem); max-width: 760px; }
+.answerGrid { display: grid; gap: .7rem; margin-top: 2rem; }
+.answer { color: #14263b; background: transparent; border: 1px solid #c7baa5; padding: 1rem; text-align: left; display: flex; gap: 1rem; align-items: center; }
+.answer span { color: #b64e20; font-weight: 800; }
+.answer:hover, .answer.selected { background: #eef5ed; border-color: #2f6b53; }
+.examNavigation { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
+.examNavigation p { text-align: center; font-size: .87rem; color: #536475; }
+.examNavigation .inkButton { justify-self: end; }
+.inkButton, .orangeButton, .quietButton { border: 0; padding: .78rem 1.05rem; font-weight: 700; }
+.inkButton { background: #14263b; color: #fffdf7; }
+.orangeButton { background: #d25e26; color: #fffdf7; }
+.quietButton { color: #14263b; background: transparent; border: 1px solid #9fa99f; }
+.technicalStatus { max-width: 900px; margin: 2rem auto 0; color: #3c654a; font-size: .9rem; }
+.technicalStatus span { display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; background: #3c8057; margin-right: .45rem; }
+.loginSheet { max-width: 440px; background: #fffdf7; padding: 2rem; border: 1px solid #cfc0aa; margin: 6rem auto; display: grid; gap: 1rem; }
+.loginSheet input { border: 1px solid #8c9a9b; padding: .7rem; background: #fffdf7; }
+.loginSheet p { color: #536475; font-size: .85rem; }
+.monitorSurface { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: .9fr 1.1fr; gap: 1rem; }
+.sessionControls, .landmarkPanel, .eventRail { border: 1px solid #cfc0aa; background: #fffdf7; padding: 1.5rem; }
+.eventRail { grid-column: 1 / -1; }
+.pairingCode { font-family: Georgia, serif; font-size: 1.3rem; }
+.pairingCode strong { color: #b64e20; letter-spacing: .08em; }
+.healthLine strong { color: #3c654a; }
+.abstractLandmarks { min-height: 170px; padding: 1rem; display: flex; align-items: end; gap: .8rem; background: #e6ede4; border: 1px solid #afc0af; overflow: hidden; }
+.abstractLandmarks i { display: block; flex: 1; background: #365b69; border-radius: 999px 999px 0 0; }
+.abstractLandmarks i:nth-child(1) { height: 37%; }.abstractLandmarks i:nth-child(2) { height: 72%; background: #b65d34; }.abstractLandmarks i:nth-child(3) { height: 52%; }.abstractLandmarks i:nth-child(4) { height: 89%; background: #3c8057; }
+.landmarkPanel > p:last-child { color: #536475; font-size: .85rem; }
+.railHeading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.stream { margin: 0; color: #9c5a1e; font-size: .85rem; }.stream.good { color: #3c654a; }
+.eventRail .orangeButton { margin: .5rem 0 1rem; }
+.eventList { list-style: none; padding: 0; margin: 0; border-top: 1px solid #ded3c3; }
+.eventList li { display: grid; grid-template-columns: 6.4rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #ded3c3; animation: event-in .35s ease-out; }
+.eventList time { color: #536475; font-variant-numeric: tabular-nums; }.eventList p, .eventList small { margin: .3rem 0 0; color: #536475; }.eventList small { display: block; }
+.technicalEvent { background: linear-gradient(90deg, #f9dfc7, transparent 62%); border-left: 4px solid #d25e26; padding-left: .75rem !important; }.signalEvent { border-left: 4px solid #3c8057; padding-left: .75rem !important; }.emptyEvent { display: block !important; color: #536475; }
+.reveal { animation: rise .5s ease-out both; }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes event-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
+@media (max-width: 700px) { .appShell { padding-top: 1.3rem; }.examMeta, .railHeading { display: block; }.examNavigation { grid-template-columns: 1fr 1fr; }.examNavigation p { grid-column: 1 / -1; grid-row: 2; margin: 0; }.monitorSurface { grid-template-columns: 1fr; }.eventRail { grid-column: auto; }.eventList li { grid-template-columns: 1fr; gap: .3rem; }.questionPaper { box-shadow: 7px 7px 0 #e6dac5; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
+
+/* Vietnamese copy is never tracked: combining marks must remain attached to their base grapheme. */
+:root { font-family: Aptos, "Segoe UI", sans-serif; }
+body { overflow-x: hidden; }
+.appHeader h1, h2, .blockingSheet h1, .lifecycleSheet h2, .confirmation h2 { font-family: Cambria, Constantia, "Times New Roman", serif; letter-spacing: normal; }
+.eyebrow { letter-spacing: normal; }
+.nfcText { font-family: Cambria, Constantia, "Times New Roman", serif; letter-spacing: normal; word-spacing: normal; font-kerning: normal; }
+button { min-height: 44px; }
+
+.monitorSurface { max-width: 1100px; grid-template-columns: minmax(0, 1fr); }
+.sessionControls { display: grid; gap: 1rem; }
+.phaseBanner { display: grid; grid-template-columns: 1fr auto; gap: .3rem 1rem; padding: 1.1rem 1.2rem; background: #f4eee2; border-left: 5px solid #8c9a9b; }
+.phaseBanner .eyebrow, .phaseBanner h2, .phaseBanner p { grid-column: 1; margin: 0; }
+.phaseBanner h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); }
+.phaseBanner p:last-of-type { color: #536475; line-height: 1.45; }
+.phaseBanner strong { grid-column: 2; grid-row: 1 / span 3; align-self: center; color: #14263b; font-family: Cambria, Constantia, serif; font-size: .84rem; letter-spacing: .08em; }
+.phaseBanner--ready { border-left-color: #b98428; background: #f8efd8; }
+.phaseBanner--recording { border-left-color: #3c8057; background: #e8f1e8; }
+.phaseBanner--sealed { border-left-color: #d25e26; background: #f9dfc7; }
+.monitorActions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sessionControls button { margin: 0; }
+.pairingCode { margin: 0; display: grid; gap: .2rem; }
+.pairingCode > span, .pairingCode--consumed { color: #536475; font-family: Aptos, "Segoe UI", sans-serif; font-size: .82rem; }
+.pairingCode--demoted { max-width: 23rem; padding-top: .35rem; border-top: 1px solid #ded3c3; }
+.pairingCode--demoted strong { color: #536475; font-family: Aptos, "Segoe UI", sans-serif; font-size: .86rem; font-weight: 700; letter-spacing: .04em; overflow-wrap: anywhere; }
+.pairingCode--consumed { margin: 0; }
+.technicalNote, .eventDisclosure, .replayStatus { margin: 0; color: #536475; font-size: .86rem; line-height: 1.5; }
+.replayStatus[role="alert"] { color: #9c3e18; font-weight: 700; }
+.eventRail { grid-column: auto; margin-top: 0; }
+.eventRail > .eventDisclosure { margin: -.25rem 0 1rem; max-width: 58rem; }
+.eventList li { grid-template-columns: 8.25rem 1fr; }
+.eventList time { color: #536475; font-weight: 700; }
+
+@media (max-width: 700px) {
+  .appShell { overflow-x: clip; }
+  .phaseBanner { grid-template-columns: 1fr; }
+  .phaseBanner strong { grid-column: 1; grid-row: auto; justify-self: start; }
+  .monitorActions { display: grid; grid-template-columns: 1fr 1fr; }
+  .monitorActions button:first-child, .monitorActions button:last-child { grid-column: 1 / -1; }
+  .eventList li { grid-template-columns: 1fr; }
+  .questionPaper h2.nfcText { font-size: clamp(1.55rem, 8vw, 2.1rem); line-height: 1.18; }
+}

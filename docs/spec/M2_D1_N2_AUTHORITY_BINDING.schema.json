@@ -1,0 +1,1797 @@
+{
+  "$id": "https://pdu.local/schemas/m2-d1-n2-static-binding-candidate-v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_kind": {
+      "const": "D1_N2_STATIC_BINDING_CANDIDATE"
+    },
+    "audio_authorized": {
+      "const": false
+    },
+    "authority_status": {
+      "const": "AUTHORITY_NOT_ISSUED"
+    },
+    "created_on": {
+      "const": "2026-08-26"
+    },
+    "d1_go": {
+      "const": false
+    },
+    "d1_n1_terminal_immutable": {
+      "const": true
+    },
+    "device_gate_decision": {
+      "const": "UNVERIFIED"
+    },
+    "digest_method": {
+      "const": "sha256(canonical-json(static_bindings);sort_keys=true,separators=comma-colon;utf8)"
+    },
+    "environment_candidates": {
+      "additionalProperties": false,
+      "properties": {
+        "supervisor_executable_candidate": {
+          "additionalProperties": false,
+          "properties": {
+            "binding_role": {
+              "const": "SUPERVISOR_EXECUTABLE_CANDIDATE"
+            },
+            "binding_status": {
+              "const": "CANDIDATE_ONLY_UNVERIFIED"
+            },
+            "sha256": {
+              "const": "5f7b89a612c9b8af1d6456cdfcd1dbe5ca630849e79aebced9bee9a6694952ec"
+            },
+            "size_bytes": {
+              "const": 103192
+            }
+          },
+          "required": [
+            "binding_role",
+            "binding_status",
+            "sha256",
+            "size_bytes"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "supervisor_executable_candidate"
+      ],
+      "type": "object"
+    },
+    "evidence_status": {
+      "const": "B0_R2_EPOCH_BINDING_SOURCE_IMPLEMENTED_OFFLINE_INDEPENDENT_REVIEW_REQUIRED"
+    },
+    "execution_authorized": {
+      "const": false
+    },
+    "grants_execution_authority": {
+      "const": false
+    },
+    "issuance_implementation_status": {
+      "const": "D1_N2_B0_R2_EPOCH_BINDING_SOURCE_IMPLEMENTED_BOOTSTRAP_UNPROVISIONED_AUTHORITY_NOT_ISSUED"
+    },
+    "issuance_time_bindings": {
+      "additionalProperties": false,
+      "properties": {
+        "authorization_nonce": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "camera_cardinality_status_safe_name": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "consumed_authority_digest": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "ffmpeg_handle_hash_size_version_identity": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "grant_challenge_capability": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "installed_dependency_observation": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "issuance_and_expiry_times": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "issuance_run_nonce": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "job_membership_and_drain": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "opaque_device_token": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "supervisor_executable_handle_binding": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "terminal_and_result_digests": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        },
+        "worker_executable_handle_binding": {
+          "const": "UNVERIFIED_AT_ISSUANCE"
+        }
+      },
+      "required": [
+        "authorization_nonce",
+        "camera_cardinality_status_safe_name",
+        "consumed_authority_digest",
+        "ffmpeg_handle_hash_size_version_identity",
+        "grant_challenge_capability",
+        "installed_dependency_observation",
+        "issuance_and_expiry_times",
+        "issuance_run_nonce",
+        "job_membership_and_drain",
+        "opaque_device_token",
+        "supervisor_executable_handle_binding",
+        "terminal_and_result_digests",
+        "worker_executable_handle_binding"
+      ],
+      "type": "object"
+    },
+    "model_training_or_evaluation_authorized": {
+      "const": false
+    },
+    "participant_collection_authorized": {
+      "const": false
+    },
+    "physical_camera_access_authorized": {
+      "const": false
+    },
+    "physical_runtime_evidence": {
+      "const": "UNVERIFIED"
+    },
+    "raw_retention_authorized": {
+      "const": false
+    },
+    "reopens_d1_n1": {
+      "const": false
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "static_bindings": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_thresholds": {
+          "additionalProperties": false,
+          "properties": {
+            "absolute_post_frame_minimum": {
+              "const": "NONE_RATE_AND_EVIDENCE_BASED"
+            },
+            "backlog_ms_max_inclusive": {
+              "const": 2000
+            },
+            "delivery_failures_max": {
+              "const": 0
+            },
+            "exact_accounting_reconciliation": {
+              "const": true
+            },
+            "max_stall_gap_ns_exclusive": {
+              "const": 1000000000
+            },
+            "p95_ingress_gap_ms_max": {
+              "const": 200
+            },
+            "p95_pose_latency_ms_max": {
+              "const": 200
+            },
+            "p99_pose_latency_ms_max": {
+              "const": 500
+            },
+            "post_drop_plus_inference_failure_rate_max": {
+              "const": 0.01
+            },
+            "post_success_coverage_min": {
+              "const": 0.99
+            },
+            "post_successful_fps_min": {
+              "const": 13.5
+            },
+            "post_warmup_seconds_min": {
+              "const": 55
+            },
+            "privacy_checked_equals_processed": {
+              "const": true
+            },
+            "privacy_counts_max": {
+              "const": 0
+            },
+            "requires_nonempty_gap_and_latency_evidence": {
+              "const": true
+            },
+            "total_seconds_min": {
+              "const": 60
+            }
+          },
+          "required": [
+            "absolute_post_frame_minimum",
+            "backlog_ms_max_inclusive",
+            "delivery_failures_max",
+            "exact_accounting_reconciliation",
+            "max_stall_gap_ns_exclusive",
+            "p95_ingress_gap_ms_max",
+            "p95_pose_latency_ms_max",
+            "p99_pose_latency_ms_max",
+            "post_drop_plus_inference_failure_rate_max",
+            "post_success_coverage_min",
+            "post_successful_fps_min",
+            "post_warmup_seconds_min",
+            "privacy_checked_equals_processed",
+            "privacy_counts_max",
+            "requires_nonempty_gap_and_latency_evidence",
+            "total_seconds_min"
+          ],
+          "type": "object"
+        },
+        "artifacts": {
+          "additionalProperties": false,
+          "properties": {
+            "blaze_face_short_range_tflite": {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "const": "BLAZE_FACE_SHORT_RANGE_TFLITE"
+                },
+                "path": {
+                  "const": "src/pdu_exam_observer/assets/models/blaze_face_short_range.tflite"
+                },
+                "sha256": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "size_bytes": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "path",
+                "sha256",
+                "size_bytes"
+              ],
+              "type": "object"
+            },
+            "pose_landmarker_lite_task": {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "const": "POSE_LANDMARKER_LITE_TASK"
+                },
+                "path": {
+                  "const": "src/pdu_exam_observer/assets/models/pose_landmarker_lite.task"
+                },
+                "sha256": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "size_bytes": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "path",
+                "sha256",
+                "size_bytes"
+              ],
+              "type": "object"
+            },
+            "source_inventory": {
+              "additionalProperties": false,
+              "properties": {
+                "BOOTSTRAP_OPERATOR_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "BOOTSTRAP_OPERATOR_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/provision_m2_d1_n2_bootstrap.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "RP2_ARTIFACT_BUILDER": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "RP2_ARTIFACT_BUILDER"
+                    },
+                    "path": {
+                      "const": "scripts/build_m2_d1_n2_rp2.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_A0_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_A0_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_a0.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_ADAPTER_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_ADAPTER_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_adapter.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_AUTHORITY_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_AUTHORITY_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_authority.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_BOOTSTRAP_INSTALL_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_BOOTSTRAP_INSTALL_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_bootstrap_install.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_BOOTSTRAP_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_BOOTSTRAP_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_bootstrap.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_BOOTSTRAP_WIN32_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_BOOTSTRAP_WIN32_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_bootstrap_win32.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_CANONICAL_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_CANONICAL_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_canonical.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_CNG_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_CNG_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_cng.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_ENTRYPOINT_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_ENTRYPOINT_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_entrypoint.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_EVIDENCE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_EVIDENCE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_evidence.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_NATIVE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_NATIVE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_native.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_PREPARE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_PREPARE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_prepare.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_WIN32_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_WIN32_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_win32.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_N2_WIN32_STORE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_N2_WIN32_STORE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_n2_win32_store.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_D1_NATIVE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_D1_NATIVE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_d1_native.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_A0_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_A0_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_a0.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_ADAPTER_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_ADAPTER_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_adapter.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_BOOTSTRAP_INSTALL_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_BOOTSTRAP_INSTALL_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_bootstrap_install.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_BOOTSTRAP_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_BOOTSTRAP_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_bootstrap.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_BOOTSTRAP_WIN32_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_BOOTSTRAP_WIN32_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_bootstrap_win32.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_CNG_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_CNG_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_cng.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_D1_N2_RP2_ARTIFACTS_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_D1_N2_RP2_ARTIFACTS_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_d1_n2_rp2_artifacts.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                }
+              },
+              "required": [
+                "SRC_M2_D1_NATIVE_PY",
+                "SRC_M2_D1_N2_AUTHORITY_PY",
+                "SRC_M2_D1_N2_A0_PY",
+                "SRC_M2_D1_N2_CANONICAL_PY",
+                "SRC_M2_D1_N2_ADAPTER_PY",
+                "SRC_M2_D1_N2_BOOTSTRAP_PY",
+                "SRC_M2_D1_N2_BOOTSTRAP_INSTALL_PY",
+                "SRC_M2_D1_N2_BOOTSTRAP_WIN32_PY",
+                "SRC_M2_D1_N2_ENTRYPOINT_PY",
+                "SRC_M2_D1_N2_EVIDENCE_PY",
+                "SRC_M2_D1_N2_PREPARE_PY",
+                "SRC_M2_D1_N2_NATIVE_PY",
+                "SRC_M2_D1_N2_CNG_PY",
+                "SRC_M2_D1_N2_WIN32_PY",
+                "SRC_M2_D1_N2_WIN32_STORE_PY",
+                "TEST_M2_D1_N2_A0_PY",
+                "TEST_M2_D1_N2_ADAPTER_PY",
+                "TEST_M2_D1_N2_BOOTSTRAP_PY",
+                "TEST_M2_D1_N2_BOOTSTRAP_INSTALL_PY",
+                "TEST_M2_D1_N2_BOOTSTRAP_WIN32_PY",
+                "TEST_M2_D1_N2_CNG_PY",
+                "TEST_M2_D1_N2_RP2_ARTIFACTS_PY",
+                "RP2_ARTIFACT_BUILDER",
+                "BOOTSTRAP_OPERATOR_SCRIPT"
+              ],
+              "type": "object"
+            },
+            "uv_lock": {
+              "additionalProperties": false,
+              "properties": {
+                "artifact_id": {
+                  "const": "UV_LOCK"
+                },
+                "path": {
+                  "const": "uv.lock"
+                },
+                "sha256": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "size_bytes": {
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "artifact_id",
+                "path",
+                "sha256",
+                "size_bytes"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "source_inventory",
+            "uv_lock",
+            "pose_landmarker_lite_task",
+            "blaze_face_short_range_tflite"
+          ],
+          "type": "object"
+        },
+        "authority_contract": {
+          "additionalProperties": false,
+          "properties": {
+            "authority_mutex": {
+              "const": "Local\\PDUExamObserver.D1N2.AuthorityV1"
+            },
+            "authority_revision": {
+              "const": "d1-n2-authority-v1"
+            },
+            "capture_job_prefix": {
+              "const": "Local\\PDUExamObserver.D1N2.Capture."
+            },
+            "namespace_key": {
+              "const": "D1_N2_AUTHORITY_V1"
+            },
+            "prepared_record": {
+              "const": "prepared.v3.json"
+            },
+            "schema_version": {
+              "const": 3
+            },
+            "state_transition": {
+              "const": [
+                "ABSENT",
+                "PENDING",
+                "PREPARED",
+                "CONSUMED",
+                "TERMINAL"
+              ]
+            },
+            "terminal_record": {
+              "const": "terminal.v3.json"
+            },
+            "video_mutex": {
+              "const": "Local\\PDUExamObserver.D1N2.VideoOnly"
+            },
+            "worker_grant_record": {
+              "const": "worker-grant.v2.json"
+            }
+          },
+          "required": [
+            "authority_mutex",
+            "authority_revision",
+            "capture_job_prefix",
+            "namespace_key",
+            "prepared_record",
+            "schema_version",
+            "state_transition",
+            "terminal_record",
+            "video_mutex",
+            "worker_grant_record"
+          ],
+          "type": "object"
+        },
+        "capture_profile": {
+          "additionalProperties": false,
+          "properties": {
+            "duration_seconds": {
+              "const": 60
+            },
+            "fps": {
+              "const": 15
+            },
+            "height": {
+              "const": 720
+            },
+            "pixel_format": {
+              "const": "rgb24"
+            },
+            "video_only": {
+              "const": true
+            },
+            "warmup_seconds": {
+              "const": 5
+            },
+            "width": {
+              "const": 1280
+            }
+          },
+          "required": [
+            "duration_seconds",
+            "fps",
+            "height",
+            "pixel_format",
+            "video_only",
+            "warmup_seconds",
+            "width"
+          ],
+          "type": "object"
+        },
+        "dependency": {
+          "additionalProperties": false,
+          "properties": {
+            "declared_pin": {
+              "const": "mediapipe==1.0.1"
+            },
+            "expected_version": {
+              "const": "1.0.1"
+            }
+          },
+          "required": [
+            "declared_pin",
+            "expected_version"
+          ],
+          "type": "object"
+        },
+        "policy_digests": {
+          "additionalProperties": false,
+          "properties": {
+            "a0_approval_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "binding_schema_canonical_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_bundle_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_cng_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_epoch_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_install_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_production_composition_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_receipt_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "bootstrap_win32_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "capture_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "challenge_job_binding_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "failure_ledger_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "ffmpeg_argv_template_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "independent_rp2_triple_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "ownership_cleanup_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "privacy_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "receipt_schema_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "terminal_evidence_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "watchdog_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "worker_argv_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "worker_bootstrap_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "worker_job_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "binding_schema_canonical_sha256",
+            "bootstrap_bundle_policy_digest",
+            "bootstrap_epoch_policy_digest",
+            "bootstrap_receipt_policy_digest",
+            "bootstrap_win32_policy_digest",
+            "bootstrap_install_policy_digest",
+            "bootstrap_cng_policy_digest",
+            "bootstrap_production_composition_policy_digest",
+            "a0_approval_policy_digest",
+            "independent_rp2_triple_policy_digest",
+            "challenge_job_binding_digest",
+            "terminal_evidence_policy_digest",
+            "ownership_cleanup_policy_digest",
+            "worker_argv_digest",
+            "worker_job_policy_digest",
+            "ffmpeg_argv_template_digest",
+            "worker_bootstrap_sha256",
+            "receipt_schema_digest",
+            "failure_ledger_digest",
+            "watchdog_policy_digest",
+            "capture_policy_digest",
+            "privacy_policy_digest"
+          ],
+          "type": "object"
+        },
+        "policy_preimages": {
+          "additionalProperties": false,
+          "properties": {
+            "a0_approval_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "algorithm": "ECDSA_P256_SHA256_IEEE_P1363",
+                  "duration_seconds": 60,
+                  "production_bootstrap": "UNPROVISIONED",
+                  "validity_seconds": 900
+                },
+                "projection": "d1-n2.signed-a0-approval-v1",
+                "source_id": "SRC_M2_D1_N2_A0_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_bundle_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "algorithm": "ECDSA_P256_SHA256_IEEE_P1363",
+                  "authority_revision": "d1-n2-authority-v1",
+                  "key_id": "sha256(exact-public-blob)",
+                  "private_key_api": "PROHIBITED"
+                },
+                "projection": "d1-n2.b0-r1-bootstrap-bundle",
+                "source_id": "SRC_M2_D1_N2_BOOTSTRAP_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_cng_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "generation": false,
+                  "persisted_key": false,
+                  "private_import": false,
+                  "signing": false,
+                  "verification": "P256_SHA256_P1363"
+                },
+                "projection": "d1-n2.b0-r1-public-only-cng",
+                "source_id": "SRC_M2_D1_N2_CNG_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_epoch_policy_digest": {
+              "const": {
+                "bootstrap_epoch_digest": "736a6760f7d8f0f635c0d1e9b626fe38d60a1c36f7c10131929a4a588597659b",
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "epoch_preimage": {
+                  "authority_revision": "d1-n2-authority-v1",
+                  "bootstrap_bundle_creation": "ONE_SHOT_CREATE_NEW",
+                  "custody_profile": "WINDOWS_CNG_USER_NONEXPORTABLE_OFFLINE_V1",
+                  "domain": "D1N2/A0_BOOTSTRAP_EPOCH/v1",
+                  "key_algorithm": "ECDSA_P256",
+                  "key_creation": "CREATE_ONLY",
+                  "key_export_policy": "NONE",
+                  "key_name": "PDUExamObserver.D1N2.A0Signing.v1",
+                  "key_storage_provider": "Microsoft Software Key Storage Provider",
+                  "key_storage_scope": "CURRENT_USER",
+                  "private_key_backup": "PROHIBITED",
+                  "public_key_format": "BCRYPT_ECCPUBLIC_BLOB_P256",
+                  "schema_version": 1,
+                  "signature_algorithm": "ECDSA_P256_SHA256_IEEE_P1363",
+                  "target_workstation_private_key": "PROHIBITED"
+                },
+                "projection": "d1-n2.b0-r2-bootstrap-epoch",
+                "source_id": "SRC_M2_D1_N2_BOOTSTRAP_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_install_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "cleanup_failure_publishes_receipt": false,
+                  "move_flags": [
+                    "MOVEFILE_WRITE_THROUGH"
+                  ],
+                  "overwrite": false,
+                  "retry": false
+                },
+                "projection": "d1-n2.b0-r1-one-shot-install",
+                "source_id": "SRC_M2_D1_N2_BOOTSTRAP_INSTALL_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_production_composition_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "a0_after_bootstrap": true,
+                  "constructor_io": false,
+                  "fallback_key": false,
+                  "installer_reachable": false
+                },
+                "projection": "d1-n2.b0-r1-lazy-production-composition",
+                "source_id": "SRC_M2_D1_N2_ADAPTER_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_receipt_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "ceremony_revision": "d1-n2-b0-r1-provisioning-v1",
+                  "cleanup_before_publication": true,
+                  "leaf_identity": "RECEIPT_OBJECT",
+                  "terminal_publication_count": 1
+                },
+                "projection": "d1-n2.b0-r1-staged-receipt",
+                "source_id": "SRC_M2_D1_N2_BOOTSTRAP_PY",
+                "version": 1
+              }
+            },
+            "bootstrap_win32_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "fixed_leaves_only": true,
+                  "inspection_states": [
+                    "OPENED",
+                    "ABSENT",
+                    "AMBIGUOUS"
+                  ],
+                  "no_reparse": true,
+                  "share_zero": true
+                },
+                "projection": "d1-n2.b0-r1-fixed-win32-boundary",
+                "source_id": "SRC_M2_D1_N2_BOOTSTRAP_WIN32_PY",
+                "version": 1
+              }
+            },
+            "capture_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "fps": 15,
+                  "height": 720,
+                  "width": 1280
+                },
+                "projection": "d1-n2.fixed-capture-profile",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "challenge_job_binding_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "challenge_before_grant": true,
+                  "job_name_digest_bound": true,
+                  "raw_challenge_persisted": false
+                },
+                "projection": "d1-n2.challenge-job-grant-binding",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "failure_ledger_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "exception_text": "PROHIBITED",
+                  "raw_frame_data": "PROHIBITED"
+                },
+                "projection": "d1-n2.redacted-failure-ledger",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "ffmpeg_argv_template_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "audio": "-an",
+                  "data": "-dn",
+                  "subtitles": "-sn"
+                },
+                "projection": "d1-n2.fixed-ffmpeg-video-only-template",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "independent_rp2_triple_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "candidate_exact_bytes": true,
+                  "schema_canonical_bytes": true,
+                  "static_bindings_canonical_bytes": true
+                },
+                "projection": "d1-n2.independent-approved-rp2-triple",
+                "source_id": "SRC_M2_D1_N2_PREPARE_PY",
+                "version": 1
+              }
+            },
+            "ownership_cleanup_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "base_exception_cleanup": true,
+                  "close_before_terminal": true,
+                  "idempotent_abort": true
+                },
+                "projection": "d1-n2.exclusive-ownership-close-before-terminal",
+                "source_id": "SRC_M2_D1_N2_ADAPTER_PY",
+                "version": 1
+              }
+            },
+            "privacy_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "audio": false,
+                  "network": false,
+                  "privacy_stop_terminal": true
+                },
+                "projection": "d1-n2.privacy-stop-policy",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "receipt_schema_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "d1_go": false,
+                  "device_gate_decision": "UNVERIFIED"
+                },
+                "projection": "d1-n2.redacted-receipt-contract",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "terminal_evidence_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "accounting_recomputed": true,
+                  "integer_timing_only": true,
+                  "receipt_and_ledger_persisted": true
+                },
+                "projection": "d1-n2.reconstructive-terminal-evidence",
+                "source_id": "SRC_M2_D1_N2_EVIDENCE_PY",
+                "version": 1
+              }
+            },
+            "watchdog_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "capture_seconds": 60,
+                  "phase_count": 6,
+                  "retry": false
+                },
+                "projection": "d1-n2.phased-watchdog",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "worker_argv_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "caller_arguments": "PROHIBITED",
+                  "video_only": true
+                },
+                "projection": "d1-n2.fixed-worker-argv",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "worker_bootstrap_sha256": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "environment_override": false,
+                  "path_search": false
+                },
+                "projection": "d1-n2.worker-bootstrap-contract",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "worker_job_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "descendant_drain_required": true,
+                  "kill_on_close": true
+                },
+                "projection": "d1-n2.kill-on-close-job-policy",
+                "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            }
+          },
+          "required": [
+            "bootstrap_bundle_policy_digest",
+            "bootstrap_epoch_policy_digest",
+            "bootstrap_receipt_policy_digest",
+            "bootstrap_win32_policy_digest",
+            "bootstrap_install_policy_digest",
+            "bootstrap_cng_policy_digest",
+            "bootstrap_production_composition_policy_digest",
+            "a0_approval_policy_digest",
+            "independent_rp2_triple_policy_digest",
+            "challenge_job_binding_digest",
+            "terminal_evidence_policy_digest",
+            "ownership_cleanup_policy_digest",
+            "worker_argv_digest",
+            "worker_job_policy_digest",
+            "ffmpeg_argv_template_digest",
+            "worker_bootstrap_sha256",
+            "receipt_schema_digest",
+            "failure_ledger_digest",
+            "watchdog_policy_digest",
+            "capture_policy_digest",
+            "privacy_policy_digest"
+          ],
+          "type": "object"
+        },
+        "research_scope": {
+          "additionalProperties": false,
+          "properties": {
+            "ablations": {
+              "const": "N/A_DEVICE_CONTRACT_SLICE"
+            },
+            "baselines": {
+              "const": "N/A_DEVICE_CONTRACT_SLICE"
+            },
+            "dataset_provenance": {
+              "const": "N/A_NO_DATASET_NO_COLLECTION"
+            },
+            "seeds": {
+              "const": "N/A_RUNTIME_CSPRNG_ONLY"
+            },
+            "split_leakage_controls": {
+              "const": "N/A_NO_MODEL_EVALUATION"
+            },
+            "uncertainty_analysis": {
+              "const": "N/A_NO_RESEARCH_FINDING"
+            }
+          },
+          "required": [
+            "ablations",
+            "baselines",
+            "dataset_provenance",
+            "seeds",
+            "split_leakage_controls",
+            "uncertainty_analysis"
+          ],
+          "type": "object"
+        },
+        "routing_receipt": {
+          "additionalProperties": false,
+          "properties": {
+            "execution_effort": {
+              "const": "high"
+            },
+            "execution_model_family": {
+              "const": "Terra"
+            },
+            "review_effort": {
+              "const": "xhigh"
+            },
+            "review_model_family": {
+              "const": "Sol"
+            },
+            "routing_basis": {
+              "const": "HPN_V6_RISK_SCALED"
+            },
+            "schema_version": {
+              "const": 1
+            }
+          },
+          "required": [
+            "execution_effort",
+            "execution_model_family",
+            "review_effort",
+            "review_model_family",
+            "routing_basis",
+            "schema_version"
+          ],
+          "type": "object"
+        },
+        "safety_policy": {
+          "additionalProperties": false,
+          "properties": {
+            "audio_authorized": {
+              "const": false
+            },
+            "automatic_person_level_decision_authorized": {
+              "const": false
+            },
+            "fail_closed": {
+              "const": true
+            },
+            "model_training_or_evaluation_authorized": {
+              "const": false
+            },
+            "network_authorized": {
+              "const": false
+            },
+            "offline_runtime": {
+              "const": true
+            },
+            "one_attempt_no_retry": {
+              "const": true
+            },
+            "participant_collection_authorized": {
+              "const": false
+            },
+            "raw_retention_authorized": {
+              "const": false
+            },
+            "video_only": {
+              "const": true
+            }
+          },
+          "required": [
+            "audio_authorized",
+            "automatic_person_level_decision_authorized",
+            "fail_closed",
+            "model_training_or_evaluation_authorized",
+            "network_authorized",
+            "offline_runtime",
+            "one_attempt_no_retry",
+            "participant_collection_authorized",
+            "raw_retention_authorized",
+            "video_only"
+          ],
+          "type": "object"
+        },
+        "watchdog": {
+          "additionalProperties": false,
+          "properties": {
+            "phase_field_allowlists": {
+              "additionalProperties": false,
+              "properties": {
+                "AUTHORIZED": {
+                  "const": [
+                    "event",
+                    "challenge_digest",
+                    "payload.grant_id"
+                  ]
+                },
+                "CAPTURE_CLOSED": {
+                  "const": [
+                    "event",
+                    "challenge_digest",
+                    "payload.worker_monotonic_ns"
+                  ]
+                },
+                "CAPTURE_STARTING": {
+                  "const": [
+                    "event",
+                    "challenge_digest",
+                    "payload.worker_monotonic_ns"
+                  ]
+                },
+                "FIRST_FRAME": {
+                  "const": [
+                    "event",
+                    "challenge_digest",
+                    "payload.worker_monotonic_ns"
+                  ]
+                },
+                "PRIVACY_READY": {
+                  "const": [
+                    "event",
+                    "challenge_digest"
+                  ]
+                },
+                "RECEIPT": {
+                  "const": [
+                    "event",
+                    "challenge_digest",
+                    "payload"
+                  ]
+                }
+              },
+              "required": [
+                "AUTHORIZED",
+                "CAPTURE_CLOSED",
+                "CAPTURE_STARTING",
+                "FIRST_FRAME",
+                "PRIVACY_READY",
+                "RECEIPT"
+              ],
+              "type": "object"
+            },
+            "phases": {
+              "const": [
+                "AUTHORIZED",
+                "PRIVACY_READY",
+                "CAPTURE_STARTING",
+                "FIRST_FRAME",
+                "CAPTURE_CLOSED",
+                "RECEIPT"
+              ]
+            },
+            "timeouts": {
+              "additionalProperties": false,
+              "properties": {
+                "authorization_seconds": {
+                  "const": 10.0
+                },
+                "capture_seconds": {
+                  "const": 60.0
+                },
+                "device_setup_seconds": {
+                  "const": 25.0
+                },
+                "first_frame_seconds": {
+                  "const": 10.0
+                },
+                "privacy_ready_seconds": {
+                  "const": 30.0
+                },
+                "report_seconds": {
+                  "const": 5.0
+                }
+              },
+              "required": [
+                "authorization_seconds",
+                "capture_seconds",
+                "device_setup_seconds",
+                "first_frame_seconds",
+                "privacy_ready_seconds",
+                "report_seconds"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "phase_field_allowlists",
+            "phases",
+            "timeouts"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "acceptance_thresholds",
+        "authority_contract",
+        "capture_profile",
+        "dependency",
+        "research_scope",
+        "routing_receipt",
+        "safety_policy",
+        "watchdog",
+        "artifacts",
+        "policy_digests",
+        "policy_preimages"
+      ],
+      "type": "object"
+    },
+    "static_bindings_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "valid_for_native_launch": {
+      "const": false
+    }
+  },
+  "required": [
+    "artifact_kind",
+    "audio_authorized",
+    "authority_status",
+    "created_on",
+    "d1_go",
+    "d1_n1_terminal_immutable",
+    "device_gate_decision",
+    "digest_method",
+    "environment_candidates",
+    "evidence_status",
+    "execution_authorized",
+    "grants_execution_authority",
+    "issuance_implementation_status",
+    "issuance_time_bindings",
+    "model_training_or_evaluation_authorized",
+    "participant_collection_authorized",
+    "physical_camera_access_authorized",
+    "physical_runtime_evidence",
+    "raw_retention_authorized",
+    "reopens_d1_n1",
+    "schema_version",
+    "valid_for_native_launch",
+    "static_bindings",
+    "static_bindings_digest"
+  ],
+  "title": "M2 D1-N2 static binding candidate",
+  "type": "object"
+}

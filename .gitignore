@@ -1,0 +1,44 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+apps/web/dist/
+apps/web/coverage/
+
+# Runtime and research data
+.env
+.env.*
+!.env.example
+data/
+runtime/
+exports/
+models/imported/
+*.partial
+
+# Build artifacts
+build/
+dist/
+release/
+*.zip
+
+# Local evidence and legacy archive
+_archive/
+.superpowers/
+playwright-report/
+test-results/
+output/
+.playwright-cli/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+

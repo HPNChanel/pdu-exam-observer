@@ -1,0 +1,15 @@
+PDU Exam Observer M0 direct runtime/build dependency notices
+
+The package inventory below is the documented direct stack at M0. Exact
+versions and transitive licenses must be generated from uv.lock and the
+frontend lockfile as a release gate; that inventory is not automated yet.
+
+FastAPI - MIT License
+Uvicorn - BSD 3-Clause License
+React - MIT License
+Vite - MIT License (frontend build dependency)
+PyInstaller - GPLv2+ with PyInstaller bootloader exception (release tool)
+
+This file is informational until the generated dependency inventory is
+attached to the release receipt. No signing or deployment is performed by the
+M0 packaging scripts.

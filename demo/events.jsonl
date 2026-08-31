@@ -1,0 +1,4 @@
+{"schema_version":"demo-event.v1","event_seq":1,"occurred_at_ms":0,"event_type":"session_started","source_kind":"synthetic_demo","confidence":null,"confidence_status":"NOT_APPLICABLE","payload":{"session_ref":"demo-session-001"}}
+{"schema_version":"demo-event.v1","event_seq":2,"occurred_at_ms":1000,"event_type":"answer_recorded","source_kind":"synthetic_demo","confidence":null,"confidence_status":"NOT_APPLICABLE","payload":{"question_ref":"q-001","answer_state":"selected"}}
+{"schema_version":"demo-event.v1","event_seq":3,"occurred_at_ms":2000,"event_type":"technical_state","source_kind":"synthetic_demo","confidence":null,"confidence_status":"INSUFFICIENT","payload":{"reason_code":"DEMO_SIGNAL_UNAVAILABLE"}}
+{"schema_version":"demo-event.v1","event_seq":4,"occurred_at_ms":3000,"event_type":"session_stopped","source_kind":"synthetic_demo","confidence":null,"confidence_status":"NOT_APPLICABLE","payload":{"stop_reason":"demo_complete"}}

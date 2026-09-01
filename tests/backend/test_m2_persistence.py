@@ -772,3 +772,42 @@ def test_migration_fault_cleanup_is_bounded_and_allows_immediate_exact_retry(
     connection.close()
     rmtree(root)
     assert duration < 0.75, duration
+
+
+def test_verified_artifact_read_returns_exact_bytes_and_enforces_bound(tmp_path: Path) -> None:
+    root = tmp_path / "root"
+    backend, session_id = _research(root)
+    store = M2PersistenceStore(root)
+    payload = b'{"artifact_kind":"M2_SYNTHETIC_PREFLIGHT_RECEIPT"}\n'
+    store.persist(_intent(session_id), StaticArtifactSource(payload))
+    assert store.read_verified_artifact("fixture-a", maximum_bytes=len(payload)) == payload
+    with pytest.raises(PersistenceFailure, match="size|limit|maximum"):
+        store.read_verified_artifact("fixture-a", maximum_bytes=len(payload) - 1)
+    store.close()
+    backend.store.close()
+
+
+def test_verified_artifact_read_rejects_manifest_path_and_final_byte_tamper(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "root"
+    backend, session_id = _research(root)
+    store = M2PersistenceStore(root)
+    payload = b"verified-artifact"
+    store.persist(_intent(session_id), StaticArtifactSource(payload))
+    original_relative = str(store.manifest("fixture-a")["relative_path"])
+    store.connection.execute(
+        "UPDATE artifact_manifests SET relative_path='artifacts/m2/other.bin' "
+        "WHERE artifact_id='fixture-a'"
+    )
+    with pytest.raises(PersistenceFailure, match="path|manifest"):
+        store.read_verified_artifact("fixture-a", maximum_bytes=1024)
+    store.connection.execute(
+        "UPDATE artifact_manifests SET relative_path=? WHERE artifact_id='fixture-a'",
+        (original_relative,),
+    )
+    (root / "artifacts" / "m2" / "fixture-a.bin").write_bytes(b"tampered-artifact")
+    with pytest.raises(PersistenceFailure, match="verification|hash|size"):
+        store.read_verified_artifact("fixture-a", maximum_bytes=1024)
+    store.close()
+    backend.store.close()

@@ -25,6 +25,7 @@ models/imported/
 build/
 dist/
 release/
+packaging/candidates/
 *.zip
 
 # Local evidence and legacy archive
@@ -41,4 +42,3 @@ output/
 .DS_Store
 Thumbs.db
 desktop.ini
-

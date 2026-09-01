@@ -16,6 +16,10 @@ export type ConsentConfirmationIntent = { consentReceiptId: string; consentVersi
 export type ReconciliationTarget = { targetId: string; targetKind: 'LOCAL_RESEARCH_FILE' | 'LOCAL_EXPORT_STAGING_FILE' | 'EXTERNAL_COPY'; state: string };
 export type ReconciliationPlan = { participantPseudonym: string; planSha256: string; confirmationPhrase: string; localTargetTotal: number; externalTargetTotal: number; blockedTargetTotal: number; recoveryRequiredTotal: number; complete: boolean; blockerCodes: string[]; targets: ReconciliationTarget[] };
 export type ReconciliationChallenge = { challengeId: string; challengeToken: string; planSha256: string; confirmationPhrase: string; expiresAt: number };
+export type SyntheticReviewRunKind = 'PREFLIGHT_60S' | 'NOMINAL_20M';
+export type SyntheticReviewReceipt = { schemaVersion: 1; status: string; integrationStatus: 'PERSISTED' | 'NOT_PERSISTED'; evidenceKind: 'SIMULATED'; runKind: SyntheticReviewRunKind; d1Outcome: 'BACKEND_CONTRACT_PASS' | 'NO_GO' | null; d1FailureCode: string | null; integrationFailureCode: string | null; deviceGateDecision: 'UNVERIFIED'; d1Go: false; authorityStatus: 'AUTHORITY_NOT_ISSUED'; physicalCameraAccessAuthorized: false; participantCollectionAuthorized: false; collectionAuthorized: false; observationCount: number; observationDigest: string | null; d1ReceiptDigest: string | null; artifactId: string | null; artifactSha256: string | null; manifestSchemaVersion: 2 | null; packageContainsIntegration: false; resultDigest: string };
+export type SyntheticReviewRun = { schemaVersion: 1; requestId: string; runSequence: number; runKind: SyntheticReviewRunKind; jobStatus: 'QUEUED' | 'RUNNING' | 'TERMINAL'; serviceFailureCode: string | null; receipt: SyntheticReviewReceipt | null };
+export type SyntheticEvidenceDownload = { bytes: Uint8Array; filename: string; sha256: string };
 
 const eventTitles = {
   BENIGN_CONFOUNDER: 'T\u01b0 th\u1ebf c\u00f3 th\u1ec3 do y\u1ebfu t\u1ed1 l\u00e0nh t\u00ednh',
@@ -103,6 +107,55 @@ const sessionStates: readonly SessionState[] = ['DRAFT', 'CONSENT_CONFIRMED', 'P
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 const isSessionState = (value: unknown): value is SessionState => typeof value === 'string' && sessionStates.includes(value as SessionState);
 const isStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.every((item) => typeof item === 'string');
+const exactKeys = (value: Record<string, unknown>, expected: readonly string[]) => { const actual = Object.keys(value).sort(); const wanted = [...expected].sort(); return actual.length === wanted.length && actual.every((key, index) => key === wanted[index]); };
+const syntheticAuthorityKeys = ['authority_status', 'capability_status', 'collection_authorized', 'd1_go', 'device_gate_decision', 'evidence_kind', 'execution_authorized', 'package_contains_integration', 'participant_collection_authorized', 'physical_camera_access_authorized', 'production_reconciler_implemented', 'production_reconciler_real_storage_verified', 'real_data_deletion_authorized', 'research_ready', 'schema_version'] as const;
+const syntheticRecordKeys = ['schema_version', 'request_id', 'run_sequence', 'run_kind', 'job_status', 'service_failure_code', 'receipt'] as const;
+const syntheticReceiptKeys = ['artifact_id', 'artifact_sha256', 'authority_status', 'collection_authorized', 'd1_failure_code', 'd1_go', 'd1_outcome', 'd1_receipt_digest', 'device_gate_decision', 'evidence_kind', 'integration_failure_code', 'integration_status', 'manifest_schema_version', 'observation_count', 'observation_digest', 'package_contains_integration', 'participant_collection_authorized', 'physical_camera_access_authorized', 'result_digest', 'run_kind', 'schema_version', 'status'] as const;
+const hasClosedSyntheticAuthority = (value: Record<string, unknown>) => value.schema_version === 1 && value.capability_status === 'SYNTHETIC_REVIEW_ONLY' && value.authority_status === 'AUTHORITY_NOT_ISSUED' && value.collection_authorized === false && value.d1_go === false && value.device_gate_decision === 'UNVERIFIED' && value.evidence_kind === 'SIMULATED' && value.execution_authorized === false && value.package_contains_integration === false && value.participant_collection_authorized === false && value.physical_camera_access_authorized === false && value.production_reconciler_implemented === false && value.production_reconciler_real_storage_verified === false && value.real_data_deletion_authorized === false && value.research_ready === false;
+const invalidSyntheticResponse = (): never => { throw new Error('Synthetic review API response is invalid'); };
+const isDigest = (value: unknown): value is string => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
+const isNullableDigest = (value: unknown): value is string | null => value === null || isDigest(value);
+const mapSyntheticReceipt = (value: unknown, expectedRunKind: SyntheticReviewRunKind): SyntheticReviewReceipt => {
+  if (!isRecord(value) || !exactKeys(value, syntheticReceiptKeys) || value.schema_version !== 1 || value.evidence_kind !== 'SIMULATED' || value.run_kind !== expectedRunKind || value.device_gate_decision !== 'UNVERIFIED' || value.d1_go !== false || value.authority_status !== 'AUTHORITY_NOT_ISSUED' || value.physical_camera_access_authorized !== false || value.participant_collection_authorized !== false || value.collection_authorized !== false || value.package_contains_integration !== false || !['PERSISTED', 'NOT_PERSISTED'].includes(String(value.integration_status)) || ![null, 'BACKEND_CONTRACT_PASS', 'NO_GO'].includes(value.d1_outcome as null | string) || typeof value.status !== 'string' || !Number.isSafeInteger(value.observation_count) || Number(value.observation_count) < 0 || !isNullableDigest(value.observation_digest) || !isNullableDigest(value.d1_receipt_digest) || !isDigest(value.result_digest) || !(value.d1_failure_code === null || typeof value.d1_failure_code === 'string') || !(value.integration_failure_code === null || typeof value.integration_failure_code === 'string')) return invalidSyntheticResponse();
+  const persisted = value.integration_status === 'PERSISTED';
+  if (persisted) {
+    if (typeof value.artifact_id !== 'string' || value.artifact_id.length === 0 || !isDigest(value.artifact_sha256) || value.manifest_schema_version !== 2 || !isDigest(value.observation_digest) || !isDigest(value.d1_receipt_digest) || value.integration_failure_code !== null || !['BACKEND_CONTRACT_PASS', 'NO_GO'].includes(String(value.d1_outcome))) return invalidSyntheticResponse();
+    if ((value.d1_outcome === 'BACKEND_CONTRACT_PASS' && value.d1_failure_code !== null) || (value.d1_outcome === 'NO_GO' && typeof value.d1_failure_code !== 'string')) return invalidSyntheticResponse();
+  } else if (value.artifact_id !== null || value.artifact_sha256 !== null || value.manifest_schema_version !== null || typeof value.integration_failure_code !== 'string') return invalidSyntheticResponse();
+  return { schemaVersion: 1, status: value.status, integrationStatus: value.integration_status as SyntheticReviewReceipt['integrationStatus'], evidenceKind: 'SIMULATED', runKind: expectedRunKind, d1Outcome: value.d1_outcome as SyntheticReviewReceipt['d1Outcome'], d1FailureCode: value.d1_failure_code as string | null, integrationFailureCode: value.integration_failure_code as string | null, deviceGateDecision: 'UNVERIFIED', d1Go: false, authorityStatus: 'AUTHORITY_NOT_ISSUED', physicalCameraAccessAuthorized: false, participantCollectionAuthorized: false, collectionAuthorized: false, observationCount: value.observation_count as number, observationDigest: value.observation_digest, d1ReceiptDigest: value.d1_receipt_digest, artifactId: value.artifact_id as string | null, artifactSha256: value.artifact_sha256 as string | null, manifestSchemaVersion: value.manifest_schema_version as 2 | null, packageContainsIntegration: false, resultDigest: value.result_digest };
+};
+const mapSyntheticRun = (value: unknown): SyntheticReviewRun => {
+  if (!isRecord(value) || !exactKeys(value, syntheticRecordKeys) || value.schema_version !== 1 || typeof value.request_id !== 'string' || !/^synrun-[0-9a-f]{32}$/.test(value.request_id) || !Number.isSafeInteger(value.run_sequence) || Number(value.run_sequence) < 1 || !['PREFLIGHT_60S', 'NOMINAL_20M'].includes(String(value.run_kind)) || !['QUEUED', 'RUNNING', 'TERMINAL'].includes(String(value.job_status)) || !(value.service_failure_code === null || typeof value.service_failure_code === 'string')) return invalidSyntheticResponse();
+  const terminal = value.job_status === 'TERMINAL'; if ((!terminal && value.receipt !== null) || (terminal && value.receipt === null && value.service_failure_code === null)) return invalidSyntheticResponse();
+  const runKind = value.run_kind as SyntheticReviewRunKind;
+  return { schemaVersion: 1, requestId: value.request_id, runSequence: value.run_sequence as number, runKind, jobStatus: value.job_status as SyntheticReviewRun['jobStatus'], serviceFailureCode: value.service_failure_code as string | null, receipt: value.receipt === null ? null : mapSyntheticReceipt(value.receipt, runKind) };
+};
+const mapSyntheticRunEnvelope = (value: unknown): SyntheticReviewRun => {
+  if (!isRecord(value) || !exactKeys(value, [...syntheticAuthorityKeys, 'run']) || !hasClosedSyntheticAuthority(value)) return invalidSyntheticResponse();
+  return mapSyntheticRun(value.run);
+};
+const syntheticEvidenceStatus = 'M2_S2D_SYNTHETIC_EVIDENCE_EXPORT_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY';
+const syntheticEvidenceKeys = ['artifact_kind', 'body', 'body_sha256', 'schema_version', 'status'] as const;
+const syntheticEvidenceBodyKeys = ['authority_ceiling', 'export_authority_effect', 'export_mode', 'source_artifact', 'source_artifact_byte_size', 'source_artifact_sha256', 'source_run'] as const;
+const syntheticEvidencePrefix = '{"artifact_kind":"M2_SYNTHETIC_EVIDENCE_BUNDLE","body":';
+const rawSyntheticEvidenceBody = (decoded: string, bodySha256: string): string => {
+  const suffix = `,"body_sha256":"${bodySha256}","schema_version":1,"status":"${syntheticEvidenceStatus}"}\n`;
+  if (!decoded.startsWith(syntheticEvidencePrefix) || !decoded.endsWith(suffix)) return invalidSyntheticResponse();
+  const body = decoded.slice(syntheticEvidencePrefix.length, -suffix.length);
+  if (!body.startsWith('{') || !body.endsWith('}')) return invalidSyntheticResponse();
+  return body;
+};
+const sha256Bytes = async (bytes: Uint8Array): Promise<string> => {
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
+  return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', buffer))).map((value) => value.toString(16).padStart(2, '0')).join('');
+};
+const validateSyntheticEvidence = (value: unknown, requestId: string): void => {
+  if (!isRecord(value) || !exactKeys(value, syntheticEvidenceKeys) || value.artifact_kind !== 'M2_SYNTHETIC_EVIDENCE_BUNDLE' || value.schema_version !== 1 || value.status !== syntheticEvidenceStatus || !isDigest(value.body_sha256) || !isRecord(value.body) || !exactKeys(value.body, syntheticEvidenceBodyKeys)) return invalidSyntheticResponse();
+  const body = value.body;
+  if (!isRecord(body.authority_ceiling) || !exactKeys(body.authority_ceiling, syntheticAuthorityKeys) || !hasClosedSyntheticAuthority(body.authority_ceiling) || body.export_authority_effect !== 'NONE' || body.export_mode !== 'DOWNLOAD_ONLY_NO_SERVER_ARCHIVE' || !isRecord(body.source_artifact) || !Number.isSafeInteger(body.source_artifact_byte_size) || Number(body.source_artifact_byte_size) < 2 || Number(body.source_artifact_byte_size) > 4_000_000 || !isDigest(body.source_artifact_sha256) || !isRecord(body.source_run) || body.source_run.request_id !== requestId) return invalidSyntheticResponse();
+};
+const invalidSyntheticEvidenceDownload = (): never => { throw new Error('Synthetic evidence download is invalid'); };
 const invalidResearchResponse = () => { throw new Error('Research API response is invalid'); };
 const hasResearchSchema = (value: unknown): value is Record<string, unknown> => isRecord(value) && value.schema_version === 1;
 const mapResearchStudy = (value: unknown, studyCode: string): ResearchStudy => {
@@ -220,6 +273,14 @@ export interface ResearchApi {
   executeReconciliation?(sessionId: string, challengeToken: string, confirmationPhrase: string): Promise<void>;
 }
 
+export interface SyntheticReviewApi {
+  createSyntheticRun(runKind: SyntheticReviewRunKind, idempotencyKey: string): Promise<SyntheticReviewRun>;
+  listSyntheticRuns(): Promise<SyntheticReviewRun[]>;
+  getSyntheticRun(requestId: string): Promise<SyntheticReviewRun>;
+  downloadSyntheticEvidence(requestId: string): Promise<SyntheticEvidenceDownload>;
+}
+export const isSyntheticReviewApi = (value: unknown): value is SyntheticReviewApi => isRecord(value) && typeof value.createSyntheticRun === 'function' && typeof value.listSyntheticRuns === 'function' && typeof value.getSyntheticRun === 'function' && typeof value.downloadSyntheticEvidence === 'function';
+
 export interface ReviewerAuthLossSource { onReviewerAuthLoss(listener: () => void): () => void; }
 export const isReviewerAuthLossSource = (value: ApiClient): value is ApiClient & ReviewerAuthLossSource => typeof (value as Partial<ReviewerAuthLossSource>).onReviewerAuthLoss === 'function';
 
@@ -231,16 +292,17 @@ export interface EventStream {
   ): () => void;
 }
 
-export class HttpApiClient implements ApiClient, ResearchApi, ReviewerAuthLossSource {
+export class HttpApiClient implements ApiClient, ResearchApi, SyntheticReviewApi, ReviewerAuthLossSource {
   private readonly authLossListeners = new Set<() => void>();
+  private authLossNotified = false;
   constructor(private readonly surface: ApiSurface = window.location.pathname === '/monitor' ? 'monitor' : 'exam') {}
 
-  private async request<T>(
+  private async requestResponse(
     path: string,
     init: RequestInit = {},
     reviewerAuth = false,
     tokenOverride?: string,
-  ): Promise<T> {
+  ): Promise<Response> {
     const headers = requestHeaders(init.headers);
     let credentials: RequestCredentials;
     if (this.surface === 'monitor') {
@@ -261,20 +323,33 @@ export class HttpApiClient implements ApiClient, ResearchApi, ReviewerAuthLossSo
 
     const response = await fetch(`/api/v1${path}`, { ...init, credentials, headers });
     if (!response.ok) {
-      const payload = await response.json().catch(() => undefined) as { detail?: { code?: string; message?: string } | string } | undefined;
+      const payload = await response.json().catch(() => undefined) as { code?: string; message?: string; detail?: { code?: string; message?: string } | string } | undefined;
       const retryAfter = Number(response.headers.get('Retry-After'));
-      const detail = typeof payload?.detail === 'string' ? payload.detail : payload?.detail?.message;
+      const detail = payload?.message ?? (typeof payload?.detail === 'string' ? payload.detail : payload?.detail?.message);
       if (this.surface === 'monitor' && response.status === 401) {
         clearReviewerSession();
-        for (const listener of this.authLossListeners) listener();
+        if (!this.authLossNotified) {
+          this.authLossNotified = true;
+          for (const listener of this.authLossListeners) listener();
+        }
       }
       throw new ApiError(
         response.status,
         Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined,
-        typeof payload?.detail === 'string' ? undefined : payload?.detail?.code,
+        payload?.code ?? (typeof payload?.detail === 'string' ? undefined : payload?.detail?.code),
         detail,
       );
     }
+    return response;
+  }
+
+  private async request<T>(
+    path: string,
+    init: RequestInit = {},
+    reviewerAuth = false,
+    tokenOverride?: string,
+  ): Promise<T> {
+    const response = await this.requestResponse(path, init, reviewerAuth, tokenOverride);
     return response.status === 204 ? undefined as T : response.json() as Promise<T>;
   }
 
@@ -309,6 +384,7 @@ export class HttpApiClient implements ApiClient, ResearchApi, ReviewerAuthLossSo
         expiresAtUtc: payload.expires_at_utc,
         reviewer: payload.reviewer,
       } satisfies StoredReviewerSession));
+      this.authLossNotified = false;
     } catch {
       clearReviewerSession();
       try {
@@ -398,6 +474,42 @@ export class HttpApiClient implements ApiClient, ResearchApi, ReviewerAuthLossSo
 
   async replay(sessionId: string): Promise<void> {
     await this.request('/demo/replay', { method: 'POST', body: JSON.stringify({ session_id: sessionId }) }, true);
+  }
+
+  async createSyntheticRun(runKind: SyntheticReviewRunKind, idempotencyKey: string): Promise<SyntheticReviewRun> { return mapSyntheticRunEnvelope(await this.request<unknown>('/synthetic-runs', { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, body: JSON.stringify({ run_kind: runKind }) }, true)); }
+  async listSyntheticRuns(): Promise<SyntheticReviewRun[]> { const value = await this.request<unknown>('/synthetic-runs', {}, true); if (!isRecord(value) || !exactKeys(value, [...syntheticAuthorityKeys, 'runs']) || !hasClosedSyntheticAuthority(value) || !Array.isArray(value.runs)) return invalidSyntheticResponse(); return value.runs.map(mapSyntheticRun); }
+  async getSyntheticRun(requestId: string): Promise<SyntheticReviewRun> { return mapSyntheticRunEnvelope(await this.request<unknown>(`/synthetic-runs/${encodeURIComponent(requestId)}`, {}, true)); }
+  async downloadSyntheticEvidence(requestId: string): Promise<SyntheticEvidenceDownload> {
+    if (!/^synrun-[0-9a-f]{32}$/.test(requestId)) return invalidSyntheticEvidenceDownload();
+    const response = await this.requestResponse(`/synthetic-runs/${encodeURIComponent(requestId)}/evidence`, {}, true);
+    const expectedFilename = `m2-s2d-${requestId}.json`;
+    if (
+      response.headers.get('Content-Type') !== 'application/json' ||
+      response.headers.get('Content-Disposition') !== `attachment; filename="${expectedFilename}"` ||
+      response.headers.get('Cache-Control') !== 'no-store'
+    ) return invalidSyntheticEvidenceDownload();
+    const expectedDigest = response.headers.get('X-PDU-Evidence-SHA256');
+    const declaredLength = Number(response.headers.get('Content-Length'));
+    if (!isDigest(expectedDigest) || (Number.isFinite(declaredLength) && declaredLength > 4_000_000)) return invalidSyntheticEvidenceDownload();
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes.length < 2 || bytes.length > 4_000_000 || await sha256Bytes(bytes) !== expectedDigest) return invalidSyntheticEvidenceDownload();
+    let decoded: string;
+    let value: unknown;
+    try {
+      decoded = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+      value = JSON.parse(decoded) as unknown;
+    } catch {
+      return invalidSyntheticEvidenceDownload();
+    }
+    try {
+      validateSyntheticEvidence(value, requestId);
+      const bodySha256 = (value as Record<string, unknown>).body_sha256 as string;
+      const rawBody = rawSyntheticEvidenceBody(decoded, bodySha256);
+      if (await sha256Bytes(new TextEncoder().encode(rawBody)) !== bodySha256) return invalidSyntheticEvidenceDownload();
+    } catch {
+      return invalidSyntheticEvidenceDownload();
+    }
+    return { bytes, filename: expectedFilename, sha256: expectedDigest };
   }
 
   async createStudy(studyCode: string, idempotencyKey: string): Promise<ResearchStudy> { return mapResearchStudy(await this.request<unknown>('/research/studies', { method: 'POST', headers: { 'Idempotency-Key': idempotencyKey }, body: JSON.stringify({ study_code: studyCode }) }, true), studyCode); }

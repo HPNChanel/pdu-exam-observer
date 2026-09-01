@@ -312,6 +312,214 @@
                   ],
                   "type": "object"
                 },
+                "M2_S2A_SMOKE_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S2A_SMOKE_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/run_m2_s2a_synthetic_integration.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S2B_SMOKE_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S2B_SMOKE_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/run_m2_s2b_synthetic_nominal.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S2D_VERIFY_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S2D_VERIFY_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/verify_m2_s2d_synthetic_evidence.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S2E_REPRODUCE_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S2E_REPRODUCE_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/reproduce_m2_s2e_synthetic_evidence.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3B_BUILD_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3B_BUILD_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/build_m2_s3b_candidate.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3B_CANDIDATE_README": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3B_CANDIDATE_README"
+                    },
+                    "path": {
+                      "const": "packaging/README_M2_S3B_CANDIDATE.txt"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3B_PYINSTALLER_SPEC": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3B_PYINSTALLER_SPEC"
+                    },
+                    "path": {
+                      "const": "packaging/PDU-Exam-Observer.current-source.spec"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3C_PACKAGED_SMOKE_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3C_PACKAGED_SMOKE_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/run_m2_s3c_packaged_smoke.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "RP2_ARTIFACT_BUILDER": {
                   "additionalProperties": false,
                   "properties": {
@@ -320,6 +528,58 @@
                     },
                     "path": {
                       "const": "scripts/build_m2_d1_n2_rp2.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_API_FACTORIES_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_API_FACTORIES_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/api/factories.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_LAUNCHER_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_LAUNCHER_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/launcher.py"
                     },
                     "sha256": {
                       "pattern": "^[0-9a-f]{64}$",
@@ -728,6 +988,240 @@
                   ],
                   "type": "object"
                 },
+                "SRC_M2_SYNTHETIC_ENVIRONMENT_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_ENVIRONMENT_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_environment.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_EVIDENCE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_EVIDENCE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_evidence.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_INTEGRATION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_INTEGRATION_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_integration.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_nominal_fixture.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_preflight_fixture.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_REPRODUCTION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_REPRODUCTION_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_reproduction.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_REVIEW_API_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_REVIEW_API_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/api/synthetic_review.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_M2_SYNTHETIC_REVIEW_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_SYNTHETIC_REVIEW_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_synthetic_review.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_LAUNCHER_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_LAUNCHER_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_launcher.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "TEST_M2_D1_N2_A0_PY": {
                   "additionalProperties": false,
                   "properties": {
@@ -909,6 +1403,396 @@
                     "size_bytes"
                   ],
                   "type": "object"
+                },
+                "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY"
+                    },
+                    "path": {
+                      "const": "tests/packaging/test_m2_s3a_package_gap_audit.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_S3B_PACKAGE_INTEGRATION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY"
+                    },
+                    "path": {
+                      "const": "tests/packaging/test_m2_s3b_package_integration.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_S3C_PACKAGED_SMOKE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_S3C_PACKAGED_SMOKE_PY"
+                    },
+                    "path": {
+                      "const": "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_EVIDENCE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_EVIDENCE_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_evidence.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_INTEGRATION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_INTEGRATION_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_integration.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_nominal_integration.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_REPRODUCTION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_REPRODUCTION_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_reproduction.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_REVIEW_API_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_REVIEW_API_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_review_api.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY"
+                    },
+                    "path": {
+                      "const": "tests/backend/test_m2_synthetic_review_service.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_WEB_API_TS": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_WEB_API_TS"
+                    },
+                    "path": {
+                      "const": "apps/web/src/api.test.ts"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX"
+                    },
+                    "path": {
+                      "const": "apps/web/src/SyntheticValidationPanel.test.tsx"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "WEB_API_TS": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "WEB_API_TS"
+                    },
+                    "path": {
+                      "const": "apps/web/src/api.ts"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "WEB_APP_TSX": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "WEB_APP_TSX"
+                    },
+                    "path": {
+                      "const": "apps/web/src/App.tsx"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "WEB_STYLES_CSS": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "WEB_STYLES_CSS"
+                    },
+                    "path": {
+                      "const": "apps/web/src/styles.css"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "WEB_SYNTHETIC_VALIDATION_PANEL_TSX": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX"
+                    },
+                    "path": {
+                      "const": "apps/web/src/SyntheticValidationPanel.tsx"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
                 }
               },
               "required": [
@@ -927,6 +1811,20 @@
                 "SRC_M2_D1_N2_CNG_PY",
                 "SRC_M2_D1_N2_WIN32_PY",
                 "SRC_M2_D1_N2_WIN32_STORE_PY",
+                "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+                "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY",
+                "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY",
+                "SRC_M2_SYNTHETIC_REVIEW_PY",
+                "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+                "SRC_M2_SYNTHETIC_EVIDENCE_PY",
+                "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
+                "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+                "SRC_API_FACTORIES_PY",
+                "SRC_LAUNCHER_PY",
+                "WEB_API_TS",
+                "WEB_APP_TSX",
+                "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+                "WEB_STYLES_CSS",
                 "TEST_M2_D1_N2_A0_PY",
                 "TEST_M2_D1_N2_ADAPTER_PY",
                 "TEST_M2_D1_N2_BOOTSTRAP_PY",
@@ -934,8 +1832,28 @@
                 "TEST_M2_D1_N2_BOOTSTRAP_WIN32_PY",
                 "TEST_M2_D1_N2_CNG_PY",
                 "TEST_M2_D1_N2_RP2_ARTIFACTS_PY",
+                "TEST_M2_SYNTHETIC_INTEGRATION_PY",
+                "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY",
+                "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY",
+                "TEST_M2_SYNTHETIC_REVIEW_API_PY",
+                "TEST_M2_SYNTHETIC_EVIDENCE_PY",
+                "TEST_M2_SYNTHETIC_REPRODUCTION_PY",
+                "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+                "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
+                "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+                "TEST_LAUNCHER_PY",
+                "TEST_WEB_API_TS",
+                "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
                 "RP2_ARTIFACT_BUILDER",
-                "BOOTSTRAP_OPERATOR_SCRIPT"
+                "BOOTSTRAP_OPERATOR_SCRIPT",
+                "M2_S2A_SMOKE_SCRIPT",
+                "M2_S2B_SMOKE_SCRIPT",
+                "M2_S2D_VERIFY_SCRIPT",
+                "M2_S2E_REPRODUCE_SCRIPT",
+                "M2_S3B_BUILD_SCRIPT",
+                "M2_S3B_PYINSTALLER_SPEC",
+                "M2_S3B_CANDIDATE_README",
+                "M2_S3C_PACKAGED_SMOKE_SCRIPT"
               ],
               "type": "object"
             },
@@ -1139,7 +2057,31 @@
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             },
+            "m2_s3c_authority_ceiling_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3c_fixed_candidate_binding_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3c_runtime_smoke_contract_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3c_status_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
             "ownership_cleanup_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "package_gap_audit_authority_ceiling_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "package_gap_audit_status_policy_digest": {
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             },
@@ -1148,6 +2090,98 @@
               "type": "string"
             },
             "receipt_schema_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "s3b_candidate_authority_ceiling_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "s3b_candidate_status_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "s3b_reproducible_build_contract_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "s3b_static_inclusion_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_authority_ceiling_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_evidence_download_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_evidence_integrity_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_evidence_offline_verifier_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_evidence_ui_disclosure_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_integration_status_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_no_camera_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_no_path_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_nominal_fault_matrix_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_nominal_run_contract_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_nominal_status_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_reproduction_classification_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_reproduction_cli_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_reproduction_environment_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_reproduction_exact_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_review_owned_workspace_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_review_request_surface_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_review_single_flight_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "synthetic_review_ui_disclosure_policy_digest": {
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             },
@@ -1194,7 +2228,36 @@
             "failure_ledger_digest",
             "watchdog_policy_digest",
             "capture_policy_digest",
-            "privacy_policy_digest"
+            "privacy_policy_digest",
+            "synthetic_integration_status_policy_digest",
+            "synthetic_authority_ceiling_policy_digest",
+            "synthetic_no_path_policy_digest",
+            "synthetic_no_camera_policy_digest",
+            "synthetic_nominal_status_policy_digest",
+            "synthetic_nominal_run_contract_policy_digest",
+            "synthetic_nominal_fault_matrix_policy_digest",
+            "synthetic_review_request_surface_policy_digest",
+            "synthetic_review_single_flight_policy_digest",
+            "synthetic_review_owned_workspace_policy_digest",
+            "synthetic_review_ui_disclosure_policy_digest",
+            "synthetic_evidence_integrity_policy_digest",
+            "synthetic_evidence_download_policy_digest",
+            "synthetic_evidence_offline_verifier_policy_digest",
+            "synthetic_evidence_ui_disclosure_policy_digest",
+            "synthetic_reproduction_environment_policy_digest",
+            "synthetic_reproduction_exact_policy_digest",
+            "synthetic_reproduction_classification_policy_digest",
+            "synthetic_reproduction_cli_policy_digest",
+            "package_gap_audit_status_policy_digest",
+            "package_gap_audit_authority_ceiling_policy_digest",
+            "s3b_candidate_status_policy_digest",
+            "s3b_reproducible_build_contract_policy_digest",
+            "s3b_static_inclusion_policy_digest",
+            "s3b_candidate_authority_ceiling_policy_digest",
+            "m2_s3c_status_policy_digest",
+            "m2_s3c_fixed_candidate_binding_policy_digest",
+            "m2_s3c_runtime_smoke_contract_policy_digest",
+            "m2_s3c_authority_ceiling_policy_digest"
           ],
           "type": "object"
         },
@@ -1396,6 +2459,79 @@
                 "version": 1
               }
             },
+            "m2_s3c_authority_ceiling_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "clean_machine_verified": false,
+                  "collection_authorized": false,
+                  "d1_go": false,
+                  "distribution_ready": false,
+                  "packaged_runtime_smoke_verified": true,
+                  "participant_collection_authorized": false,
+                  "physical_camera_access_authorized": false,
+                  "release_authorized": false,
+                  "research_ready": false,
+                  "same_host_portable_verified": false
+                },
+                "projection": "m2-s3c.same-host-smoke-no-release-authority-ceiling",
+                "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+                "version": 1
+              }
+            },
+            "m2_s3c_fixed_candidate_binding_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "candidate_path_caller_controlled": false,
+                  "candidate_process_invocation_count": 2,
+                  "candidate_source_revision_separate_from_harness_revision": true,
+                  "candidate_tree_sha256": "80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009"
+                },
+                "projection": "m2-s3c.fixed-s3b-candidate-and-source-revision-binding",
+                "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+                "version": 1
+              }
+            },
+            "m2_s3c_runtime_smoke_contract_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "browser_opened": false,
+                  "evidence_export_invoked": false,
+                  "invocation_count": 2,
+                  "loopback_only": true,
+                  "retry_count": 0,
+                  "run_order": [
+                    "PREFLIGHT_60S",
+                    "NOMINAL_20M"
+                  ],
+                  "shutdown_mode": "FORCED_PROCESS_TREE_TERMINATION"
+                },
+                "projection": "m2-s3c.fixed-loopback-preflight-and-nominal-smoke-contract",
+                "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+                "version": 1
+              }
+            },
+            "m2_s3c_status_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "closed_gap_id": "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+                  "open_gap_ids": [
+                    "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                    "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+                    "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                    "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+                  ],
+                  "status": "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+                },
+                "projection": "m2-s3c.same-host-packaged-synthetic-runtime-smoke",
+                "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+                "version": 1
+              }
+            },
             "ownership_cleanup_policy_digest": {
               "const": {
                 "canonicalization": "json-v1-sort-keys-compact-utf8",
@@ -1406,6 +2542,58 @@
                 },
                 "projection": "d1-n2.exclusive-ownership-close-before-terminal",
                 "source_id": "SRC_M2_D1_N2_ADAPTER_PY",
+                "version": 1
+              }
+            },
+            "package_gap_audit_authority_ceiling_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "clean_machine_verified": false,
+                  "collection_authorized": false,
+                  "d1_go": false,
+                  "device_gate_decision": "UNVERIFIED",
+                  "distribution_ready": false,
+                  "execution_authorized": false,
+                  "package_contains_integration": false,
+                  "package_rebuild_started": false,
+                  "participant_collection_authorized": false,
+                  "physical_camera_access_authorized": false,
+                  "production_reconciler_implemented": false,
+                  "production_reconciler_real_storage_verified": false,
+                  "real_data_deletion_authorized": false,
+                  "release_authorized": false,
+                  "research_ready": false,
+                  "same_host_portable_verified": false
+                },
+                "projection": "m2-s3a.no-rebuild-no-release-authority-ceiling",
+                "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+                "version": 1
+              }
+            },
+            "package_gap_audit_status_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "audit_result": "PACKAGE_GAP_CONFIRMED",
+                  "audit_status": "M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY",
+                  "gap_ids": [
+                    "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+                    "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+                    "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+                    "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                    "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+                    "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                    "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE",
+                    "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+                  ],
+                  "historical_package_integrity": "MANIFEST_VERIFIED",
+                  "package_rebuild_started": false,
+                  "source_currency": "HISTORICAL_NOT_CURRENT_SOURCE"
+                },
+                "projection": "m2-s3a.current-source-package-gap-audit",
+                "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
                 "version": 1
               }
             },
@@ -1431,6 +2619,373 @@
                 },
                 "projection": "d1-n2.redacted-receipt-contract",
                 "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+                "version": 1
+              }
+            },
+            "s3b_candidate_authority_ceiling_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "candidate_package_contains_integration": true,
+                  "clean_machine_verified": false,
+                  "collection_authorized": false,
+                  "d1_go": false,
+                  "distribution_ready": false,
+                  "historical_package_unchanged": true,
+                  "packaged_runtime_smoke_verified": false,
+                  "participant_collection_authorized": false,
+                  "physical_camera_access_authorized": false,
+                  "release_authorized": false,
+                  "research_ready": false
+                },
+                "projection": "m2-s3b.candidate-static-no-release-authority-ceiling",
+                "source_id": "M2_S3B_CANDIDATE_README",
+                "version": 1
+              }
+            },
+            "s3b_candidate_status_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "closed_gap_ids": [
+                    "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+                    "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+                    "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE"
+                  ],
+                  "open_gap_count": 5,
+                  "status": "M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
+                },
+                "projection": "m2-s3b.current-source-candidate-static-integration",
+                "source_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
+                "version": 1
+              }
+            },
+            "s3b_reproducible_build_contract_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "build_count": 2,
+                  "build_time_utc": "2026-09-01T00:00:00Z",
+                  "byte_identical_required": true,
+                  "python_hash_seed": "1",
+                  "source_date_epoch": "1788220800"
+                },
+                "projection": "m2-s3b.same-host-bit-reproducible-double-build",
+                "source_id": "M2_S3B_BUILD_SCRIPT",
+                "version": 1
+              }
+            },
+            "s3b_static_inclusion_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "archive_inventory": "EXECUTABLE_RECURSIVE_ARCHIVE",
+                  "frontend_byte_identical": true,
+                  "required_module_count": 11,
+                  "runtime_smoke_verified": false
+                },
+                "projection": "m2-s3b.recursive-archive-and-frontend-static-inclusion",
+                "source_id": "M2_S3B_PYINSTALLER_SPEC",
+                "version": 1
+              }
+            },
+            "synthetic_authority_ceiling_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "collection_authorized": false,
+                  "d1_go": false,
+                  "device_gate_decision": "UNVERIFIED",
+                  "package_contains_integration": false,
+                  "participant_collection_authorized": false,
+                  "physical_camera_access_authorized": false
+                },
+                "projection": "m2-s2a.synthetic-authority-ceiling",
+                "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_evidence_download_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authenticated_monitor_only": true,
+                  "exam_origin_route_exposed": false,
+                  "maximum_bytes": 4000000,
+                  "server_archive_created": false,
+                  "terminal_persisted_only": true
+                },
+                "projection": "m2-s2d.download-only-monitor-surface",
+                "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+                "version": 1
+              }
+            },
+            "synthetic_evidence_integrity_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "artifact_sha256_verified_before_export": true,
+                  "body_sha256_required": true,
+                  "d1_receipt_semantics_verified": true,
+                  "observation_digest_recomputed": true,
+                  "source_run_receipt_cross_bound": true
+                },
+                "projection": "m2-s2d.full-artifact-cross-binding",
+                "source_id": "SRC_M2_SYNTHETIC_EVIDENCE_PY",
+                "version": 1
+              }
+            },
+            "synthetic_evidence_offline_verifier_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "accepts_exactly_one_file": true,
+                  "authority_effect": "NONE",
+                  "canonical_json_required": true,
+                  "failure_exit_code": 2,
+                  "symlink_or_reparse_allowed": false
+                },
+                "projection": "m2-s2d.offline-verifier-fail-closed",
+                "source_id": "M2_S2D_VERIFY_SCRIPT",
+                "version": 1
+              }
+            },
+            "synthetic_evidence_ui_disclosure_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "disclosure": "B\u1eb1ng ch\u1ee9ng m\u00f4 ph\u1ecfng \u2014 kh\u00f4ng ph\u1ea3i x\u00e1c minh thi\u1ebft b\u1ecb, D1_GO hay quy\u1ec1n thu d\u1eef li\u1ec7u.",
+                  "download_scope": "TERMINAL_PERSISTED_ONLY",
+                  "research_ready_claimed": false
+                },
+                "projection": "m2-s2d.download-ui-disclosure",
+                "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+                "version": 1
+              }
+            },
+            "synthetic_integration_status_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "d1_outcomes": [
+                    "BACKEND_CONTRACT_PASS",
+                    "NO_GO"
+                  ],
+                  "evidence_kind": "SIMULATED",
+                  "integration_statuses": [
+                    "PERSISTED",
+                    "NOT_PERSISTED"
+                  ],
+                  "run_kind": "PREFLIGHT_60S",
+                  "status": "M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+                },
+                "projection": "m2-s2a.synthetic-integration-status",
+                "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_no_camera_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "audio": false,
+                  "camera": false,
+                  "device_enumeration": false,
+                  "fixture_kind": "DETERMINISTIC_FIXTURE"
+                },
+                "projection": "m2-s2a.no-camera-device-surface",
+                "source_id": "M2_S2A_SMOKE_SCRIPT",
+                "version": 1
+              }
+            },
+            "synthetic_no_path_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "absolute_path_output": "PROHIBITED",
+                  "caller_path_input": "PROHIBITED",
+                  "temporary_root": "OWNED_AND_REMOVED"
+                },
+                "projection": "m2-s2a.no-path-surface",
+                "source_id": "M2_S2A_SMOKE_SCRIPT",
+                "version": 1
+              }
+            },
+            "synthetic_nominal_fault_matrix_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "corrupt_input_persisted": false,
+                  "corrupt_receipt_persisted": false,
+                  "persist_valid_no_go": true,
+                  "persistence_failure_artifact_claim": false,
+                  "physical_fault_evidence": false
+                },
+                "projection": "m2-s2b.synthetic-fault-matrix",
+                "source_id": "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_nominal_run_contract_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "accelerated_timestamps": true,
+                  "frame_count": 18077,
+                  "frames_per_second": 15,
+                  "height": 720,
+                  "physical_wait": false,
+                  "requested_duration_seconds": 1200,
+                  "run_kind": "NOMINAL_20M",
+                  "warmup_seconds": 5,
+                  "width": 1280
+                },
+                "projection": "m2-s2b.fixed-nominal-run-contract",
+                "source_id": "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY",
+                "version": 1
+              }
+            },
+            "synthetic_nominal_status_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "d1_outcomes": [
+                    "BACKEND_CONTRACT_PASS",
+                    "NO_GO"
+                  ],
+                  "evidence_kind": "SIMULATED",
+                  "integration_statuses": [
+                    "PERSISTED",
+                    "NOT_PERSISTED"
+                  ],
+                  "run_kind": "NOMINAL_20M",
+                  "status": "M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+                },
+                "projection": "m2-s2b.synthetic-nominal-status",
+                "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_reproduction_classification_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_mutation_is_semantic_mismatch": false,
+                  "classifications": [
+                    "EXACTLY_REPRODUCED",
+                    "REPRODUCTION_FAILED",
+                    "SEMANTIC_RESULT_MISMATCH",
+                    "SOURCE_REVISION_MISMATCH"
+                  ],
+                  "mismatch_fields_closed": true
+                },
+                "projection": "m2-s2e.closed-differential-classification",
+                "source_id": "TEST_M2_SYNTHETIC_REPRODUCTION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_reproduction_cli_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "accepts_exactly_one_file": true,
+                  "maximum_bytes": 4000000,
+                  "path_disclosed": false,
+                  "success_classification": "EXACTLY_REPRODUCED",
+                  "symlink_or_reparse_allowed": false
+                },
+                "projection": "m2-s2e.offline-reproduction-cli",
+                "source_id": "M2_S2E_REPRODUCE_SCRIPT",
+                "version": 1
+              }
+            },
+            "synthetic_reproduction_environment_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "caller_root_allowed": false,
+                  "closed_source_inventory": true,
+                  "encoder_policy": "M2-S2C-SIMULATED-ENCODER-NOT-INVOKED-V1",
+                  "source_revision_required_for_exact": true
+                },
+                "projection": "m2-s2e.closed-current-source-binding",
+                "source_id": "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
+                "version": 1
+              }
+            },
+            "synthetic_reproduction_exact_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "built_in_fixtures_only": true,
+                  "comparison_scope": "WHOLE_BUNDLE_AND_NESTED_DIGESTS",
+                  "device_access": false,
+                  "source_mismatch_replay": false,
+                  "temporary_workspace_removed_before_success": true
+                },
+                "projection": "m2-s2e.same-revision-exact-replay",
+                "source_id": "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+                "version": 1
+              }
+            },
+            "synthetic_review_owned_workspace_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "cleanup_on_shutdown": true,
+                  "configured_operational_root_used": false,
+                  "owned_temp_root": true
+                },
+                "projection": "m2-s2c.owned-ephemeral-workspace",
+                "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+                "version": 1
+              }
+            },
+            "synthetic_review_request_surface_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "automatic_retry": false,
+                  "caller_device": false,
+                  "caller_path": false,
+                  "request_fields": "run_kind_only",
+                  "run_kinds": [
+                    "PREFLIGHT_60S",
+                    "NOMINAL_20M"
+                  ]
+                },
+                "projection": "m2-s2c.closed-review-request-surface",
+                "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+                "version": 1
+              }
+            },
+            "synthetic_review_single_flight_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "automatic_retry": false,
+                  "max_active_runs": 1,
+                  "max_records": 32
+                },
+                "projection": "m2-s2c.single-flight-bounded-history",
+                "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+                "version": 1
+              }
+            },
+            "synthetic_review_ui_disclosure_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "banner": "M\u00d4 PH\u1eceNG \u2014 KH\u00d4NG CAMERA \u2014 KH\u00d4NG C\u1ea4P QUY\u1ec0N THU D\u1eee LI\u1ec6U",
+                  "d1_go": false,
+                  "device_gate_decision": "UNVERIFIED",
+                  "evidence_kind": "SIMULATED"
+                },
+                "projection": "m2-s2c.monitor-ui-disclosure",
+                "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
                 "version": 1
               }
             },
@@ -1518,7 +3073,36 @@
             "failure_ledger_digest",
             "watchdog_policy_digest",
             "capture_policy_digest",
-            "privacy_policy_digest"
+            "privacy_policy_digest",
+            "synthetic_integration_status_policy_digest",
+            "synthetic_authority_ceiling_policy_digest",
+            "synthetic_no_path_policy_digest",
+            "synthetic_no_camera_policy_digest",
+            "synthetic_nominal_status_policy_digest",
+            "synthetic_nominal_run_contract_policy_digest",
+            "synthetic_nominal_fault_matrix_policy_digest",
+            "synthetic_review_request_surface_policy_digest",
+            "synthetic_review_single_flight_policy_digest",
+            "synthetic_review_owned_workspace_policy_digest",
+            "synthetic_review_ui_disclosure_policy_digest",
+            "synthetic_evidence_integrity_policy_digest",
+            "synthetic_evidence_download_policy_digest",
+            "synthetic_evidence_offline_verifier_policy_digest",
+            "synthetic_evidence_ui_disclosure_policy_digest",
+            "synthetic_reproduction_environment_policy_digest",
+            "synthetic_reproduction_exact_policy_digest",
+            "synthetic_reproduction_classification_policy_digest",
+            "synthetic_reproduction_cli_policy_digest",
+            "package_gap_audit_status_policy_digest",
+            "package_gap_audit_authority_ceiling_policy_digest",
+            "s3b_candidate_status_policy_digest",
+            "s3b_reproducible_build_contract_policy_digest",
+            "s3b_static_inclusion_policy_digest",
+            "s3b_candidate_authority_ceiling_policy_digest",
+            "m2_s3c_status_policy_digest",
+            "m2_s3c_fixed_candidate_binding_policy_digest",
+            "m2_s3c_runtime_smoke_contract_policy_digest",
+            "m2_s3c_authority_ceiling_policy_digest"
           ],
           "type": "object"
         },

@@ -38,6 +38,30 @@ ARTIFACT_PATHS = {
     "SRC_M2_D1_N2_CNG_PY": "src/pdu_exam_observer/m2_d1_n2_cng.py",
     "SRC_M2_D1_N2_WIN32_PY": "src/pdu_exam_observer/m2_d1_n2_win32.py",
     "SRC_M2_D1_N2_WIN32_STORE_PY": "src/pdu_exam_observer/m2_d1_n2_win32_store.py",
+    "SRC_M2_SYNTHETIC_INTEGRATION_PY": (
+        "src/pdu_exam_observer/m2_synthetic_integration.py"
+    ),
+    "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY": (
+        "src/pdu_exam_observer/m2_synthetic_preflight_fixture.py"
+    ),
+    "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY": (
+        "src/pdu_exam_observer/m2_synthetic_nominal_fixture.py"
+    ),
+    "SRC_M2_SYNTHETIC_REVIEW_PY": "src/pdu_exam_observer/m2_synthetic_review.py",
+    "SRC_M2_SYNTHETIC_REVIEW_API_PY": "src/pdu_exam_observer/api/synthetic_review.py",
+    "SRC_M2_SYNTHETIC_EVIDENCE_PY": "src/pdu_exam_observer/m2_synthetic_evidence.py",
+    "SRC_M2_SYNTHETIC_ENVIRONMENT_PY": (
+        "src/pdu_exam_observer/m2_synthetic_environment.py"
+    ),
+    "SRC_M2_SYNTHETIC_REPRODUCTION_PY": (
+        "src/pdu_exam_observer/m2_synthetic_reproduction.py"
+    ),
+    "SRC_API_FACTORIES_PY": "src/pdu_exam_observer/api/factories.py",
+    "SRC_LAUNCHER_PY": "src/pdu_exam_observer/launcher.py",
+    "WEB_API_TS": "apps/web/src/api.ts",
+    "WEB_APP_TSX": "apps/web/src/App.tsx",
+    "WEB_SYNTHETIC_VALIDATION_PANEL_TSX": "apps/web/src/SyntheticValidationPanel.tsx",
+    "WEB_STYLES_CSS": "apps/web/src/styles.css",
     "TEST_M2_D1_N2_A0_PY": "tests/backend/test_m2_d1_n2_a0.py",
     "TEST_M2_D1_N2_ADAPTER_PY": "tests/backend/test_m2_d1_n2_adapter.py",
     "TEST_M2_D1_N2_BOOTSTRAP_PY": "tests/backend/test_m2_d1_n2_bootstrap.py",
@@ -51,6 +75,34 @@ ARTIFACT_PATHS = {
     "TEST_M2_D1_N2_RP2_ARTIFACTS_PY": (
         "tests/backend/test_m2_d1_n2_rp2_artifacts.py"
     ),
+    "TEST_M2_SYNTHETIC_INTEGRATION_PY": (
+        "tests/backend/test_m2_synthetic_integration.py"
+    ),
+    "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY": (
+        "tests/backend/test_m2_synthetic_nominal_integration.py"
+    ),
+    "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY": (
+        "tests/backend/test_m2_synthetic_review_service.py"
+    ),
+    "TEST_M2_SYNTHETIC_REVIEW_API_PY": "tests/backend/test_m2_synthetic_review_api.py",
+    "TEST_M2_SYNTHETIC_EVIDENCE_PY": "tests/backend/test_m2_synthetic_evidence.py",
+    "TEST_M2_SYNTHETIC_REPRODUCTION_PY": (
+        "tests/backend/test_m2_synthetic_reproduction.py"
+    ),
+    "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": (
+        "tests/packaging/test_m2_s3a_package_gap_audit.py"
+    ),
+    "TEST_M2_S3B_PACKAGE_INTEGRATION_PY": (
+        "tests/packaging/test_m2_s3b_package_integration.py"
+    ),
+    "TEST_M2_S3C_PACKAGED_SMOKE_PY": (
+        "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py"
+    ),
+    "TEST_LAUNCHER_PY": "tests/backend/test_launcher.py",
+    "TEST_WEB_API_TS": "apps/web/src/api.test.ts",
+    "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": (
+        "apps/web/src/SyntheticValidationPanel.test.tsx"
+    ),
     "UV_LOCK": "uv.lock",
     "POSE_LANDMARKER_LITE_TASK": (
         "src/pdu_exam_observer/assets/models/pose_landmarker_lite.task"
@@ -60,13 +112,32 @@ ARTIFACT_PATHS = {
     ),
     "RP2_ARTIFACT_BUILDER": "scripts/build_m2_d1_n2_rp2.py",
     "BOOTSTRAP_OPERATOR_SCRIPT": "scripts/provision_m2_d1_n2_bootstrap.py",
+    "M2_S2A_SMOKE_SCRIPT": "scripts/run_m2_s2a_synthetic_integration.py",
+    "M2_S2B_SMOKE_SCRIPT": "scripts/run_m2_s2b_synthetic_nominal.py",
+    "M2_S2D_VERIFY_SCRIPT": "scripts/verify_m2_s2d_synthetic_evidence.py",
+    "M2_S2E_REPRODUCE_SCRIPT": "scripts/reproduce_m2_s2e_synthetic_evidence.py",
+    "M2_S3B_BUILD_SCRIPT": "scripts/build_m2_s3b_candidate.py",
+    "M2_S3B_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.current-source.spec",
+    "M2_S3B_CANDIDATE_README": "packaging/README_M2_S3B_CANDIDATE.txt",
+    "M2_S3C_PACKAGED_SMOKE_SCRIPT": "scripts/run_m2_s3c_packaged_smoke.py",
 }
 
 SOURCE_IDS = tuple(
     identifier
     for identifier in ARTIFACT_PATHS
-    if identifier.startswith(("SRC_", "TEST_"))
-) + ("RP2_ARTIFACT_BUILDER", "BOOTSTRAP_OPERATOR_SCRIPT")
+    if identifier.startswith(("SRC_", "TEST_", "WEB_"))
+) + (
+    "RP2_ARTIFACT_BUILDER",
+    "BOOTSTRAP_OPERATOR_SCRIPT",
+    "M2_S2A_SMOKE_SCRIPT",
+    "M2_S2B_SMOKE_SCRIPT",
+    "M2_S2D_VERIFY_SCRIPT",
+    "M2_S2E_REPRODUCE_SCRIPT",
+    "M2_S3B_BUILD_SCRIPT",
+    "M2_S3B_PYINSTALLER_SPEC",
+    "M2_S3B_CANDIDATE_README",
+    "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+)
 NON_SOURCE_IDS = (
     "UV_LOCK",
     "POSE_LANDMARKER_LITE_TASK",
@@ -324,6 +395,442 @@ POLICY_PREIMAGES = {
         "version": 1,
         "canonicalization": POLICY_CANONICALIZATION,
         "fields": {"audio": False, "network": False, "privacy_stop_terminal": True},
+    },
+    "synthetic_integration_status_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "projection": "m2-s2a.synthetic-integration-status",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "d1_outcomes": ["BACKEND_CONTRACT_PASS", "NO_GO"],
+            "evidence_kind": "SIMULATED",
+            "integration_statuses": ["PERSISTED", "NOT_PERSISTED"],
+            "run_kind": "PREFLIGHT_60S",
+            "status": (
+                "M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_"
+                "DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+            ),
+        },
+    },
+    "synthetic_authority_ceiling_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "projection": "m2-s2a.synthetic-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "collection_authorized": False,
+            "d1_go": False,
+            "device_gate_decision": "UNVERIFIED",
+            "package_contains_integration": False,
+            "participant_collection_authorized": False,
+            "physical_camera_access_authorized": False,
+        },
+    },
+    "synthetic_no_path_policy_digest": {
+        "source_id": "M2_S2A_SMOKE_SCRIPT",
+        "projection": "m2-s2a.no-path-surface",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "absolute_path_output": "PROHIBITED",
+            "caller_path_input": "PROHIBITED",
+            "temporary_root": "OWNED_AND_REMOVED",
+        },
+    },
+    "synthetic_no_camera_policy_digest": {
+        "source_id": "M2_S2A_SMOKE_SCRIPT",
+        "projection": "m2-s2a.no-camera-device-surface",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "audio": False,
+            "camera": False,
+            "device_enumeration": False,
+            "fixture_kind": "DETERMINISTIC_FIXTURE",
+        },
+    },
+    "synthetic_nominal_status_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "projection": "m2-s2b.synthetic-nominal-status",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "d1_outcomes": ["BACKEND_CONTRACT_PASS", "NO_GO"],
+            "evidence_kind": "SIMULATED",
+            "integration_statuses": ["PERSISTED", "NOT_PERSISTED"],
+            "run_kind": "NOMINAL_20M",
+            "status": (
+                "M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_"
+                "DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+            ),
+        },
+    },
+    "synthetic_nominal_run_contract_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY",
+        "projection": "m2-s2b.fixed-nominal-run-contract",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "accelerated_timestamps": True,
+            "frame_count": 18_077,
+            "frames_per_second": 15,
+            "height": 720,
+            "physical_wait": False,
+            "requested_duration_seconds": 1200,
+            "run_kind": "NOMINAL_20M",
+            "warmup_seconds": 5,
+            "width": 1280,
+        },
+    },
+    "synthetic_nominal_fault_matrix_policy_digest": {
+        "source_id": "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY",
+        "projection": "m2-s2b.synthetic-fault-matrix",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "corrupt_input_persisted": False,
+            "corrupt_receipt_persisted": False,
+            "persist_valid_no_go": True,
+            "persistence_failure_artifact_claim": False,
+            "physical_fault_evidence": False,
+        },
+    },
+    "synthetic_review_request_surface_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+        "projection": "m2-s2c.closed-review-request-surface",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "automatic_retry": False,
+            "caller_device": False,
+            "caller_path": False,
+            "request_fields": "run_kind_only",
+            "run_kinds": ["PREFLIGHT_60S", "NOMINAL_20M"],
+        },
+    },
+    "synthetic_review_single_flight_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+        "projection": "m2-s2c.single-flight-bounded-history",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "automatic_retry": False,
+            "max_active_runs": 1,
+            "max_records": 32,
+        },
+    },
+    "synthetic_review_owned_workspace_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+        "projection": "m2-s2c.owned-ephemeral-workspace",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "cleanup_on_shutdown": True,
+            "configured_operational_root_used": False,
+            "owned_temp_root": True,
+        },
+    },
+    "synthetic_review_ui_disclosure_policy_digest": {
+        "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+        "projection": "m2-s2c.monitor-ui-disclosure",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "banner": "MÔ PHỎNG — KHÔNG CAMERA — KHÔNG CẤP QUYỀN THU DỮ LIỆU",
+            "d1_go": False,
+            "device_gate_decision": "UNVERIFIED",
+            "evidence_kind": "SIMULATED",
+        },
+    },
+    "synthetic_evidence_integrity_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_EVIDENCE_PY",
+        "projection": "m2-s2d.full-artifact-cross-binding",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "artifact_sha256_verified_before_export": True,
+            "body_sha256_required": True,
+            "d1_receipt_semantics_verified": True,
+            "observation_digest_recomputed": True,
+            "source_run_receipt_cross_bound": True,
+        },
+    },
+    "synthetic_evidence_download_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+        "projection": "m2-s2d.download-only-monitor-surface",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authenticated_monitor_only": True,
+            "exam_origin_route_exposed": False,
+            "maximum_bytes": 4_000_000,
+            "server_archive_created": False,
+            "terminal_persisted_only": True,
+        },
+    },
+    "synthetic_evidence_offline_verifier_policy_digest": {
+        "source_id": "M2_S2D_VERIFY_SCRIPT",
+        "projection": "m2-s2d.offline-verifier-fail-closed",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "accepts_exactly_one_file": True,
+            "authority_effect": "NONE",
+            "canonical_json_required": True,
+            "failure_exit_code": 2,
+            "symlink_or_reparse_allowed": False,
+        },
+    },
+    "synthetic_evidence_ui_disclosure_policy_digest": {
+        "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+        "projection": "m2-s2d.download-ui-disclosure",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "disclosure": (
+                "Bằng chứng mô phỏng — không phải xác minh thiết bị, "
+                "D1_GO hay quyền thu dữ liệu."
+            ),
+            "download_scope": "TERMINAL_PERSISTED_ONLY",
+            "research_ready_claimed": False,
+        },
+    },
+    "synthetic_reproduction_environment_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
+        "projection": "m2-s2e.closed-current-source-binding",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "caller_root_allowed": False,
+            "closed_source_inventory": True,
+            "encoder_policy": "M2-S2C-SIMULATED-ENCODER-NOT-INVOKED-V1",
+            "source_revision_required_for_exact": True,
+        },
+    },
+    "synthetic_reproduction_exact_policy_digest": {
+        "source_id": "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+        "projection": "m2-s2e.same-revision-exact-replay",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "built_in_fixtures_only": True,
+            "comparison_scope": "WHOLE_BUNDLE_AND_NESTED_DIGESTS",
+            "device_access": False,
+            "source_mismatch_replay": False,
+            "temporary_workspace_removed_before_success": True,
+        },
+    },
+    "synthetic_reproduction_classification_policy_digest": {
+        "source_id": "TEST_M2_SYNTHETIC_REPRODUCTION_PY",
+        "projection": "m2-s2e.closed-differential-classification",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_mutation_is_semantic_mismatch": False,
+            "classifications": [
+                "EXACTLY_REPRODUCED",
+                "REPRODUCTION_FAILED",
+                "SEMANTIC_RESULT_MISMATCH",
+                "SOURCE_REVISION_MISMATCH",
+            ],
+            "mismatch_fields_closed": True,
+        },
+    },
+    "synthetic_reproduction_cli_policy_digest": {
+        "source_id": "M2_S2E_REPRODUCE_SCRIPT",
+        "projection": "m2-s2e.offline-reproduction-cli",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "accepts_exactly_one_file": True,
+            "maximum_bytes": 4_000_000,
+            "path_disclosed": False,
+            "success_classification": "EXACTLY_REPRODUCED",
+            "symlink_or_reparse_allowed": False,
+        },
+    },
+    "package_gap_audit_status_policy_digest": {
+        "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+        "projection": "m2-s3a.current-source-package-gap-audit",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "audit_result": "PACKAGE_GAP_CONFIRMED",
+            "audit_status": (
+                "M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_"
+                "REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY"
+            ),
+            "gap_ids": [
+                "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+                "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+                "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+                "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+                "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE",
+                "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT",
+            ],
+            "historical_package_integrity": "MANIFEST_VERIFIED",
+            "package_rebuild_started": False,
+            "source_currency": "HISTORICAL_NOT_CURRENT_SOURCE",
+        },
+    },
+    "package_gap_audit_authority_ceiling_policy_digest": {
+        "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+        "projection": "m2-s3a.no-rebuild-no-release-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "clean_machine_verified": False,
+            "collection_authorized": False,
+            "d1_go": False,
+            "device_gate_decision": "UNVERIFIED",
+            "distribution_ready": False,
+            "execution_authorized": False,
+            "package_contains_integration": False,
+            "package_rebuild_started": False,
+            "participant_collection_authorized": False,
+            "physical_camera_access_authorized": False,
+            "production_reconciler_implemented": False,
+            "production_reconciler_real_storage_verified": False,
+            "real_data_deletion_authorized": False,
+            "release_authorized": False,
+            "research_ready": False,
+            "same_host_portable_verified": False,
+        },
+    },
+    "s3b_candidate_status_policy_digest": {
+        "source_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
+        "projection": "m2-s3b.current-source-candidate-static-integration",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "closed_gap_ids": [
+                "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+                "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+                "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE",
+            ],
+            "open_gap_count": 5,
+            "status": (
+                "M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_"
+                "INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
+            ),
+        },
+    },
+    "s3b_reproducible_build_contract_policy_digest": {
+        "source_id": "M2_S3B_BUILD_SCRIPT",
+        "projection": "m2-s3b.same-host-bit-reproducible-double-build",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "build_count": 2,
+            "build_time_utc": "2026-09-01T00:00:00Z",
+            "byte_identical_required": True,
+            "python_hash_seed": "1",
+            "source_date_epoch": "1788220800",
+        },
+    },
+    "s3b_static_inclusion_policy_digest": {
+        "source_id": "M2_S3B_PYINSTALLER_SPEC",
+        "projection": "m2-s3b.recursive-archive-and-frontend-static-inclusion",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "archive_inventory": "EXECUTABLE_RECURSIVE_ARCHIVE",
+            "frontend_byte_identical": True,
+            "required_module_count": 11,
+            "runtime_smoke_verified": False,
+        },
+    },
+    "s3b_candidate_authority_ceiling_policy_digest": {
+        "source_id": "M2_S3B_CANDIDATE_README",
+        "projection": "m2-s3b.candidate-static-no-release-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "candidate_package_contains_integration": True,
+            "clean_machine_verified": False,
+            "collection_authorized": False,
+            "d1_go": False,
+            "distribution_ready": False,
+            "historical_package_unchanged": True,
+            "packaged_runtime_smoke_verified": False,
+            "participant_collection_authorized": False,
+            "physical_camera_access_authorized": False,
+            "release_authorized": False,
+            "research_ready": False,
+        },
+    },
+    "m2_s3c_status_policy_digest": {
+        "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+        "projection": "m2-s3c.same-host-packaged-synthetic-runtime-smoke",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "closed_gap_id": "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+            "open_gap_ids": [
+                "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+                "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT",
+            ],
+            "status": (
+                "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_"
+                "SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+            ),
+        },
+    },
+    "m2_s3c_fixed_candidate_binding_policy_digest": {
+        "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+        "projection": "m2-s3c.fixed-s3b-candidate-and-source-revision-binding",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "candidate_path_caller_controlled": False,
+            "candidate_process_invocation_count": 2,
+            "candidate_source_revision_separate_from_harness_revision": True,
+            "candidate_tree_sha256": (
+                "80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009"
+            ),
+        },
+    },
+    "m2_s3c_runtime_smoke_contract_policy_digest": {
+        "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+        "projection": "m2-s3c.fixed-loopback-preflight-and-nominal-smoke-contract",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "browser_opened": False,
+            "evidence_export_invoked": False,
+            "invocation_count": 2,
+            "loopback_only": True,
+            "retry_count": 0,
+            "run_order": ["PREFLIGHT_60S", "NOMINAL_20M"],
+            "shutdown_mode": "FORCED_PROCESS_TREE_TERMINATION",
+        },
+    },
+    "m2_s3c_authority_ceiling_policy_digest": {
+        "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+        "projection": "m2-s3c.same-host-smoke-no-release-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "clean_machine_verified": False,
+            "collection_authorized": False,
+            "d1_go": False,
+            "distribution_ready": False,
+            "packaged_runtime_smoke_verified": True,
+            "participant_collection_authorized": False,
+            "physical_camera_access_authorized": False,
+            "release_authorized": False,
+            "research_ready": False,
+            "same_host_portable_verified": False,
+        },
     },
 }
 ROOT_FIXED = {

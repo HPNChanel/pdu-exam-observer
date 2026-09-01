@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { ApiError, isMissingResearchRoute, newIdempotencyKey } from './api';
+import { ApiError, isMissingResearchRoute, isSyntheticReviewApi, newIdempotencyKey } from './api';
 import type { ResearchApi, ResearchParticipant, ResearchReadiness, ResearchRecovery, ResearchSession, ResearchStudy, WithdrawalStatus } from './api';
 import { ReconciliationPanel } from './ReconciliationPanel';
+import { SyntheticValidationPanel } from './SyntheticValidationPanel';
 import { formatRetentionEndDate, parseRetentionEndDate } from './retention';
 import './research.css';
 
@@ -25,7 +26,7 @@ function Notice({ error, scope, retry, label }: { error: ActionError; scope: Sco
   return <div className="researchError" role="alert" aria-live="assertive"><p>{error.message}</p>{retry && <button className="linkButton" onClick={retry}>{label}</button>}</div>;
 }
 
-export function ResearchPreparation({ api }: { api: ResearchApi }) {
+function ResearchPreparationCore({ api }: { api: ResearchApi }) {
   const [studyCode, setStudyCode] = useState(''); const [study, setStudy] = useState<ResearchStudy>(); const [participant, setParticipant] = useState<ResearchParticipant>(); const [session, setSession] = useState<ResearchSession>(); const [policy, setPolicy] = useState(''); const [endDate, setEndDate] = useState(''); const [receipt, setReceipt] = useState(''); const [version, setVersion] = useState(''); const [ready, setReady] = useState<ResearchReadiness>(); const [recovery, setRecovery] = useState<ResearchRecovery>(); const [withdrawal, setWithdrawal] = useState<WithdrawalStatus>(); const [savedSessionId, setSavedSessionId] = useState(''); const [recoveryNotice, setRecoveryNotice] = useState(''); const [confirmOpen, setConfirmOpen] = useState(false); const [pending, setPending] = useState<Scope>(); const [error, setError] = useState<ActionError>(); const [unavailable, setUnavailable] = useState(false);
   const keys = useRef(new Map<Scope, string>()); const unavailableRef = useRef<HTMLHeadingElement>(null); const savedSessionInput = useRef<HTMLInputElement>(null); const recoveryNoticeRef = useRef<HTMLParagraphElement>(null); const withdrawalTrigger = useRef<HTMLButtonElement>(null); const withdrawalCancel = useRef<HTMLButtonElement>(null); const withdrawalConfirm = useRef<HTMLButtonElement>(null); const terminal = withdrawal?.terminal === true || recovery?.state === 'WITHDRAWN' || session?.state === 'WITHDRAWN';
   useEffect(() => { if (unavailable) unavailableRef.current?.focus(); }, [unavailable]);
@@ -71,4 +72,8 @@ export function ResearchPreparation({ api }: { api: ResearchApi }) {
     {session && <section className="researchReadiness" aria-labelledby="readiness-heading"><h3 id="readiness-heading">Cổng sẵn sàng và khôi phục</h3><button className="quietButton" disabled={pending === 'readiness'} onClick={() => void loadReadiness()}>Tải cổng sẵn sàng</button><Notice error={error} scope="readiness" retry={() => void loadReadiness()} label="Thử lại tải cổng sẵn sàng" />{ready && <div aria-live="polite"><p className={ready.ready ? 'readinessReady' : 'readinessBlocked'}>{ready.ready ? 'Sẵn sàng theo cổng máy chủ' : 'Chưa sẵn sàng cho thu thập'}</p>{!ready.ready && <p>Không thể ghi nhận hoặc thu thập khi vẫn còn cổng chặn.</p>}<ul>{ready.blockingGates.map((gate) => <li key={gate}>{gates[gate] ?? `Mã kỹ thuật chưa hỗ trợ: ${gate}`}</li>)}</ul></div>}<button className="quietButton" disabled={pending === 'recovery'} onClick={() => void loadRecovery()}>Tải trạng thái khôi phục</button><Notice error={error} scope="recovery" retry={() => void loadRecovery()} label="Thử lại tải trạng thái khôi phục" />{recovery && <div aria-live="polite"><p>Trạng thái khôi phục: {lifecycleLabels[recovery.state]}</p>{recovery.collectionBlocked && recovery.reauthenticationRequired && <p>Thu thập bị chặn; cần xác thực lại khi khôi phục.</p>}</div>}</section>}
     {session && <section className="withdrawalPanel" aria-labelledby="withdrawal-heading"><h3 id="withdrawal-heading">Rút khỏi nghiên cứu</h3>{terminal ? <div aria-live="polite"><p className="readinessBlocked">Đã rút khỏi nghiên cứu</p><p>{withdrawal?.taskCount ?? 0} tác vụ đối soát đang chờ</p><ReconciliationPanel api={api} sessionId={session.id} /></div> : confirmOpen ? <div role="alertdialog" aria-modal="true" aria-labelledby="withdrawal-title" onKeyDown={dialogKey}><h4 id="withdrawal-title">Xác nhận rút khỏi nghiên cứu</h4><p>Thao tác này áp dụng cho người tham gia này và tất cả phiên nghiên cứu liên quan của họ. Xuất và hiện vật phải được đối soát; không thể hoàn tác trong M1.</p><button ref={withdrawalCancel} className="quietButton" onClick={closeWithdrawal}>Quay lại</button><button ref={withdrawalConfirm} className="orangeButton" disabled={pending === 'withdrawal'} onClick={withdraw}>Xác nhận rút khỏi nghiên cứu</button></div> : <><p className="withdrawalWarning">Rút khỏi nghiên cứu áp dụng cho người tham gia này và tất cả phiên nghiên cứu liên quan của họ. Xuất và hiện vật phải được đối soát; không thể hoàn tác trong M1.</p><button ref={withdrawalTrigger} className="orangeButton" onClick={() => setConfirmOpen(true)}>Yêu cầu rút khỏi nghiên cứu</button></>}<Notice error={error} scope="withdrawal" retry={withdraw} label="Thử lại rút khỏi nghiên cứu" /></section>}
   </section>;
+}
+
+export function ResearchPreparation({ api }: { api: ResearchApi }) {
+  return <><ResearchPreparationCore api={api} />{isSyntheticReviewApi(api) && <SyntheticValidationPanel api={api} />}</>;
 }

@@ -69,3 +69,30 @@ def test_launcher_binds_monitor_server_to_its_canonical_localhost_origin(
     launcher.main()
 
     assert [config.host for config in configs] == ["localhost", "127.0.0.1"]
+
+
+def test_launcher_m2synthetic_injects_monitor_only_service_and_closes_it(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    created: list[object] = []
+
+    class Service:
+        @classmethod
+        def create_owned(cls) -> "Service":
+            instance = cls()
+            instance.closed = False
+            created.append(instance)
+            return instance
+
+        def close(self) -> None:
+            self.closed = True
+
+    monkeypatch.setenv("PDU_REVIEWER_PIN", "test-only-pin")
+    monkeypatch.setenv("PDU_RUNTIME_MODE", "m2synthetic")
+    monkeypatch.setattr(launcher, "SyntheticReviewService", Service)
+
+    exam, monitor = launcher.build_apps_from_environment()
+    assert exam.state.synthetic_review_service is None
+    assert monitor.state.synthetic_review_service is created[0]
+    launcher._close_synthetic_review_service(monitor)
+    assert created[0].closed is True  # type: ignore[attr-defined]

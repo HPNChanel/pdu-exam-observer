@@ -12,6 +12,7 @@ from pdu_exam_observer.api.factories import AppConfig, create_exam_app, create_m
 from pdu_exam_observer.configuration import load_native_config
 from pdu_exam_observer.m1 import M1Backend
 from pdu_exam_observer.m1_r1 import M1R1Backend
+from pdu_exam_observer.m2_synthetic_review import SyntheticReviewService
 
 
 def _port(name: str, default: int) -> int:
@@ -38,9 +39,10 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
     if exam_port == monitor_port:
         raise RuntimeError("PDU_EXAM_PORT and PDU_MONITOR_PORT must differ")
     mode = os.getenv("PDU_RUNTIME_MODE", "m0").lower()
-    if mode not in {"m0", "m1", "m1r1"}:
-        raise RuntimeError("PDU_RUNTIME_MODE must be m0, m1, or m1r1")
+    if mode not in {"m0", "m1", "m1r1", "m2synthetic"}:
+        raise RuntimeError("PDU_RUNTIME_MODE must be m0, m1, m1r1, or m2synthetic")
     backend = None
+    synthetic_review_service = None
     if mode == "m1":
         native = load_native_config()
         backend = M1Backend(
@@ -55,12 +57,15 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
             encryption_status=native.encryption_status,
             acl_status=native.acl_status,
         )
+    elif mode == "m2synthetic":
+        synthetic_review_service = SyntheticReviewService.create_owned()
     if backend is None:
         config = AppConfig(
             reviewer_pin=reviewer_pin,
             exam_origin=f"http://127.0.0.1:{exam_port}",
             monitor_origin=f"http://localhost:{monitor_port}",
             allowed_hosts=("127.0.0.1", "localhost"),
+            synthetic_review_service=synthetic_review_service,
         )
     else:
         config = AppConfig(
@@ -70,7 +75,18 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
             allowed_hosts=("127.0.0.1", "localhost"),
             backend=backend,
         )
-    return create_exam_app(config), create_monitor_app(config)
+    try:
+        return create_exam_app(config), create_monitor_app(config)
+    except Exception:
+        if synthetic_review_service is not None:
+            synthetic_review_service.close()
+        raise
+
+
+def _close_synthetic_review_service(monitor: FastAPI) -> None:
+    service = getattr(monitor.state, "synthetic_review_service", None)
+    if service is not None:
+        service.close()
 
 
 def main() -> None:
@@ -98,3 +114,4 @@ def main() -> None:
         exam_server.should_exit = True
         monitor_thread.join(timeout=5)
         exam_thread.join(timeout=5)
+        _close_synthetic_review_service(monitor)

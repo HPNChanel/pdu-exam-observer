@@ -70,8 +70,18 @@ _ALLOWED_FAILURES = frozenset(
     (
         "INPUT_UNAVAILABLE",
         "INPUT_MALFORMED",
+        "FRAME_STALLED",
+        "CLOCK_REGRESSION",
+        "POSE_ENGINE_UNAVAILABLE",
+        "POSE_ENGINE_EXCEPTION",
+        "POSE_OUTPUT_INVALID",
+        "QUALITY_INSUFFICIENT",
+        "ENCODER_UNAVAILABLE",
         "ENCODER_WRITE_FAILED",
+        "ENCODER_FINALIZE_FAILED",
         "DISK_UNAVAILABLE",
+        "DISK_SPACE_INSUFFICIENT",
+        "DISK_THROUGHPUT_INSUFFICIENT",
         "DISK_FSYNC_FAILED",
         "ATOMIC_RENAME_FAILED",
         "MANIFEST_VALIDATION_FAILED",
@@ -995,6 +1005,58 @@ class M2PersistenceStore:
         result = {str(key): row[key] for key in row.keys()}
         result["durability_state"] = self._durability_state
         return result
+
+    def read_verified_artifact(self, artifact_id: str, *, maximum_bytes: int) -> bytes:
+        """Read a sealed artifact through the same identity and hash guard used at write time."""
+
+        self._opaque(artifact_id, "artifact id")
+        if (
+            not isinstance(maximum_bytes, int)
+            or isinstance(maximum_bytes, bool)
+            or maximum_bytes <= 0
+        ):
+            raise PersistenceFailure("artifact maximum size is invalid")
+        if os.name != "nt":
+            raise PlatformUnsupported("PLATFORM_UNSUPPORTED: artifact verification is Windows-only")
+        with self._root_lock:
+            with self._directory_guards():
+                with self._lock:
+                    row = self.connection.execute(
+                        "SELECT m.relative_path,m.byte_size,m.sha256,a.status validity_state "
+                        "FROM artifact_manifests m JOIN artifact_registry a "
+                        "ON a.id=m.artifact_id WHERE m.artifact_id=?",
+                        (artifact_id,),
+                    ).fetchone()
+                    if row is None:
+                        raise KeyError(artifact_id)
+                    if row["validity_state"] != "VALID":
+                        raise PersistenceFailure("artifact validity is not readable")
+                    size = int(row["byte_size"])
+                    digest = str(row["sha256"])
+                    _partial, final, _partial_relative, final_relative = self._paths(
+                        artifact_id
+                    )
+                    if str(row["relative_path"]) != final_relative:
+                        raise PersistenceFailure("artifact manifest path is inconsistent")
+                    if size > maximum_bytes:
+                        raise PersistenceFailure("artifact exceeds maximum size limit")
+                    descriptor = self._open_final_guard(final, size, digest)
+                    try:
+                        os.lseek(descriptor, 0, os.SEEK_SET)
+                        chunks: list[bytes] = []
+                        count = 0
+                        while block := os.read(descriptor, 65536):
+                            count += len(block)
+                            if count > maximum_bytes:
+                                raise PersistenceFailure("artifact exceeds maximum size limit")
+                            chunks.append(block)
+                        payload = b"".join(chunks)
+                        if len(payload) != size or hashlib.sha256(payload).hexdigest() != digest:
+                            raise PersistenceFailure("artifact read verification failed")
+                        self._verify_final_guard(final, descriptor, size, digest)
+                        return payload
+                    finally:
+                        os.close(descriptor)
 
     def manifest_or_none(self, artifact_id: str) -> dict[str, object] | None:
         try:

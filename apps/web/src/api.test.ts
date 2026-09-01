@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { BrowserEventStream, HttpApiClient } from './api';
+import { BrowserEventStream, DemoApiClient, HttpApiClient, isSyntheticReviewApi } from './api';
 
 const reviewerStorageKey = 'pdu-exam-observer.reviewer-session.v1';
 const token = 'x'.repeat(43);
@@ -26,6 +26,73 @@ const response = (body: unknown, status = 200, headers?: HeadersInit) =>
     status,
     headers: { 'Content-Type': 'application/json', ...headers },
   });
+
+const evidenceAuthority = {
+  authority_status: 'AUTHORITY_NOT_ISSUED',
+  capability_status: 'SYNTHETIC_REVIEW_ONLY',
+  collection_authorized: false,
+  d1_go: false,
+  device_gate_decision: 'UNVERIFIED',
+  evidence_kind: 'SIMULATED',
+  execution_authorized: false,
+  package_contains_integration: false,
+  participant_collection_authorized: false,
+  physical_camera_access_authorized: false,
+  production_reconciler_implemented: false,
+  production_reconciler_real_storage_verified: false,
+  real_data_deletion_authorized: false,
+  research_ready: false,
+  schema_version: 1,
+};
+
+const canonical = (value: unknown): string => {
+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+  if (typeof value === 'object' && value !== null) {
+    const item = value as Record<string, unknown>;
+    return `{${Object.keys(item).sort().map((key) => `${JSON.stringify(key)}:${canonical(item[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+};
+
+const evidenceDocument = (requestId: string) => ({
+  artifact_kind: 'M2_SYNTHETIC_EVIDENCE_BUNDLE',
+  body: {
+    authority_ceiling: evidenceAuthority,
+    export_authority_effect: 'NONE',
+    export_mode: 'DOWNLOAD_ONLY_NO_SERVER_ARCHIVE',
+    source_artifact: {},
+    source_artifact_byte_size: 2,
+    source_artifact_sha256: 'b'.repeat(64),
+    source_run: { request_id: requestId },
+  },
+  body_sha256: 'c'.repeat(64),
+  schema_version: 1,
+  status: 'M2_S2D_SYNTHETIC_EVIDENCE_EXPORT_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY',
+});
+
+const sha256 = async (bytes: Uint8Array): Promise<string> => {
+  const buffer = new ArrayBuffer(bytes.byteLength);
+  new Uint8Array(buffer).set(bytes);
+  return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', buffer))).map((value) => value.toString(16).padStart(2, '0')).join('');
+};
+
+async function evidenceResponse(requestId: string, body: unknown = evidenceDocument(requestId), headers: HeadersInit = {}): Promise<Response> {
+  const document = body as ReturnType<typeof evidenceDocument>;
+  if (document && typeof document === 'object' && document.body && typeof document.body === 'object') {
+    document.body_sha256 = await sha256(new TextEncoder().encode(canonical(document.body)));
+  }
+  const bytes = new TextEncoder().encode(`${canonical(document)}\n`);
+  return new Response(bytes, {
+    status: 200,
+    headers: {
+      'Cache-Control': 'no-store',
+      'Content-Disposition': `attachment; filename="m2-s2d-${requestId}.json"`,
+      'Content-Type': 'application/json',
+      'X-PDU-Evidence-SHA256': await sha256(bytes),
+      ...headers,
+    },
+  });
+}
 
 function openEventStream(chunks: Uint8Array[], close = false): Response {
   return new Response(
@@ -288,6 +355,164 @@ describe('HTTP API adapter', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ schema_version: 1, session_id: 'research-other', consent_confirmed: true })));
 
     await expect(new HttpApiClient('monitor').confirmResearchConsent('research-1', { consentReceiptId: 'receipt-1', consentVersion: 'v1' }, 'consent-key')).rejects.toThrow('Research API response is invalid');
+  });
+});
+
+describe('synthetic reviewer API adapter', () => {
+  const authority = {
+    schema_version: 1, capability_status: 'SYNTHETIC_REVIEW_ONLY',
+    authority_status: 'AUTHORITY_NOT_ISSUED', collection_authorized: false, d1_go: false,
+    device_gate_decision: 'UNVERIFIED', evidence_kind: 'SIMULATED', execution_authorized: false,
+    package_contains_integration: false, participant_collection_authorized: false,
+    physical_camera_access_authorized: false, production_reconciler_implemented: false,
+    production_reconciler_real_storage_verified: false, real_data_deletion_authorized: false,
+    research_ready: false,
+  };
+  const run = {
+    schema_version: 1, request_id: 'synrun-0123456789abcdef0123456789abcdef',
+    run_sequence: 1, run_kind: 'PREFLIGHT_60S', job_status: 'QUEUED',
+    service_failure_code: null, receipt: null,
+  };
+  const digest = 'a'.repeat(64);
+  const receipt = {
+    artifact_id: 'artifact-synrun-0123456789abcdef0123456789abcdef', artifact_sha256: digest,
+    authority_status: 'AUTHORITY_NOT_ISSUED', collection_authorized: false,
+    d1_failure_code: null, d1_go: false, d1_outcome: 'BACKEND_CONTRACT_PASS',
+    d1_receipt_digest: digest, device_gate_decision: 'UNVERIFIED', evidence_kind: 'SIMULATED',
+    integration_failure_code: null, integration_status: 'PERSISTED', manifest_schema_version: 2,
+    observation_count: 977, observation_digest: digest, package_contains_integration: false,
+    participant_collection_authorized: false, physical_camera_access_authorized: false,
+    result_digest: digest, run_kind: 'PREFLIGHT_60S', schema_version: 1,
+    status: 'M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY',
+  };
+
+  it('uses reviewer bearer, omitted credentials, one fixed body and idempotency header', async () => {
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const fetchMock = vi.fn().mockResolvedValue(response({ ...authority, run }, 202)); vi.stubGlobal('fetch', fetchMock);
+    await new HttpApiClient('monitor').createSyntheticRun('PREFLIGHT_60S', 'synthetic-key-0001');
+    expect(fetchMock.mock.calls[0][0]).toBe('/api/v1/synthetic-runs');
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ credentials: 'omit', body: JSON.stringify({ run_kind: 'PREFLIGHT_60S' }), headers: expect.objectContaining({ Authorization: `Bearer ${token}`, 'Idempotency-Key': 'synthetic-key-0001' }) });
+  });
+
+  it('maps list and get without exposing backend snake case', async () => {
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(response({ ...authority, runs: [run] })).mockResolvedValueOnce(response({ ...authority, run })));
+    const api = new HttpApiClient('monitor');
+    await expect(api.listSyntheticRuns()).resolves.toEqual([expect.objectContaining({ requestId: run.request_id, runKind: 'PREFLIGHT_60S' })]);
+    await expect(api.getSyntheticRun(run.request_id)).resolves.toEqual(expect.objectContaining({ requestId: run.request_id }));
+  });
+
+  it('rejects unknown fields and forged authority values', async () => {
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const forged = { ...authority, collection_authorized: true, device_path: 'C:/camera', run };
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response(forged)));
+    await expect(new HttpApiClient('monitor').getSyntheticRun(run.request_id)).rejects.toThrow('Synthetic review API response is invalid');
+  });
+
+  it('rejects malformed terminal receipt semantics', async () => {
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const malformed = [
+      { ...receipt, artifact_sha256: 'ABC' },
+      { ...receipt, run_kind: 'NOMINAL_20M' },
+      { ...receipt, observation_count: -1 },
+      { ...receipt, integration_status: 'NOT_PERSISTED', d1_outcome: null, integration_failure_code: 'PERSISTENCE_FAILED' },
+    ];
+    const fetchMock = vi.fn();
+    for (const candidate of malformed) {
+      fetchMock.mockResolvedValueOnce(response({ ...authority, run: { ...run, job_status: 'TERMINAL', receipt: candidate } }));
+    }
+    vi.stubGlobal('fetch', fetchMock);
+    const api = new HttpApiClient('monitor');
+    for (let index = 0; index < malformed.length; index += 1) {
+      await expect(api.getSyntheticRun(run.request_id)).rejects.toThrow('Synthetic review API response is invalid');
+    }
+  });
+
+  it('maps bounded errors and does not fabricate the optional API in demo mode', async () => {
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response({ code: 'SYNTHETIC_RUN_ALREADY_ACTIVE', message: 'A synthetic review run is already active.' }, 409)));
+    await expect(new HttpApiClient('monitor').createSyntheticRun('PREFLIGHT_60S', 'synthetic-key-0001')).rejects.toMatchObject({ status: 409, code: 'SYNTHETIC_RUN_ALREADY_ACTIVE' });
+    expect('createSyntheticRun' in new DemoApiClient()).toBe(false);
+  });
+
+  it('downloads authenticated evidence with one exact GET and verified bytes', async () => {
+    const requestId = 'synrun-0123456789abcdef0123456789abcdef';
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const raw = await evidenceResponse(requestId);
+    const floatDocument = evidenceDocument(requestId);
+    const rawBody = canonical(floatDocument.body).replace('"source_artifact":{}', '"source_artifact":{"encoded_byte_rate":1000000.0}');
+    floatDocument.body_sha256 = await sha256(new TextEncoder().encode(rawBody));
+    const floatText = `{"artifact_kind":"M2_SYNTHETIC_EVIDENCE_BUNDLE","body":${rawBody},"body_sha256":"${floatDocument.body_sha256}","schema_version":1,"status":"${floatDocument.status}"}\n`;
+    const floatBytes = new TextEncoder().encode(floatText);
+    const floatResponse = new Response(floatBytes, { status: 200, headers: { 'Cache-Control': 'no-store', 'Content-Disposition': `attachment; filename="m2-s2d-${requestId}.json"`, 'Content-Type': 'application/json', 'X-PDU-Evidence-SHA256': await sha256(floatBytes) } });
+    const fetchMock = vi.fn().mockResolvedValueOnce(raw).mockResolvedValueOnce(floatResponse);
+    vi.stubGlobal('fetch', fetchMock);
+
+    const downloaded = await new HttpApiClient('monitor').downloadSyntheticEvidence(requestId);
+
+    expect(downloaded.filename).toBe(`m2-s2d-${requestId}.json`);
+    expect(downloaded.sha256).toBe(await sha256(downloaded.bytes));
+    await expect(new HttpApiClient('monitor').downloadSyntheticEvidence(requestId)).resolves.toMatchObject({ filename: `m2-s2d-${requestId}.json` });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0][0]).toBe(`/api/v1/synthetic-runs/${requestId}/evidence`);
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({ credentials: 'omit', headers: expect.objectContaining({ Authorization: `Bearer ${token}` }) });
+    expect((fetchMock.mock.calls[0][1] as RequestInit).body).toBeUndefined();
+  });
+
+  it('rejects forged digest content type disposition and oversized downloads', async () => {
+    const requestId = 'synrun-0123456789abcdef0123456789abcdef';
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const cases = [
+      await evidenceResponse(requestId, evidenceDocument(requestId), { 'X-PDU-Evidence-SHA256': '0'.repeat(64) }),
+      await evidenceResponse(requestId, evidenceDocument(requestId), { 'Content-Type': 'text/plain' }),
+      await evidenceResponse(requestId, evidenceDocument(requestId), { 'Content-Disposition': 'attachment; filename="C:/private.json"' }),
+      new Response(new Uint8Array(4_000_001), { status: 200, headers: { 'Content-Type': 'application/json', 'Content-Disposition': `attachment; filename="m2-s2d-${requestId}.json"`, 'X-PDU-Evidence-SHA256': '0'.repeat(64) } }),
+    ];
+    const api = new HttpApiClient('monitor');
+    for (const item of cases) {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(item));
+      await expect(api.downloadSyntheticEvidence(requestId)).rejects.toThrow('Synthetic evidence download is invalid');
+    }
+  });
+
+  it('rejects malformed open and authority-escalated evidence envelopes', async () => {
+    const requestId = 'synrun-0123456789abcdef0123456789abcdef';
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const open = { ...evidenceDocument(requestId), extra: true };
+    const escalated = evidenceDocument(requestId);
+    escalated.body.authority_ceiling = { ...evidenceAuthority, research_ready: true };
+    const mismatched = evidenceDocument('synrun-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    const api = new HttpApiClient('monitor');
+    for (const body of [open, escalated, mismatched, { malformed: true }]) {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(await evidenceResponse(requestId, body)));
+      await expect(api.downloadSyntheticEvidence(requestId)).rejects.toThrow('Synthetic evidence download is invalid');
+    }
+  });
+
+  it('applies bounded API errors and one-shot auth loss without retrying download', async () => {
+    const requestId = 'synrun-0123456789abcdef0123456789abcdef';
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const fetchMock = vi.fn().mockResolvedValue(response({ code: 'SYNTHETIC_EVIDENCE_NOT_EXPORTABLE', message: 'Synthetic evidence is not exportable for this run.' }, 409));
+    vi.stubGlobal('fetch', fetchMock);
+    await expect(new HttpApiClient('monitor').downloadSyntheticEvidence(requestId)).rejects.toMatchObject({ status: 409, code: 'SYNTHETIC_EVIDENCE_NOT_EXPORTABLE' });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    window.sessionStorage.setItem(reviewerStorageKey, JSON.stringify({ schemaVersion: 1, accessToken: token, expiresAtUtc: '2023-11-15T00:13:20Z', reviewer: 'Nghiên cứu viên' }));
+    const authFetch = vi.fn().mockResolvedValue(response({ code: 'AUTHENTICATION_REQUIRED', message: 'Reviewer authentication required.' }, 401));
+    vi.stubGlobal('fetch', authFetch);
+    const api = new HttpApiClient('monitor');
+    const listener = vi.fn();
+    api.onReviewerAuthLoss(listener);
+    await expect(api.downloadSyntheticEvidence(requestId)).rejects.toMatchObject({ status: 401 });
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(authFetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('requires the evidence method in the synthetic capability guard', () => {
+    const complete = new HttpApiClient('monitor');
+    expect(isSyntheticReviewApi(complete)).toBe(true);
+    expect(isSyntheticReviewApi({ createSyntheticRun() {}, listSyntheticRuns() {}, getSyntheticRun() {} })).toBe(false);
+    expect(isSyntheticReviewApi(new DemoApiClient())).toBe(false);
   });
 });
 

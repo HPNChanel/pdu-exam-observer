@@ -38,6 +38,7 @@ from pdu_exam_observer.contracts import (
 from pdu_exam_observer.domain.state import InvalidTransition
 from pdu_exam_observer.m1 import M1Backend
 from pdu_exam_observer.m1_r1 import M1R1Backend, ResearchStoreV3
+from pdu_exam_observer.m2_synthetic_review import SyntheticReviewService
 from pdu_exam_observer.reconciliation import (
     ChallengeRejected,
     ConfirmationService,
@@ -60,6 +61,7 @@ class AppConfig:
     allowed_hosts: tuple[str, ...]
     backend: M0Backend = field(default_factory=M0Backend)
     static_dir: Path | None = None
+    synthetic_review_service: SyntheticReviewService | None = None
     reviewer_auth: ReviewerAuthenticator = field(init=False, repr=False)
 
     def __post_init__(self, reviewer_pin: str) -> None:
@@ -112,6 +114,7 @@ def _create_app(
 ) -> FastAPI:
     app = FastAPI(title=title)
     app.state.backend = config.backend
+    app.state.synthetic_review_service = None
     expected_host = urlsplit(expected_origin).netloc
     json_paths = {
         "/api/v1/reviewer/login",
@@ -243,6 +246,14 @@ def create_monitor_app(config: AppConfig) -> FastAPI:
         ):
             raise _reviewer_unauthorized()
         return token
+
+    if config.synthetic_review_service is not None:
+        from pdu_exam_observer.api.synthetic_review import register_synthetic_review_routes
+
+        app.state.synthetic_review_service = config.synthetic_review_service
+        register_synthetic_review_routes(
+            app, config.synthetic_review_service, require_reviewer
+        )
 
     @app.post("/api/v1/reviewer/login")
     async def reviewer_login(

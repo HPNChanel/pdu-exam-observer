@@ -80,11 +80,71 @@
           "sha256": "0956d57bcd750db0f0e9721dd64ee951c12fcb47714bae47155aba8448cee965",
           "size_bytes": 3045
         },
+        "M2_S2A_SMOKE_SCRIPT": {
+          "artifact_id": "M2_S2A_SMOKE_SCRIPT",
+          "path": "scripts/run_m2_s2a_synthetic_integration.py",
+          "sha256": "85228e9ac8d9cd1acce357ae424596f2bfda8c2bee308e7e1ecdf823b9cec9d7",
+          "size_bytes": 6010
+        },
+        "M2_S2B_SMOKE_SCRIPT": {
+          "artifact_id": "M2_S2B_SMOKE_SCRIPT",
+          "path": "scripts/run_m2_s2b_synthetic_nominal.py",
+          "sha256": "c6a79cbbe486bf8aef660c7eec4eff97a498cdfcac3a362e3f55cf451e4e838d",
+          "size_bytes": 6086
+        },
+        "M2_S2D_VERIFY_SCRIPT": {
+          "artifact_id": "M2_S2D_VERIFY_SCRIPT",
+          "path": "scripts/verify_m2_s2d_synthetic_evidence.py",
+          "sha256": "8e2937270e724be792ec1ff87ab4433473f9b706c195e5001c70c9409a8c1eb6",
+          "size_bytes": 1730
+        },
+        "M2_S2E_REPRODUCE_SCRIPT": {
+          "artifact_id": "M2_S2E_REPRODUCE_SCRIPT",
+          "path": "scripts/reproduce_m2_s2e_synthetic_evidence.py",
+          "sha256": "13c95c8653b7a13ca2c39ea695ad573e42f9a6f771c44c2a19f36aaffcc73b7d",
+          "size_bytes": 1917
+        },
+        "M2_S3B_BUILD_SCRIPT": {
+          "artifact_id": "M2_S3B_BUILD_SCRIPT",
+          "path": "scripts/build_m2_s3b_candidate.py",
+          "sha256": "6f92d9b5741a8b11c4f6ca64e1ac13bcaedc273f663b47ebc3a20584f1438033",
+          "size_bytes": 31255
+        },
+        "M2_S3B_CANDIDATE_README": {
+          "artifact_id": "M2_S3B_CANDIDATE_README",
+          "path": "packaging/README_M2_S3B_CANDIDATE.txt",
+          "sha256": "653585fd4c0e25a81ebca9ed1107d791ac8494cfffdea26370d005a41bff7570",
+          "size_bytes": 586
+        },
+        "M2_S3B_PYINSTALLER_SPEC": {
+          "artifact_id": "M2_S3B_PYINSTALLER_SPEC",
+          "path": "packaging/PDU-Exam-Observer.current-source.spec",
+          "sha256": "8d2c78bbaf402d99058b3dbd62d6783fbaf0fce6f5fa20084141027d02beb325",
+          "size_bytes": 1963
+        },
+        "M2_S3C_PACKAGED_SMOKE_SCRIPT": {
+          "artifact_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+          "path": "scripts/run_m2_s3c_packaged_smoke.py",
+          "sha256": "54fa216f6d7ddfbc6cad6286cd02f586f92fea144fc5588b8fb10a0d26d0803f",
+          "size_bytes": 34521
+        },
         "RP2_ARTIFACT_BUILDER": {
           "artifact_id": "RP2_ARTIFACT_BUILDER",
           "path": "scripts/build_m2_d1_n2_rp2.py",
-          "sha256": "fa42565bd37f776e8309651fecad04a23c1f1bd3e51707bc7d2e35b540e35a7d",
-          "size_bytes": 31268
+          "sha256": "04dfbdd61d304a72ff85307697cc0e2cc6179536328c850edbec6c6fbdafa404",
+          "size_bytes": 52345
+        },
+        "SRC_API_FACTORIES_PY": {
+          "artifact_id": "SRC_API_FACTORIES_PY",
+          "path": "src/pdu_exam_observer/api/factories.py",
+          "sha256": "ef1c3bc632b08a3cd62251c8f908f2b143f4fcde98834044772b1b6b1524d0a0",
+          "size_bytes": 31369
+        },
+        "SRC_LAUNCHER_PY": {
+          "artifact_id": "SRC_LAUNCHER_PY",
+          "path": "src/pdu_exam_observer/launcher.py",
+          "sha256": "ba3ec09434552ecb4ee62d3e41757e81b65346b1ad6f7df3ec8365a31026ee75",
+          "size_bytes": 4436
         },
         "SRC_M2_D1_N2_A0_PY": {
           "artifact_id": "SRC_M2_D1_N2_A0_PY",
@@ -176,6 +236,60 @@
           "sha256": "b599e835f38b44df09b9ee751771f0d32e9a4c31f4b1536f445c7a53a98625df",
           "size_bytes": 161835
         },
+        "SRC_M2_SYNTHETIC_ENVIRONMENT_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_environment.py",
+          "sha256": "4bf3951afc0da7ed81c42c7f125f1e8cc7d33a1ac4836e8a862bf390f09ed7dc",
+          "size_bytes": 2394
+        },
+        "SRC_M2_SYNTHETIC_EVIDENCE_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_EVIDENCE_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_evidence.py",
+          "sha256": "447edc845dbe7f7fdfd186125d5fb1c38386d6ba60324ef7c723ec1e79d9d673",
+          "size_bytes": 29263
+        },
+        "SRC_M2_SYNTHETIC_INTEGRATION_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_integration.py",
+          "sha256": "2dcff6abcc8a6ccb622c5e2193b9829df1a92dca219d3896c0285f25108d944c",
+          "size_bytes": 28040
+        },
+        "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_nominal_fixture.py",
+          "sha256": "e57259839958429862748eea6a3828d80745bb7a18dc768aac400fb8bcac2409",
+          "size_bytes": 4682
+        },
+        "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_PREFLIGHT_FIXTURE_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_preflight_fixture.py",
+          "sha256": "dd9851643e6528a3da9a8322d24a0cb50df8f2c20efbf4fd31c1939435ac72ff",
+          "size_bytes": 4272
+        },
+        "SRC_M2_SYNTHETIC_REPRODUCTION_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_reproduction.py",
+          "sha256": "fc20b41b17a7c04d99d3ce0d051eb1cc8e6aa2c93cbd092927c9bb32228678c8",
+          "size_bytes": 28726
+        },
+        "SRC_M2_SYNTHETIC_REVIEW_API_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+          "path": "src/pdu_exam_observer/api/synthetic_review.py",
+          "sha256": "c63f1c7a512bbfe9a151be6222d4ace203a9b4054ac0930ff402e1371ea49a72",
+          "size_bytes": 8438
+        },
+        "SRC_M2_SYNTHETIC_REVIEW_PY": {
+          "artifact_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+          "path": "src/pdu_exam_observer/m2_synthetic_review.py",
+          "sha256": "68108568c088e59c8234f2bd4ba0354c36c54e134e5fb05f887265aa65bb8666",
+          "size_bytes": 14693
+        },
+        "TEST_LAUNCHER_PY": {
+          "artifact_id": "TEST_LAUNCHER_PY",
+          "path": "tests/backend/test_launcher.py",
+          "sha256": "0cf76ddbd1eff1456d798af00d0cb57cd2a1b04bab1ac3dd99481778c0c62780",
+          "size_bytes": 3191
+        },
         "TEST_M2_D1_N2_A0_PY": {
           "artifact_id": "TEST_M2_D1_N2_A0_PY",
           "path": "tests/backend/test_m2_d1_n2_a0.py",
@@ -215,8 +329,98 @@
         "TEST_M2_D1_N2_RP2_ARTIFACTS_PY": {
           "artifact_id": "TEST_M2_D1_N2_RP2_ARTIFACTS_PY",
           "path": "tests/backend/test_m2_d1_n2_rp2_artifacts.py",
-          "sha256": "18469610650f6a22f66f23b7c041f3adf67ce96f53d36a2ebd163c14c7e08ffa",
-          "size_bytes": 10388
+          "sha256": "896920620f7e484fd876a5e207e1567b604aa6d7da9ec5fa9a8cda8fec7f0fef",
+          "size_bytes": 19137
+        },
+        "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": {
+          "artifact_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+          "path": "tests/packaging/test_m2_s3a_package_gap_audit.py",
+          "sha256": "c8d90ff636da807257fea9e4b0e480558710964b8799d731ad4c9116b63d15ea",
+          "size_bytes": 9719
+        },
+        "TEST_M2_S3B_PACKAGE_INTEGRATION_PY": {
+          "artifact_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
+          "path": "tests/packaging/test_m2_s3b_package_integration.py",
+          "sha256": "1e9e9884225be9e48bb18b78d84d7f84ab390ba629315b597d22e2dd7f99510c",
+          "size_bytes": 8408
+        },
+        "TEST_M2_S3C_PACKAGED_SMOKE_PY": {
+          "artifact_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+          "path": "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py",
+          "sha256": "1dfa077225b1cae8ab6952ead8bf2692c92f6039ac3011d41179affc9eda3794",
+          "size_bytes": 12574
+        },
+        "TEST_M2_SYNTHETIC_EVIDENCE_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_EVIDENCE_PY",
+          "path": "tests/backend/test_m2_synthetic_evidence.py",
+          "sha256": "409bf89dd3b6318424562827ec78113bd2f8b137fa73635fa2a0257443222c17",
+          "size_bytes": 11018
+        },
+        "TEST_M2_SYNTHETIC_INTEGRATION_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_INTEGRATION_PY",
+          "path": "tests/backend/test_m2_synthetic_integration.py",
+          "sha256": "fe1abb92e308f9befdaf7471d1f675ecbb31cd12d7eb9e830714e85c0322d405",
+          "size_bytes": 16617
+        },
+        "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY",
+          "path": "tests/backend/test_m2_synthetic_nominal_integration.py",
+          "sha256": "717543eaf8bf37d5e81cc17385f6389c8f258c0e316156bbec503cefa2fd6ec7",
+          "size_bytes": 28064
+        },
+        "TEST_M2_SYNTHETIC_REPRODUCTION_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_REPRODUCTION_PY",
+          "path": "tests/backend/test_m2_synthetic_reproduction.py",
+          "sha256": "106e36bd3e975cd72edf487c011ab20d26ebb9f5393a1b945b43a181948ae685",
+          "size_bytes": 12720
+        },
+        "TEST_M2_SYNTHETIC_REVIEW_API_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_REVIEW_API_PY",
+          "path": "tests/backend/test_m2_synthetic_review_api.py",
+          "sha256": "47822a202445bd07cbb15a5a78d3137c75cf0cb2de8ceffafa46a19eed5802f5",
+          "size_bytes": 11891
+        },
+        "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY": {
+          "artifact_id": "TEST_M2_SYNTHETIC_REVIEW_SERVICE_PY",
+          "path": "tests/backend/test_m2_synthetic_review_service.py",
+          "sha256": "402ab8d190f3deb60b47d15dbf2a1771c4f53572e4433e3c87628b84d6ac9cd3",
+          "size_bytes": 9794
+        },
+        "TEST_WEB_API_TS": {
+          "artifact_id": "TEST_WEB_API_TS",
+          "path": "apps/web/src/api.test.ts",
+          "sha256": "143513df5e749f9b7739eb2f8a00ea8cfa826623d8e39c22230cb6f4a77282a2",
+          "size_bytes": 36352
+        },
+        "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": {
+          "artifact_id": "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+          "path": "apps/web/src/SyntheticValidationPanel.test.tsx",
+          "sha256": "2a6be26ffb85fd3afa8b589d334a9d279fb09a180a4ea292bd4059a36c155437",
+          "size_bytes": 13527
+        },
+        "WEB_API_TS": {
+          "artifact_id": "WEB_API_TS",
+          "path": "apps/web/src/api.ts",
+          "sha256": "2afac917ccb429355c1c3ffc71c574b46bed103af6eb74c18effbdb848f17371",
+          "size_bytes": 49548
+        },
+        "WEB_APP_TSX": {
+          "artifact_id": "WEB_APP_TSX",
+          "path": "apps/web/src/App.tsx",
+          "sha256": "51432af5c347dbf4b9abafd930b3b577a1b1ed4c30c65aa2161f2aea657eb3b3",
+          "size_bytes": 20290
+        },
+        "WEB_STYLES_CSS": {
+          "artifact_id": "WEB_STYLES_CSS",
+          "path": "apps/web/src/styles.css",
+          "sha256": "14fefbe74f409ec2bb544e0a6fdd0ef181b004fe788d307fd7adf71ecd600a91",
+          "size_bytes": 11605
+        },
+        "WEB_SYNTHETIC_VALIDATION_PANEL_TSX": {
+          "artifact_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+          "path": "apps/web/src/SyntheticValidationPanel.tsx",
+          "sha256": "802ef7864308bd0e14364cd7a715b56f2a497ad7da63ac4c2031fbb3db156e23",
+          "size_bytes": 9310
         }
       },
       "uv_lock": {
@@ -259,7 +463,7 @@
     },
     "policy_digests": {
       "a0_approval_policy_digest": "ac22c090564799ec2377ee0a39da83345561804f4519c5db65fe155dc17ee327",
-      "binding_schema_canonical_sha256": "07ebbffaa9e0f9c2fa5b44dc9d2fab24ac82e324a118618acea7c830c5dd15cb",
+      "binding_schema_canonical_sha256": "ddf88162717ec7bdc8d28a7e0e1da81a90bab711a3a392579a69e8b3cc7fac1c",
       "bootstrap_bundle_policy_digest": "740432c7a7809d8120c7f8618aab13d324928ac50c2a04d6f6bf3b6f64cac0ff",
       "bootstrap_cng_policy_digest": "2455117e6e166d3ebe4827c5ebaf5e9de6c95e258f872d6dc707ac1bb5e7b457",
       "bootstrap_epoch_policy_digest": "8df0a2dbed4c839c8e071c665eb3138221aca9304b32c2dbdcae050f77fc83e1",
@@ -272,9 +476,38 @@
       "failure_ledger_digest": "4fb769a94964161a446f0089f1baa8050f39050e01bf9248268e940ee072b2a7",
       "ffmpeg_argv_template_digest": "fcce8bb0442e5125a24ece5a516be96b3108d01df27f6704afbbcbe0af79acff",
       "independent_rp2_triple_policy_digest": "c8640cab14fb6236e2aa0178d83b53206985e7dc4959eaca991a66e4872f740f",
+      "m2_s3c_authority_ceiling_policy_digest": "7b25e55f8b7f8c8fd19eab2d73da570101ef85d3c127eaec2e07b92f51e21a0f",
+      "m2_s3c_fixed_candidate_binding_policy_digest": "121b175e009024741abdc8e67f6a0500787ea37c257964aacc6dafb6a53e95c1",
+      "m2_s3c_runtime_smoke_contract_policy_digest": "6b17fb2ddda065db1b15ada6c70a0d7fc9695edc59bd9f97e6e096b36a91953d",
+      "m2_s3c_status_policy_digest": "d1a67e82027084c5a524df6cbf762ff6abf0a05d30243533a0da308b9381f533",
       "ownership_cleanup_policy_digest": "3511491b6efa116ea99dd84a519670e1f9fec9fc7336f3c143bc4a2179267929",
+      "package_gap_audit_authority_ceiling_policy_digest": "c8499e633e01f18533f9bce09846cc5482b6b00edfe3775365cca47424f0b8c5",
+      "package_gap_audit_status_policy_digest": "b2e045c25c54d0c63b8cee637eb2cf2c2318cf8b776009d6a2c8114ecd3af792",
       "privacy_policy_digest": "edee0ee9bc49d5eb149feaf7b237d33cf075823e4a4a5d898378c7563b0f9ce9",
       "receipt_schema_digest": "3fbb5022ba163ba4368a6fbbb7f2c9eadc491f8e3d20193121cd0554f1a9bf56",
+      "s3b_candidate_authority_ceiling_policy_digest": "73c443ddd2728d17e26f076532d8edbbc7651d6d278d823d302598dce7bc4a5c",
+      "s3b_candidate_status_policy_digest": "410a653a2c6a67fa65d73aa9da5bf4e54a2c03793479481f367e6229614b1df5",
+      "s3b_reproducible_build_contract_policy_digest": "7ebdf255058d09d668d7d166fb0fe7527dcbf46cdf552dafb6727de146c10748",
+      "s3b_static_inclusion_policy_digest": "fda9977ea857cc23ef2b38ace4c7c9b9b621060093ca7ac7da716291717de417",
+      "synthetic_authority_ceiling_policy_digest": "fbd87fb7f87591e64951131a54a76e9f925ffee7ddc6229cdfc9bba4b3fb367a",
+      "synthetic_evidence_download_policy_digest": "3bbbf8927dc55f3dc61f7e79c14b39a186130c0ba35c607885d2703394bdf2de",
+      "synthetic_evidence_integrity_policy_digest": "0353d8788bdf7ac35f695d30efa36f50f96433a1c694bef56db0a33b0ab289c8",
+      "synthetic_evidence_offline_verifier_policy_digest": "3062aedf498334dd19002a78ebd3f7ab6aa4589eb4333274f9c4367cb4661317",
+      "synthetic_evidence_ui_disclosure_policy_digest": "8372d265471461bfab9f65c52db0b9e11f55c41eabbe6914a911c66e5a12a2f7",
+      "synthetic_integration_status_policy_digest": "1478449629115d548b9b82e0fe6e6a176de3abbd3f47e1ff00e3502fc90b1da4",
+      "synthetic_no_camera_policy_digest": "ab28824a2703385e2c0f3233af12201b04d1d8aa9523cf615545ce699956cb6b",
+      "synthetic_no_path_policy_digest": "b0fb54cbfda620a422fe8a28e84ec869bf1a197ed135454a5e748bd1c95a308d",
+      "synthetic_nominal_fault_matrix_policy_digest": "bfc6089d46ed61c9a94f02e0c18ec193901c81d07e075f090b35c4aabca1e561",
+      "synthetic_nominal_run_contract_policy_digest": "580f05380eebb8951093def80bb4089372fefd2a3f436f251e9ce12c7d9acdd5",
+      "synthetic_nominal_status_policy_digest": "2bb84f8bba16877b429a4d52239ab2348a5db1306078e4b7379a4cc257df17c5",
+      "synthetic_reproduction_classification_policy_digest": "32509ff3c5f8c534a974e6010bb37beecbc35c751b8adb770ef3feb01f2850ce",
+      "synthetic_reproduction_cli_policy_digest": "6a1f61836de0a8c559530465c9d0c54e0515e2063f3085e0d24150eaa4a6e196",
+      "synthetic_reproduction_environment_policy_digest": "63d3044db926a4a2fd1fdef853197c7b56bd214586b6ba273050513575bcff79",
+      "synthetic_reproduction_exact_policy_digest": "1c1071cf300909dcc42588709ef0f705ceeda62a23ebc49b55ff081bdf28dbb5",
+      "synthetic_review_owned_workspace_policy_digest": "2c61182fc576ce3b0e58bc2d7e3f4a13be65a3a9d93f8260e26beecf1dd728da",
+      "synthetic_review_request_surface_policy_digest": "4ff231077cac9fc04d58d373170d40c895d131adcaafe36121a745c957470fa1",
+      "synthetic_review_single_flight_policy_digest": "8f0b01052e3104de1971ecdbe32bd98e99a087c366950bdfb2dfca9463c3faa3",
+      "synthetic_review_ui_disclosure_policy_digest": "81fa920f03f953a91b30f3f07617ca0788521e9f484e85462fd35c8d6444dd28",
       "terminal_evidence_policy_digest": "3af930bf10e1c2a05d9f24ba9b0b3ad9d23b0add97f36ceb61db7750fb26432d",
       "watchdog_policy_digest": "b54e97e25f5428af7bc39cfc02fc7377bdd633f9b3834140cc13a22b844c2f78",
       "worker_argv_digest": "2a9713396c70cb12d0a2e20245b7daac427cabec70943995ca556a64d0291668",
@@ -451,6 +684,71 @@
         "source_id": "SRC_M2_D1_N2_PREPARE_PY",
         "version": 1
       },
+      "m2_s3c_authority_ceiling_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "clean_machine_verified": false,
+          "collection_authorized": false,
+          "d1_go": false,
+          "distribution_ready": false,
+          "packaged_runtime_smoke_verified": true,
+          "participant_collection_authorized": false,
+          "physical_camera_access_authorized": false,
+          "release_authorized": false,
+          "research_ready": false,
+          "same_host_portable_verified": false
+        },
+        "projection": "m2-s3c.same-host-smoke-no-release-authority-ceiling",
+        "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+        "version": 1
+      },
+      "m2_s3c_fixed_candidate_binding_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "candidate_path_caller_controlled": false,
+          "candidate_process_invocation_count": 2,
+          "candidate_source_revision_separate_from_harness_revision": true,
+          "candidate_tree_sha256": "80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009"
+        },
+        "projection": "m2-s3c.fixed-s3b-candidate-and-source-revision-binding",
+        "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+        "version": 1
+      },
+      "m2_s3c_runtime_smoke_contract_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "browser_opened": false,
+          "evidence_export_invoked": false,
+          "invocation_count": 2,
+          "loopback_only": true,
+          "retry_count": 0,
+          "run_order": [
+            "PREFLIGHT_60S",
+            "NOMINAL_20M"
+          ],
+          "shutdown_mode": "FORCED_PROCESS_TREE_TERMINATION"
+        },
+        "projection": "m2-s3c.fixed-loopback-preflight-and-nominal-smoke-contract",
+        "source_id": "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+        "version": 1
+      },
+      "m2_s3c_status_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "closed_gap_id": "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+          "open_gap_ids": [
+            "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+            "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+            "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+            "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+          ],
+          "status": "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+        },
+        "projection": "m2-s3c.same-host-packaged-synthetic-runtime-smoke",
+        "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+        "version": 1
+      },
       "ownership_cleanup_policy_digest": {
         "canonicalization": "json-v1-sort-keys-compact-utf8",
         "fields": {
@@ -460,6 +758,54 @@
         },
         "projection": "d1-n2.exclusive-ownership-close-before-terminal",
         "source_id": "SRC_M2_D1_N2_ADAPTER_PY",
+        "version": 1
+      },
+      "package_gap_audit_authority_ceiling_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "clean_machine_verified": false,
+          "collection_authorized": false,
+          "d1_go": false,
+          "device_gate_decision": "UNVERIFIED",
+          "distribution_ready": false,
+          "execution_authorized": false,
+          "package_contains_integration": false,
+          "package_rebuild_started": false,
+          "participant_collection_authorized": false,
+          "physical_camera_access_authorized": false,
+          "production_reconciler_implemented": false,
+          "production_reconciler_real_storage_verified": false,
+          "real_data_deletion_authorized": false,
+          "release_authorized": false,
+          "research_ready": false,
+          "same_host_portable_verified": false
+        },
+        "projection": "m2-s3a.no-rebuild-no-release-authority-ceiling",
+        "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
+        "version": 1
+      },
+      "package_gap_audit_status_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "audit_result": "PACKAGE_GAP_CONFIRMED",
+          "audit_status": "M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY",
+          "gap_ids": [
+            "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+            "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+            "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT",
+            "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+            "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+            "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+            "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE",
+            "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+          ],
+          "historical_package_integrity": "MANIFEST_VERIFIED",
+          "package_rebuild_started": false,
+          "source_currency": "HISTORICAL_NOT_CURRENT_SOURCE"
+        },
+        "projection": "m2-s3a.current-source-package-gap-audit",
+        "source_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
         "version": 1
       },
       "privacy_policy_digest": {
@@ -481,6 +827,327 @@
         },
         "projection": "d1-n2.redacted-receipt-contract",
         "source_id": "SRC_M2_D1_N2_NATIVE_PY",
+        "version": 1
+      },
+      "s3b_candidate_authority_ceiling_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "candidate_package_contains_integration": true,
+          "clean_machine_verified": false,
+          "collection_authorized": false,
+          "d1_go": false,
+          "distribution_ready": false,
+          "historical_package_unchanged": true,
+          "packaged_runtime_smoke_verified": false,
+          "participant_collection_authorized": false,
+          "physical_camera_access_authorized": false,
+          "release_authorized": false,
+          "research_ready": false
+        },
+        "projection": "m2-s3b.candidate-static-no-release-authority-ceiling",
+        "source_id": "M2_S3B_CANDIDATE_README",
+        "version": 1
+      },
+      "s3b_candidate_status_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "closed_gap_ids": [
+            "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED",
+            "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED",
+            "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE"
+          ],
+          "open_gap_count": 5,
+          "status": "M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
+        },
+        "projection": "m2-s3b.current-source-candidate-static-integration",
+        "source_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
+        "version": 1
+      },
+      "s3b_reproducible_build_contract_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "build_count": 2,
+          "build_time_utc": "2026-09-01T00:00:00Z",
+          "byte_identical_required": true,
+          "python_hash_seed": "1",
+          "source_date_epoch": "1788220800"
+        },
+        "projection": "m2-s3b.same-host-bit-reproducible-double-build",
+        "source_id": "M2_S3B_BUILD_SCRIPT",
+        "version": 1
+      },
+      "s3b_static_inclusion_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "archive_inventory": "EXECUTABLE_RECURSIVE_ARCHIVE",
+          "frontend_byte_identical": true,
+          "required_module_count": 11,
+          "runtime_smoke_verified": false
+        },
+        "projection": "m2-s3b.recursive-archive-and-frontend-static-inclusion",
+        "source_id": "M2_S3B_PYINSTALLER_SPEC",
+        "version": 1
+      },
+      "synthetic_authority_ceiling_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "collection_authorized": false,
+          "d1_go": false,
+          "device_gate_decision": "UNVERIFIED",
+          "package_contains_integration": false,
+          "participant_collection_authorized": false,
+          "physical_camera_access_authorized": false
+        },
+        "projection": "m2-s2a.synthetic-authority-ceiling",
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "version": 1
+      },
+      "synthetic_evidence_download_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authenticated_monitor_only": true,
+          "exam_origin_route_exposed": false,
+          "maximum_bytes": 4000000,
+          "server_archive_created": false,
+          "terminal_persisted_only": true
+        },
+        "projection": "m2-s2d.download-only-monitor-surface",
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+        "version": 1
+      },
+      "synthetic_evidence_integrity_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "artifact_sha256_verified_before_export": true,
+          "body_sha256_required": true,
+          "d1_receipt_semantics_verified": true,
+          "observation_digest_recomputed": true,
+          "source_run_receipt_cross_bound": true
+        },
+        "projection": "m2-s2d.full-artifact-cross-binding",
+        "source_id": "SRC_M2_SYNTHETIC_EVIDENCE_PY",
+        "version": 1
+      },
+      "synthetic_evidence_offline_verifier_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "accepts_exactly_one_file": true,
+          "authority_effect": "NONE",
+          "canonical_json_required": true,
+          "failure_exit_code": 2,
+          "symlink_or_reparse_allowed": false
+        },
+        "projection": "m2-s2d.offline-verifier-fail-closed",
+        "source_id": "M2_S2D_VERIFY_SCRIPT",
+        "version": 1
+      },
+      "synthetic_evidence_ui_disclosure_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "disclosure": "B\u1eb1ng ch\u1ee9ng m\u00f4 ph\u1ecfng \u2014 kh\u00f4ng ph\u1ea3i x\u00e1c minh thi\u1ebft b\u1ecb, D1_GO hay quy\u1ec1n thu d\u1eef li\u1ec7u.",
+          "download_scope": "TERMINAL_PERSISTED_ONLY",
+          "research_ready_claimed": false
+        },
+        "projection": "m2-s2d.download-ui-disclosure",
+        "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
+        "version": 1
+      },
+      "synthetic_integration_status_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "d1_outcomes": [
+            "BACKEND_CONTRACT_PASS",
+            "NO_GO"
+          ],
+          "evidence_kind": "SIMULATED",
+          "integration_statuses": [
+            "PERSISTED",
+            "NOT_PERSISTED"
+          ],
+          "run_kind": "PREFLIGHT_60S",
+          "status": "M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+        },
+        "projection": "m2-s2a.synthetic-integration-status",
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "version": 1
+      },
+      "synthetic_no_camera_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "audio": false,
+          "camera": false,
+          "device_enumeration": false,
+          "fixture_kind": "DETERMINISTIC_FIXTURE"
+        },
+        "projection": "m2-s2a.no-camera-device-surface",
+        "source_id": "M2_S2A_SMOKE_SCRIPT",
+        "version": 1
+      },
+      "synthetic_no_path_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "absolute_path_output": "PROHIBITED",
+          "caller_path_input": "PROHIBITED",
+          "temporary_root": "OWNED_AND_REMOVED"
+        },
+        "projection": "m2-s2a.no-path-surface",
+        "source_id": "M2_S2A_SMOKE_SCRIPT",
+        "version": 1
+      },
+      "synthetic_nominal_fault_matrix_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "corrupt_input_persisted": false,
+          "corrupt_receipt_persisted": false,
+          "persist_valid_no_go": true,
+          "persistence_failure_artifact_claim": false,
+          "physical_fault_evidence": false
+        },
+        "projection": "m2-s2b.synthetic-fault-matrix",
+        "source_id": "TEST_M2_SYNTHETIC_NOMINAL_INTEGRATION_PY",
+        "version": 1
+      },
+      "synthetic_nominal_run_contract_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "accelerated_timestamps": true,
+          "frame_count": 18077,
+          "frames_per_second": 15,
+          "height": 720,
+          "physical_wait": false,
+          "requested_duration_seconds": 1200,
+          "run_kind": "NOMINAL_20M",
+          "warmup_seconds": 5,
+          "width": 1280
+        },
+        "projection": "m2-s2b.fixed-nominal-run-contract",
+        "source_id": "SRC_M2_SYNTHETIC_NOMINAL_FIXTURE_PY",
+        "version": 1
+      },
+      "synthetic_nominal_status_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "d1_outcomes": [
+            "BACKEND_CONTRACT_PASS",
+            "NO_GO"
+          ],
+          "evidence_kind": "SIMULATED",
+          "integration_statuses": [
+            "PERSISTED",
+            "NOT_PERSISTED"
+          ],
+          "run_kind": "NOMINAL_20M",
+          "status": "M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY"
+        },
+        "projection": "m2-s2b.synthetic-nominal-status",
+        "source_id": "SRC_M2_SYNTHETIC_INTEGRATION_PY",
+        "version": 1
+      },
+      "synthetic_reproduction_classification_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_mutation_is_semantic_mismatch": false,
+          "classifications": [
+            "EXACTLY_REPRODUCED",
+            "REPRODUCTION_FAILED",
+            "SEMANTIC_RESULT_MISMATCH",
+            "SOURCE_REVISION_MISMATCH"
+          ],
+          "mismatch_fields_closed": true
+        },
+        "projection": "m2-s2e.closed-differential-classification",
+        "source_id": "TEST_M2_SYNTHETIC_REPRODUCTION_PY",
+        "version": 1
+      },
+      "synthetic_reproduction_cli_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "accepts_exactly_one_file": true,
+          "maximum_bytes": 4000000,
+          "path_disclosed": false,
+          "success_classification": "EXACTLY_REPRODUCED",
+          "symlink_or_reparse_allowed": false
+        },
+        "projection": "m2-s2e.offline-reproduction-cli",
+        "source_id": "M2_S2E_REPRODUCE_SCRIPT",
+        "version": 1
+      },
+      "synthetic_reproduction_environment_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "caller_root_allowed": false,
+          "closed_source_inventory": true,
+          "encoder_policy": "M2-S2C-SIMULATED-ENCODER-NOT-INVOKED-V1",
+          "source_revision_required_for_exact": true
+        },
+        "projection": "m2-s2e.closed-current-source-binding",
+        "source_id": "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
+        "version": 1
+      },
+      "synthetic_reproduction_exact_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "built_in_fixtures_only": true,
+          "comparison_scope": "WHOLE_BUNDLE_AND_NESTED_DIGESTS",
+          "device_access": false,
+          "source_mismatch_replay": false,
+          "temporary_workspace_removed_before_success": true
+        },
+        "projection": "m2-s2e.same-revision-exact-replay",
+        "source_id": "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+        "version": 1
+      },
+      "synthetic_review_owned_workspace_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "cleanup_on_shutdown": true,
+          "configured_operational_root_used": false,
+          "owned_temp_root": true
+        },
+        "projection": "m2-s2c.owned-ephemeral-workspace",
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+        "version": 1
+      },
+      "synthetic_review_request_surface_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "automatic_retry": false,
+          "caller_device": false,
+          "caller_path": false,
+          "request_fields": "run_kind_only",
+          "run_kinds": [
+            "PREFLIGHT_60S",
+            "NOMINAL_20M"
+          ]
+        },
+        "projection": "m2-s2c.closed-review-request-surface",
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_API_PY",
+        "version": 1
+      },
+      "synthetic_review_single_flight_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "automatic_retry": false,
+          "max_active_runs": 1,
+          "max_records": 32
+        },
+        "projection": "m2-s2c.single-flight-bounded-history",
+        "source_id": "SRC_M2_SYNTHETIC_REVIEW_PY",
+        "version": 1
+      },
+      "synthetic_review_ui_disclosure_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "banner": "M\u00d4 PH\u1eceNG \u2014 KH\u00d4NG CAMERA \u2014 KH\u00d4NG C\u1ea4P QUY\u1ec0N THU D\u1eee LI\u1ec6U",
+          "d1_go": false,
+          "device_gate_decision": "UNVERIFIED",
+          "evidence_kind": "SIMULATED"
+        },
+        "projection": "m2-s2c.monitor-ui-disclosure",
+        "source_id": "WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
         "version": 1
       },
       "terminal_evidence_policy_digest": {
@@ -614,6 +1281,6 @@
       }
     }
   },
-  "static_bindings_digest": "5645963129cb0dcd70538a18c35ed0a569111ad907975333a17d664bc62d5979",
+  "static_bindings_digest": "b4a98d948f34c7b13132dab27776ba32dcf74a97239037cd8fd82d5ef7453def",
   "valid_for_native_launch": false
 }

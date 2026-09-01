@@ -219,6 +219,271 @@ collection_authorized=false
 authority_status=AUTHORITY_NOT_ISSUED
 ```
 
+## G11 - M2-S2A synthetic vertical-slice integrity
+
+- Status:
+  `M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+- Focused M2-S2A tests pass 12/12; scoped Ruff and strict mypy pass.
+- Two no-argument smoke invocations returned exit 0, empty stderr, byte-identical
+  canonical output, `BACKEND_CONTRACT_PASS`, `device_gate_decision=UNVERIFIED`,
+  `d1_go=false`, and removed their temporary roots.
+- RP2 binds 28 source/tool leaves and 25 policy preimages. Current tuple:
+  `static_bindings_digest=84694c545120b69cebaa8d64fb40c3c1d574afcecd69126f1238d5e285a7a22f`,
+  `candidate_exact_bytes_sha256=cd89fad5be9e804fcdf56b87f8edd517fe15be74de0e1c0dcd01d0e10bb16bec`,
+  `binding_schema_exact_bytes_sha256=fcc3ae40caf53e2afd3f67b1f0739ce863e4a6780673e6de0afd904750571d94`.
+- At task start Git existed and the baseline was clean `main` at `7912bd9`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+## G12 - M2-S2B synthetic nominal integrity
+
+Status:
+`M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+- Focused M2-S2B tests cover exactly 12 non-parametrized contracts, including
+  18,077-frame shape/timing/golden bindings, S2A regression, exact D1 metrics,
+  warmup denominators, synthetic fault routing, integrity rejection,
+  idempotency/persistence races, artifact minimization, and no-argument CLI.
+- Golden observation digests are independently calculated and literal boundary
+  vectors are pinned; a mutated production digest implementation is rejected.
+- Threshold failures are produced from mutated nominal observations for FPS,
+  gap, latency, backlog, coverage/drop reconciliation, input, pose, quality,
+  and manifest routes; exact valid `NO_GO` remains auditable without becoming a
+  PASS or authority claim.
+- RP2 current tuple is
+  `static_bindings_digest=6e84eb0699658c61efd335a175a2abb4470f37afeaff131d94cdce332640fa43`,
+  `candidate_exact_bytes_sha256=99365851f4fbad6f78c9b94c30eaef362b281c1a901cc15b40f2c5707e9fd771`,
+  `binding_schema_exact_bytes_sha256=1bec3a9e9747136f01e43dd76de62f5b622eb00540714ee4c1639ee470edcb2d`.
+
+```text
+evidence_kind=SIMULATED
+run_kind=NOMINAL_20M
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G12 verifies deterministic local source behavior only. Physical device faults,
+camera behavior, installed-package inclusion, research performance, and
+collection readiness remain unverified.
+
+## G13 - M2-S2C synthetic reviewer integrity
+
+Status:
+`M2_S2C_SYNTHETIC_REVIEWER_API_UI_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+Focused Python tests cover single-flight, idempotency, capacity, owned-root
+cleanup, monitor-only authentication, closed request schemas, error mapping,
+and launcher shutdown. Web tests cover strict authority mapping, optional-route
+handling, two fixed actions, GET-only bounded polling, terminal copy, and no
+automatic retry. Headed Chromium verified both fixed runs and cleanup.
+
+RP2 tuple:
+`static_bindings_digest=d54ec5277d9713128e03a0eaae787c5ff6fd04ee6e48fee3654f87655d847248`,
+`candidate_exact_bytes_sha256=582bb50f0ca2118937f7d79d7dd8a0bff3d43d72a58ae540c27c41ccddcabd71`,
+`binding_schema_exact_bytes_sha256=9c460d3fb874faea444ab97a3c85bc70c37d25f6ea1ced5be4f2dbec20092387`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G13 is local source/runtime integrity only. Physical, package, research,
+collection, deployment, and release states remain unopened.
+
+## G14 - M2-S2D synthetic evidence integrity
+
+Status:
+`M2_S2D_SYNTHETIC_EVIDENCE_EXPORT_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+Focused Python tests cover verified descriptor reads, link/reparse and mutation
+rejection, canonical bundle determinism, PASS and valid `NO_GO`, full semantic
+cross-binding, offline CLI bounds, service eligibility, auth, origin
+separation, and response headers. Web tests cover byte/hash/body verification,
+closed authority mapping, one-shot download, no retry, download lifecycle, and
+persistent disclosure. Source Chromium evidence verified both run kinds.
+
+RP2 tuple:
+`static_bindings_digest=7204b1d53dbac8d5fd7f057c9b5a63e3fde10ec4c68111e4fa2b0ef9312880d3`,
+`candidate_exact_bytes_sha256=46221d85c38df2e44b62d688ff5a162519f215078462ef6f54bc47b65c75abd0`,
+`binding_schema_exact_bytes_sha256=23d742592c018343767ff8b670e1a253f7e2e2cbdf1a91c4829e8dc7bf30a9d3`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G14 proves local source/download/offline-verification integrity only. Physical,
+package, research, collection, deployment, and release states remain unopened.
+
+## G15 - M2-S2E strict synthetic reproduction integrity
+
+Status:
+`M2_S2E_SYNTHETIC_EVIDENCE_REPRODUCTION_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+Exact success requires a verified S2D source, matching current environment
+binding, deterministic built-in replay, verified persisted artifact, transient
+S2D reconstruction, equality of the whole bundle plus every closed nested
+digest, and removed temporary state. `SOURCE_REVISION_MISMATCH` stops before
+replay. Authority mutation is a bounded failure, never a semantic mismatch.
+
+RP2 tuple:
+`static_bindings_digest=38a17dcc4ea214a2d52ef2bb825e502bcf88d7dbf48ebc2f3758da93b6d2a585`,
+`candidate_exact_bytes_sha256=15f3bcc27411b1534e6214d8818af70cf46076776af4ae73551d508d0f0f7119`,
+`binding_schema_exact_bytes_sha256=abc494b96a3cc52eda57c43d677c83245736ab65ff923faa4e39524cf84f2dc5`.
+
+```text
+classification=EXACTLY_REPRODUCED
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G15 proves current-source built-in synthetic determinism only. Physical,
+package, research, collection, M3, deployment, and release states remain
+unopened.
+
+## G16 - M2-S3A package-gap audit integrity
+
+Status:
+`M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY`.
+
+Canonical audit verification binds exact historical package/build/frontend
+inputs, S2E upstream identity, a closed eight-gap matrix, canonical body hash,
+and a human-readable projection. Audit JSON SHA-256 is
+`a63c0fefa7c7aba37685ccb65bec7fd605448e42873d5d8252975a82ea9269e5`.
+
+RP2 tuple for 52 source/tool entries and 42 policy preimages:
+`static_bindings_digest=e11984ea6cd5146a862b9065a22063cf80d3eb8aa7ce92b6929450cafa7769d5`,
+`candidate_exact_bytes_sha256=d98a0013e4c4b3c219fcd0d53e66c5c99dcd3c4fcea6d823d54bf1e040e0c258`,
+`binding_schema_exact_bytes_sha256=17cb07cb672dfccc0c5fe0c3fffd91a82e63a392bbbc0660d09b047dce8ad5f1`.
+
+```text
+package_contains_integration=false
+package_rebuild_started=false
+release_authorized=false
+distribution_ready=false
+clean_machine_verified=false
+same_host_portable_verified=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G16 is audit/static evidence only. The historical package was not rebuilt and
+no packaged S2A-S2E, portability, camera, participant, M3, deployment, or
+release claim is opened.
+
+## G17 - M2-S3B deterministic package integration integrity
+
+Require
+`M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY`
+and receipt SHA
+`c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf`.
+
+The gate recomputes or checks:
+
+- RP2 tuple
+  `static_bindings_digest=e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626`,
+  `candidate_exact_bytes_sha256=d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10`,
+  and `binding_schema_exact_bytes_sha256=eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8`;
+- byte-identical build A/B tree digest
+  `80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009`;
+- recursive executable/PYZ inclusion, isolated frontend equality, README
+  boundary, candidate manifest integrity, and historical package immutability;
+- GAP-01/GAP-02/GAP-07 `CLOSED_FOR_CURRENT_CANDIDATE` with GAP-03/GAP-04/
+  GAP-05/GAP-06/GAP-08 `OPEN`;
+- exact authority ceiling:
+
+```text
+historical_package_unchanged=true
+candidate_package_built=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=false
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G17 does not run the candidate and does not establish packaged smoke,
+portability, clean-machine evidence, distribution readiness, or release
+authority.
+
 ## External and residual gates
 
 - `UNVERIFIED`: institutional approval, real participant data, M2 capture/pose/model work, clean-machine execution, signing, deployment, physical two-monitor behavior, other browsers, and user visual acceptance.

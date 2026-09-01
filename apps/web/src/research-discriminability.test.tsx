@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 import { HttpApiClient } from './api';
@@ -57,7 +57,7 @@ describe('M1 discriminability through the production HTTP client', () => {
     render(<App route="/monitor" api={resourceApi} initialReviewer />);
     fireEvent.change(screen.getByLabelText('Mã nghiên cứu'), { target: { value: 'PDU-D-01' } });
     fireEvent.click(screen.getByRole('button', { name: 'Tạo bản nháp nghiên cứu' }));
-    const scoped = await screen.findByRole('alert');
+    const scoped = await within(screen.getByRole('region', { name: 'Chuẩn bị nghiên cứu' })).findByRole('alert');
     expect(scoped).toHaveTextContent('bản nháp nghiên cứu không còn tồn tại hoặc đã cũ');
     expect(screen.getByRole('region', { name: 'Chuẩn bị nghiên cứu' })).toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe('M1 discriminability through the production HTTP client', () => {
     render(<App route="/monitor" api={authenticatedClient()} initialReviewer />);
     fireEvent.change(screen.getByLabelText('Mã nghiên cứu'), { target: { value: 'PDU-D-01' } });
     fireEvent.click(screen.getByRole('button', { name: 'Tạo bản nháp nghiên cứu' }));
-    const studyConflict = await screen.findByRole('alert');
+    const studyConflict = await within(screen.getByRole('region', { name: 'Chuẩn bị nghiên cứu' })).findByRole('alert');
     expect(studyConflict).toHaveTextContent('xung đột');
     expect(studyConflict.closest('section')).toHaveTextContent('1. Bản nháp nghiên cứu');
     fireEvent.click(screen.getByRole('button', { name: 'Thử lại tạo bản nháp nghiên cứu' }));

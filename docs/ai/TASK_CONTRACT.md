@@ -1,4 +1,310 @@
-# Task Contract v13
+# Task Contract v19
+
+## M2-S3B deterministic candidate integration boundary
+
+`USER_STATED`: on `2026-09-01`, the user approved Direction A and authorized
+the deterministic current-source candidate build in the current task-scoped
+dirty checkout.
+
+Current status:
+`M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY`.
+
+The contract permits isolated frontend/PyInstaller builds, exact A/B tree
+comparison, static archive/frontend/README inspection, a local ignored
+candidate, canonical receipts, RP2 reconciliation, tests, and current-ledger
+updates. It does not permit running the candidate, signing, promotion,
+distribution, deployment, commit, push, release, camera/device access,
+participant contact, real deletion, or M3.
+
+```text
+package_integration_receipt_sha256=c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf
+source_tool_inventory_count=56
+policy_preimage_count=46
+static_bindings_digest=e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626
+candidate_exact_bytes_sha256=d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10
+binding_schema_exact_bytes_sha256=eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8
+historical_package_unchanged=true
+candidate_package_built=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=false
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+GAP-01, GAP-02, and GAP-07 are `CLOSED_FOR_CURRENT_CANDIDATE`. GAP-03,
+GAP-04, GAP-05, GAP-06, and GAP-08 remain `OPEN`. The candidate is a local
+static artifact, not packaged runtime, portability, distribution, or release
+evidence.
+
+## M2-S3A current package-gap audit boundary
+
+`USER_STATED`: on `2026-09-01`, the user approved Direction A and authorized
+the deterministic audit-only S3A plan in the current task-scoped dirty
+checkout.
+
+Current status:
+`M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY`.
+
+The contract permits canonical JSON/Markdown audit artifacts, five packaging
+tests, RP2 source/static reconciliation, and current-ledger updates. It does
+not permit package/frontend/runtime mutation, package rebuild, camera/device
+access, participant contact, M3, signing, deployment, commit, push, or release.
+
+```text
+audit_json_sha256=a63c0fefa7c7aba37685ccb65bec7fd605448e42873d5d8252975a82ea9269e5
+source_tool_inventory_count=52
+policy_preimage_count=42
+static_bindings_digest=e11984ea6cd5146a862b9065a22063cf80d3eb8aa7ce92b6929450cafa7769d5
+candidate_exact_bytes_sha256=d98a0013e4c4b3c219fcd0d53e66c5c99dcd3c4fcea6d823d54bf1e040e0c258
+binding_schema_exact_bytes_sha256=17cb07cb672dfccc0c5fe0c3fffd91a82e63a392bbbc0660d09b047dce8ad5f1
+package_contains_integration=false
+package_rebuild_started=false
+release_authorized=false
+distribution_ready=false
+clean_machine_verified=false
+same_host_portable_verified=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+All eight package gaps remain `OPEN`. Git metadata exists; the cumulative work
+started from clean `main` at `7912bd9` and remains uncommitted.
+
+## Retained M2-S2E strict reproduction boundary
+
+`USER_STATED`: on `2026-09-01`, the user approved Direction A and authorized
+implementation of strict same-revision synthetic reproduction in the current
+task-scoped dirty checkout.
+
+Current status:
+`M2_S2E_SYNTHETIC_EVIDENCE_REPRODUCTION_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+The contract permits one bounded S2D file, strict S2D verification, current
+source binding comparison, built-in synthetic replay in an owned temporary
+root, canonical comparison receipts, RP2 regeneration, tests, and current
+ledger reconciliation. It does not permit camera/device access, caller runner
+or fixture input, browser import, M3, participant contact, package rebuild,
+deployment, submission, commit, push, or release.
+
+```text
+static_bindings_digest=38a17dcc4ea214a2d52ef2bb825e502bcf88d7dbf48ebc2f3758da93b6d2a585
+candidate_exact_bytes_sha256=15f3bcc27411b1534e6214d8818af70cf46076776af4ae73551d508d0f0f7119
+binding_schema_exact_bytes_sha256=abc494b96a3cc52eda57c43d677c83245736ab65ff923faa4e39524cf84f2dc5
+classification=EXACTLY_REPRODUCED
+legacy_classification=SOURCE_REVISION_MISMATCH
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+Older S2D bundles remain valid integrity evidence but cannot be rewritten to
+match the new source binding. They return `SOURCE_REVISION_MISMATCH` without
+creating a replay workspace.
+
+## M2-S2D current synthetic evidence boundary
+
+`USER_STATED`: on `2026-08-31`, the user approved Direction A and authorized
+implementation of M2-S2D in the current task-scoped dirty checkout.
+
+Current status:
+`M2_S2D_SYNTHETIC_EVIDENCE_EXPORT_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+The contract permits a verified read of terminal persisted synthetic
+artifacts, deterministic download-only evidence bundles, an offline one-file
+verifier, authenticated monitor UI wiring, source-runtime browser evidence,
+RP2 regeneration, and current-ledger reconciliation. It does not permit a
+server archive, remote transmission, physical capture, participant contact,
+collection, package rebuild, deployment, submission, or release.
+
+```text
+static_bindings_digest=7204b1d53dbac8d5fd7f057c9b5a63e3fde10ec4c68111e4fa2b0ef9312880d3
+candidate_exact_bytes_sha256=46221d85c38df2e44b62d688ff5a162519f215078462ef6f54bc47b65c75abd0
+binding_schema_exact_bytes_sha256=23d742592c018343767ff8b670e1a253f7e2e2cbdf1a91c4829e8dc7bf30a9d3
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+`OBSERVED at task start`: Git metadata exists and the baseline was clean
+`main` at `7912bd9`. Current changes remain uncommitted and task-scoped.
+
+## Retained M2-S2C synthetic reviewer source-runtime boundary
+
+`USER_STATED`: on `2026-08-31`, the user approved Direction A and authorized
+implementation of the M2-S2C source-only reviewer API/UI plan.
+
+Current status:
+`M2_S2C_SYNTHETIC_REVIEWER_API_UI_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+The contract permits repository code, tests, an owned temporary synthetic
+workspace, source-runtime browser verification, RP2 regeneration, and current
+ledger reconciliation. It does not permit physical capture, participant
+contact, collection, package rebuild, deployment, submission, or release.
+
+```text
+static_bindings_digest=d54ec5277d9713128e03a0eaae787c5ff6fd04ee6e48fee3654f87655d847248
+candidate_exact_bytes_sha256=582bb50f0ca2118937f7d79d7dd8a0bff3d43d72a58ae540c27c41ccddcabd71
+binding_schema_exact_bytes_sha256=9c460d3fb874faea444ab97a3c85bc70c37d25f6ea1ced5be4f2dbec20092387
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+The service accepts only `run_kind`, keeps at most one active run and 32
+records, derives opaque per-intent persistence IDs, and cleans its owned root
+at shutdown. The exam origin exposes no S2C route.
+
+## M2-S2B current synthetic nominal boundary
+
+`USER_STATED`: on `2026-08-31`, the user approved implementation of the
+synthetic-only M2-S2B nominal run. This authorizes local source changes,
+deterministic fixtures, temporary synthetic persistence, tests, RP2
+source/static reconciliation, and ledger updates only.
+
+Current status:
+`M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+`OBSERVED`: the caller-locked `run_kind=NOMINAL_20M` contract processes exactly
+18,077 zero-pose frames over accelerated 1,200-second timestamps. The shared
+private engine retains the M2-S2A public API, recomputes D1 bindings, validates
+receipt semantics, and separates persisted artifact validity from
+`BACKEND_CONTRACT_PASS` or exact technical `NO_GO`. The artifact is minimized;
+it contains no raw landmark, frame, fixture bytes, identity, device identifier,
+or local path.
+
+Current RP2 source/static tuple:
+
+```text
+static_bindings_digest=6e84eb0699658c61efd335a175a2abb4470f37afeaff131d94cdce332640fa43
+candidate_exact_bytes_sha256=99365851f4fbad6f78c9b94c30eaef362b281c1a901cc15b40f2c5707e9fd771
+binding_schema_exact_bytes_sha256=1bec3a9e9747136f01e43dd76de62f5b622eb00540714ee4c1639ee470edcb2d
+```
+
+`OBSERVED at task start`: Git metadata exists; the baseline was clean `main`
+at `7912bd9`. Current uncommitted changes remain task-scoped. No commit, push,
+package rebuild, deployment, or release is authorized by this contract.
+
+```text
+evidence_kind=SIMULATED
+run_kind=NOMINAL_20M
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+No physical camera/device action, audio, participant flow, export, real
+deletion, external submission, provisioning, M3 work, package rebuild, or
+release is authorized. Synthetic fault routing is not physical fault evidence.
+
+## M2-S2A retained synthetic integration boundary
+
+`USER_STATED`: on `2026-08-31`, the user approved implementation of the
+synthetic-only M2-S2A vertical slice. This authorizes local source changes,
+deterministic fixtures, temporary synthetic persistence, tests, RP2
+source/static reconciliation, and ledger updates only.
+
+Current status:
+`M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+`OBSERVED`: the integration core processes 977 deterministic zero-pose frames,
+recomputes D1 bindings, validates receipt semantics, persists valid
+`BACKEND_CONTRACT_PASS` and `NO_GO` audit artifacts, and does not persist raw
+landmarks or fixture bytes. `integration_status=PERSISTED` is not a D1 or
+device decision. The no-argument smoke uses an owned temporary root and emits
+sanitized canonical output only.
+
+Current RP2 source/static tuple:
+
+```text
+static_bindings_digest=84694c545120b69cebaa8d64fb40c3c1d574afcecd69126f1238d5e285a7a22f
+candidate_exact_bytes_sha256=cd89fad5be9e804fcdf56b87f8edd517fe15be74de0e1c0dcd01d0e10bb16bec
+binding_schema_exact_bytes_sha256=fcc3ae40caf53e2afd3f67b1f0739ce863e4a6780673e6de0afd904750571d94
+```
+
+`OBSERVED at task start`: Git metadata exists; the baseline was clean `main`
+at `7912bd9`. No commit, push, package rebuild, deployment, or release is
+authorized by this contract.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+No physical camera/device action, audio, participant flow, export, real
+deletion, external submission, provisioning, M3 work, package rebuild, or
+release is authorized.
 
 ## GOV-P5A current human-confirmation request boundary
 

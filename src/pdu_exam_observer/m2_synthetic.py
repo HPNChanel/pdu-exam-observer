@@ -580,7 +580,9 @@ def _definition_is_valid(definition: FixtureDefinition) -> bool:
     )
 
 
-def _input_hash(fixture: FixtureInput) -> str:
+def fixture_input_digest(fixture: FixtureInput) -> str:
+    """Return the canonical identity digest for one injected fixture frame."""
+
     return _canonical_digest(
         {
             "fixture_id": fixture.fixture_id,
@@ -591,6 +593,12 @@ def _input_hash(fixture: FixtureInput) -> str:
             "technical_input_kind": fixture.technical_input_kind.value,
         }
     )
+
+
+def _input_hash(fixture: FixtureInput) -> str:
+    """Backward-compatible internal alias for the public digest helper."""
+
+    return fixture_input_digest(fixture)
 
 
 def _canonical_digest(payload: object) -> str:

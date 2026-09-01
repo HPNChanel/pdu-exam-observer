@@ -996,7 +996,7 @@ class M1Backend(M0Backend):
                 parsed_retention_end = date.fromisoformat(retention_end_date)
             except ValueError as exc:
                 raise InvalidTransition("Retention end date must be a valid ISO date") from exc
-            if parsed_retention_end < datetime.fromtimestamp(self.clock(), UTC).date():
+            if parsed_retention_end < date.fromtimestamp(self.clock()):
                 raise InvalidTransition("Retention end date may not be in the past")
         key = self._key(idempotency_key, f"session-{participant_id}")
         payload: dict[str, object] = {

@@ -250,6 +250,278 @@ collection_authorized=false
 authority_status=AUTHORITY_NOT_ISSUED
 ```
 
+## G15 - M2-S2A synthetic integration acceptance
+
+- Status:
+  `M2_S2A_SYNTHETIC_PREFLIGHT_VERTICAL_SLICE_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+- `evidence_kind=SIMULATED`; 977 deterministic zero-pose frames bind the
+  synthetic runner to D1 receipt semantics and M2 persistence.
+- Both valid `BACKEND_CONTRACT_PASS` and `NO_GO` audit receipts are persisted;
+  `integration_status=PERSISTED` does not imply device or research readiness.
+- Current RP2 tuple:
+  `static_bindings_digest=84694c545120b69cebaa8d64fb40c3c1d574afcecd69126f1238d5e285a7a22f`,
+  `candidate_exact_bytes_sha256=cd89fad5be9e804fcdf56b87f8edd517fe15be74de0e1c0dcd01d0e10bb16bec`,
+  `binding_schema_exact_bytes_sha256=fcc3ae40caf53e2afd3f67b1f0739ce863e4a6780673e6de0afd904750571d94`.
+- At task start Git existed and the baseline was clean `main` at `7912bd9`.
+
+```text
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+## G16 - M2-S2B synthetic nominal integration acceptance
+
+Status:
+`M2_S2B_SYNTHETIC_NOMINAL_20M_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+- Exactly 18,077 deterministic zero-pose frames are evaluated under the fixed
+  accelerated `run_kind=NOMINAL_20M` contract for 1,200 requested seconds.
+- The public M2-S2A API remains intact; the nominal caller cannot select run
+  kind, duration, profile, artifact kind, or status marker.
+- D1 `BACKEND_CONTRACT_PASS` and exact valid technical `NO_GO` receipts remain
+  distinct from `integration_status=PERSISTED`; corrupt or forged evidence and
+  persistence/withdrawal failures do not claim an artifact.
+- The synthetic fault matrix covers timing, accounting, latency, backlog,
+  input, pose, quality, encoder, disk, durability, privacy, receipt integrity,
+  idempotency, persistence, and withdrawal routing. This is synthetic routing
+  evidence, not proof of a reproduced physical fault.
+- RP2 verifies the current 31-entry inventory and 28 policy preimages:
+  `static_bindings_digest=6e84eb0699658c61efd335a175a2abb4470f37afeaff131d94cdce332640fa43`,
+  `candidate_exact_bytes_sha256=99365851f4fbad6f78c9b94c30eaef362b281c1a901cc15b40f2c5707e9fd771`,
+  `binding_schema_exact_bytes_sha256=1bec3a9e9747136f01e43dd76de62f5b622eb00540714ee4c1639ee470edcb2d`.
+
+```text
+evidence_kind=SIMULATED
+run_kind=NOMINAL_20M
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G16 does not authorize camera/device access, participant contact, collection,
+export, real deletion, package rebuild, deployment, or M3.
+
+## G17 - M2-S2C synthetic reviewer API/UI acceptance
+
+Status:
+`M2_S2C_SYNTHETIC_REVIEWER_API_UI_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+- Monitor routes require the reviewer bearer; exam origin returns 404.
+- Request surface contains only `run_kind`, with `PREFLIGHT_60S` and
+  `NOMINAL_20M`; no path, device, duration, fixture, digest, or authority input.
+- One owned temporary workspace permits one active run, retains at most 32
+  records, derives per-intent artifact IDs, and is removed on shutdown.
+- Browser evidence shows the persistent synthetic/no-camera/no-collection
+  banner and bounded terminal interpretation for both fixed runs.
+- RP2 verifies 44 source/tool entries and 32 policy preimages:
+  `static_bindings_digest=d54ec5277d9713128e03a0eaae787c5ff6fd04ee6e48fee3654f87655d847248`,
+  `candidate_exact_bytes_sha256=582bb50f0ca2118937f7d79d7dd8a0bff3d43d72a58ae540c27c41ccddcabd71`,
+  `binding_schema_exact_bytes_sha256=9c460d3fb874faea444ab97a3c85bc70c37d25f6ea1ced5be4f2dbec20092387`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G17 does not authorize physical execution, camera/device access, participant
+contact, collection, package rebuild, deployment, or release.
+
+## G18 - M2-S2D synthetic evidence export acceptance
+
+Status:
+`M2_S2D_SYNTHETIC_EVIDENCE_EXPORT_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+- Only terminal persisted synthetic runs, including valid technical `NO_GO`,
+  are exportable; corrupt input or forged receipt produces no bundle claim.
+- The authenticated monitor route returns a canonical JSON attachment of at
+  most 4,000,000 bytes; the exam origin exposes no evidence route.
+- The bundle contains the complete minimized persisted artifact and cross-binds
+  its SHA-256, D1 semantics, observations, source run, and authority ceiling.
+- The offline CLI accepts exactly one regular non-link file and fails closed
+  with a bounded canonical receipt; the server creates no export archive.
+- Browser evidence downloaded and offline-verified both preflight and nominal
+  bundles with console errors/warnings 0/0 and cleanup 0/0/0.
+- RP2 verifies 47 source/tool entries and 36 policy preimages:
+  `static_bindings_digest=7204b1d53dbac8d5fd7f057c9b5a63e3fde10ec4c68111e4fa2b0ef9312880d3`,
+  `candidate_exact_bytes_sha256=46221d85c38df2e44b62d688ff5a162519f215078462ef6f54bc47b65c75abd0`,
+  `binding_schema_exact_bytes_sha256=23d742592c018343767ff8b670e1a253f7e2e2cbdf1a91c4829e8dc7bf30a9d3`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G18 does not authorize physical execution, camera/device access, participant
+contact, collection, remote transmission, package rebuild, deployment, or
+release.
+
+## G19 - M2-S2E strict synthetic reproduction acceptance
+
+Status:
+`M2_S2E_SYNTHETIC_EVIDENCE_REPRODUCTION_LOCALLY_VERIFIED_DEVICE_UNVERIFIED_NO_COLLECTION_AUTHORITY`.
+
+- Fresh preflight and nominal S2D bundles return `EXACTLY_REPRODUCED` only
+  after whole-bundle and all nested comparison digests match.
+- Valid older evidence returns `SOURCE_REVISION_MISMATCH` before temporary
+  workspace creation; semantic and operational failures cannot emit exact.
+- The replay uses only built-in fixtures, verified persistence reads, a
+  transient S2D rebuild, and cleanup before success.
+- The one-file CLI is bounded to 4,000,000 bytes, rejects links/reparse input,
+  emits canonical sanitized output, and creates no output archive.
+- RP2 verifies 51 source/tool entries and 40 policy preimages:
+  `static_bindings_digest=38a17dcc4ea214a2d52ef2bb825e502bcf88d7dbf48ebc2f3758da93b6d2a585`,
+  `candidate_exact_bytes_sha256=15f3bcc27411b1534e6214d8818af70cf46076776af4ae73551d508d0f0f7119`,
+  `binding_schema_exact_bytes_sha256=abc494b96a3cc52eda57c43d677c83245736ab65ff923faa4e39524cf84f2dc5`.
+
+```text
+evidence_kind=SIMULATED
+package_contains_integration=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G19 does not authorize physical execution, device access, participant contact,
+collection, M3, package rebuild, deployment, or release.
+
+## G20 - M2-S3A current-source package gap audit acceptance
+
+Status:
+`M2_S3A_CURRENT_SOURCE_PACKAGE_GAP_AUDITED_REBUILD_NOT_STARTED_NO_RELEASE_AUTHORITY`.
+
+- Canonical audit JSON SHA-256 is
+  `a63c0fefa7c7aba37685ccb65bec7fd605448e42873d5d8252975a82ea9269e5`.
+- The historical package is `MANIFEST_VERIFIED` and
+  `HISTORICAL_NOT_CURRENT_SOURCE`; build-TOC evidence is auxiliary only.
+- Exactly eight gaps remain `OPEN`; none has an authority effect.
+- RP2 verifies 52 source/tool entries and 42 policy preimages:
+  `static_bindings_digest=e11984ea6cd5146a862b9065a22063cf80d3eb8aa7ce92b6929450cafa7769d5`,
+  `candidate_exact_bytes_sha256=d98a0013e4c4b3c219fcd0d53e66c5c99dcd3c4fcea6d823d54bf1e040e0c258`,
+  `binding_schema_exact_bytes_sha256=17cb07cb672dfccc0c5fe0c3fffd91a82e63a392bbbc0660d09b047dce8ad5f1`.
+
+```text
+package_contains_integration=false
+package_rebuild_started=false
+release_authorized=false
+distribution_ready=false
+clean_machine_verified=false
+same_host_portable_verified=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G20 proves package-gap traceability only. It is not package integration,
+portable execution, distribution readiness, physical evidence, or release
+authority.
+
+## G21 - M2-S3B deterministic current-source candidate acceptance
+
+Status marker:
+`M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY`.
+
+Pass only if:
+
+- The canonical integration receipt SHA-256 is
+  `c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf`.
+- RP2 checks the final tuple
+  `static_bindings_digest=e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626`,
+  `candidate_exact_bytes_sha256=d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10`,
+  and `binding_schema_exact_bytes_sha256=eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8`.
+- Build A and B have the same tree digest
+  `80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009`
+  with no mismatch paths.
+- Recursive archive inventory contains all 11 required modules; the packaged
+  frontend equals the isolated build; the candidate README retains every
+  synthetic/no-authority marker; both candidate manifests verify.
+- GAP-01, GAP-02, and GAP-07 are `CLOSED_FOR_CURRENT_CANDIDATE`; GAP-03,
+  GAP-04, GAP-05, GAP-06, and GAP-08 remain `OPEN`.
+- The historical package remains byte-identical and manifest-valid.
+- The following ceiling remains exact:
+
+```text
+historical_package_unchanged=true
+candidate_package_built=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=false
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+G21 is static same-host build evidence only. The candidate was not run and is
+not portability, distribution, physical-device, research, collection, or
+release evidence.
+
 ## Residual and external gates
 
 - `UNVERIFIED`: institutional approval, real participant data, M2+ capture/model work, actual encryption/ACL controls, clean-machine execution, signing, deployment, physical two-monitor behavior, other browsers, and user visual acceptance.

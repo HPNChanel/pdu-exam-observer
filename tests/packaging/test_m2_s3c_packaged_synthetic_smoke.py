@@ -16,10 +16,10 @@ STATUS = (
     "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_"
     "SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
 )
-S3B_RECEIPT_SHA256 = "c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf"
-EXECUTABLE_SHA256 = "432b82534448d5e32c10ecd2099ee7267dc5e2f7d0079a3782c9d9db9861610d"
-MANIFEST_SHA256 = "5d796d341f20d449dc4ff469cc315e6a815506195d739166fe550a2ba8039749"
-TREE_SHA256 = "80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009"
+S3B_RECEIPT_SHA256 = "bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd"
+EXECUTABLE_SHA256 = "9a90abf58e7a0c36c5050c44213ec2f478070b5c8bfdd05570bed4bdc40efbec"
+MANIFEST_SHA256 = "e0b279a1e667cc39e5c5f62d6aa169e6973c2c2f957f78118f86f9de972e620f"
+TREE_SHA256 = "29a0d7749e8069978f54d9c0087261fe709da3c016c73acca9cffb5034f8c37e"
 README_SHA256 = "653585fd4c0e25a81ebca9ed1107d791ac8494cfffdea26370d005a41bff7570"
 
 
@@ -111,8 +111,46 @@ def test_cli_is_no_argument_and_pins_exact_candidate_inputs() -> None:
     }
 
 
-def test_orchestrator_uses_fixed_environment_and_exactly_two_invocations(tmp_path: Path) -> None:
+def test_orchestrator_uses_fixed_environment_and_exactly_two_invocations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     module = _load_module()
+    static_bindings = {"artifacts": {}, "policy_preimages": {}}
+    static_bytes = json.dumps(
+        static_bindings,
+        ensure_ascii=True,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    candidate = {
+        "artifact_kind": "D1_N2_STATIC_BINDING_CANDIDATE",
+        "static_bindings": static_bindings,
+        "static_bindings_digest": hashlib.sha256(static_bytes).hexdigest(),
+    }
+    candidate_path = tmp_path / "candidate.json"
+    schema_path = tmp_path / "schema.json"
+    candidate_path.write_text(
+        json.dumps(candidate, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    schema_path.write_text("schema\n", encoding="utf-8")
+    monkeypatch.setattr(module, "RP2_CANDIDATE", candidate_path)
+    monkeypatch.setattr(module, "RP2_SCHEMA", schema_path)
+    revision = module._load_harness_revision()
+    assert revision == {
+        "binding_schema_exact_bytes_sha256": hashlib.sha256(schema_path.read_bytes()).hexdigest(),
+        "candidate_exact_bytes_sha256": hashlib.sha256(candidate_path.read_bytes()).hexdigest(),
+        "static_bindings_digest": candidate["static_bindings_digest"],
+    }
+    candidate["static_bindings"]["authority_status"] = "ISSUED"
+    candidate_path.write_text(
+        json.dumps(candidate, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(module._SmokeError) as tampered:
+        module._load_harness_revision()
+    assert tampered.value.code is module.PackagedSmokeFailureCode.CANDIDATE_INPUT_MISMATCH
+
     environment = module._build_child_environment({}, tmp_path, 12001, 12002)
     assert environment == {
         "PDU_EXAM_PORT": "12001",
@@ -243,6 +281,13 @@ def test_cleanup_removes_only_owned_root_and_incomplete_runtime_never_passes(
     tmp_path: Path,
 ) -> None:
     module = _load_module()
+
+    class _AlreadyExitedProcess:
+        def poll(self) -> int:
+            return 1
+
+    assert module._terminate_process_tree(_AlreadyExitedProcess()) is False
+
     parent = tmp_path / "candidates"
     owned = parent / ".pdu-m2-s3c-owned"
     owned.mkdir(parents=True)

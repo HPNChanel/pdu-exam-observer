@@ -47,7 +47,8 @@ def _source_bundle(kind: SyntheticReviewRunKind) -> bytes:
             kind,
             idempotency_key=f"m2-s2e-source-{kind.value.lower()}-0001",
         )
-        for _ in range(600):
+        deadline = time.monotonic() + 30.0
+        while time.monotonic() < deadline:
             record = service.get(queued.request_id)
             if record.job_status is SyntheticReviewJobStatus.TERMINAL:
                 return service.export_evidence(queued.request_id).payload
@@ -75,7 +76,9 @@ def test_structured_loader_preserves_the_existing_s2d_verification_contract() ->
     assert source.integration_receipt.result_digest == source.source_result_digest
 
 
-def test_environment_binding_is_deterministic_and_uses_the_closed_source_inventory() -> None:
+def test_environment_binding_is_deterministic_and_uses_the_closed_source_inventory(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     expected_paths = (
         "src/pdu_exam_observer/m2_synthetic.py",
         "src/pdu_exam_observer/m2_d1_contract.py",
@@ -96,6 +99,30 @@ def test_environment_binding_is_deterministic_and_uses_the_closed_source_invento
     assert first == second
     assert first.injected_failure_codes == ()
     assert synthetic_environment_binding_digest(first) == source.environment_binding_digest
+
+    import pdu_exam_observer.m2_synthetic_environment as environment
+
+    repository = Path(__file__).parents[2]
+    bundle_root = tmp_path / "PDU-Exam-Observer"
+    internal_root = bundle_root / "_internal"
+    binding_root = internal_root / "synthetic-bindings"
+    packaged_binding_paths = (
+        *expected_paths,
+        "src/pdu_exam_observer/assets/models/pose_landmarker_lite.task",
+    )
+    for relative in packaged_binding_paths:
+        target = binding_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((repository / relative).read_bytes())
+    packaged_manifest = b"packaged-release-manifest\n"
+    (bundle_root / "RELEASE_MANIFEST.json").write_bytes(packaged_manifest)
+    monkeypatch.setattr(environment.sys, "frozen", True, raising=False)
+    monkeypatch.setattr(environment.sys, "_MEIPASS", str(internal_root), raising=False)
+    monkeypatch.setattr(environment.sys, "executable", str(bundle_root / "PDUExamObserver.exe"))
+    packaged = current_synthetic_environment_bindings()
+    assert packaged.application_revision_digest == first.application_revision_digest
+    assert packaged.pose_engine_digest == first.pose_engine_digest
+    assert packaged.release_manifest_digest == hashlib.sha256(packaged_manifest).hexdigest()
 
 
 def test_preflight_bundle_is_exactly_reproduced_after_workspace_cleanup() -> None:

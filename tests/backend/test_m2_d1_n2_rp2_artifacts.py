@@ -177,6 +177,12 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "m2_s3c_runtime_smoke_contract_policy_digest",
         "m2_s3c_authority_ceiling_policy_digest",
     }.issubset(builder.POLICY_PREIMAGES)
+    assert (
+        builder.POLICY_PREIMAGES["s3b_static_inclusion_policy_digest"]["fields"][
+            "required_module_count"
+        ]
+        == 14
+    )
 
 
 def test_rp2_write_is_idempotent_and_check_rejects_source_or_candidate_mutation(

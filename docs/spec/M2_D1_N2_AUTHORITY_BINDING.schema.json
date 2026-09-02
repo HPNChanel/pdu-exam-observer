@@ -2682,7 +2682,7 @@
                 "fields": {
                   "archive_inventory": "EXECUTABLE_RECURSIVE_ARCHIVE",
                   "frontend_byte_identical": true,
-                  "required_module_count": 11,
+                  "required_module_count": 14,
                   "runtime_smoke_verified": false
                 },
                 "projection": "m2-s3b.recursive-archive-and-frontend-static-inclusion",

@@ -23,6 +23,7 @@ STATUS = (
     "STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
 )
 REQUIRED_MODULES = {
+    "fastapi",
     "pdu_exam_observer.api.synthetic_review",
     "pdu_exam_observer.m2_d1_contract",
     "pdu_exam_observer.m2_persistence",
@@ -34,6 +35,8 @@ REQUIRED_MODULES = {
     "pdu_exam_observer.m2_synthetic_preflight_fixture",
     "pdu_exam_observer.m2_synthetic_reproduction",
     "pdu_exam_observer.m2_synthetic_review",
+    "pydantic",
+    "uvicorn",
 }
 HISTORICAL_HASHES = {
     "packaging/PDU-Exam-Observer.spec": (
@@ -107,7 +110,20 @@ def test_candidate_contract_locks_toolchain_environment_and_hidden_imports() -> 
         "uv": "0.10.10",
     }
     assert set(builder.required_modules()) == REQUIRED_MODULES
+    assert builder.runtime_build_environment_contract() == {
+        "project_dependency_names": [
+            "fastapi",
+            "mediapipe",
+            "pydantic",
+            "sse-starlette",
+            "uvicorn",
+        ],
+        "project_sync_args": ["sync", "--locked", "--no-dev"],
+    }
     assert SPEC.is_file()
+    spec_text = SPEC.read_text(encoding="utf-8")
+    assert "exclude_binaries=True" in spec_text
+    assert "a.scripts,\n    [],\n    exclude_binaries=True" in spec_text
 
 
 def test_source_binding_matches_s3a_historical_inputs_and_current_rp2() -> None:
@@ -134,22 +150,19 @@ def test_canonical_receipt_has_closed_envelope_and_valid_body_hash() -> None:
     assert document["body_sha256"] == hashlib.sha256(_canonical(document["body"])).hexdigest()
 
 
-def test_candidate_records_prove_two_byte_identical_manifest_valid_builds(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_candidate_records_prove_two_byte_identical_manifest_valid_builds() -> None:
     builder = _load_builder()
-    monkeypatch.setattr(
-        builder,
-        "_load_rp2",
-        lambda: {
-            "binding_schema_exact_bytes_sha256": "a" * 64,
-            "candidate_exact_bytes_sha256": "b" * 64,
-            "static_bindings_digest": "c" * 64,
-        },
-    )
-    result = builder.check_candidate()
-    assert result["result"] == "CANDIDATE_PACKAGE_INTEGRATED"
     receipt = json.loads(LOCAL_VALIDATION.read_text(encoding="utf-8"))
+    source_revision = receipt["body"]["source_revision"]
+    result = builder._check_candidate(source_revision, require_ai_receipt_match=False)
+    assert result["result"] == "CANDIDATE_PACKAGE_INTEGRATED"
+    with pytest.raises(builder.CandidateError) as wrong_revision:
+        builder._check_candidate(
+            {**source_revision, "static_bindings_digest": "0" * 64},
+            require_ai_receipt_match=False,
+        )
+    assert wrong_revision.value.code == "RP2_INVALID"
+
     reproducibility = receipt["body"]["reproducibility"]
     assert reproducibility["byte_identical"] is True
     assert reproducibility["mismatch_paths"] == []

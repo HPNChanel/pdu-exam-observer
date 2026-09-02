@@ -741,7 +741,7 @@ POLICY_PREIMAGES = {
         "fields": {
             "archive_inventory": "EXECUTABLE_RECURSIVE_ARCHIVE",
             "frontend_byte_identical": True,
-            "required_module_count": 11,
+            "required_module_count": 14,
             "runtime_smoke_verified": False,
         },
     },

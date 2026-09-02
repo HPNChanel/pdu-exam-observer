@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 
 from pdu_exam_observer.m2_synthetic_integration import SyntheticEnvironmentBindings
@@ -31,12 +32,27 @@ def _repository_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
+def _binding_root_and_release_manifest() -> tuple[Path, Path]:
+    if getattr(sys, "frozen", False):
+        internal_root = Path(str(sys._MEIPASS))  # type: ignore[attr-defined]
+        bundle_root = Path(sys.executable).resolve().parent
+        return (
+            internal_root / "synthetic-bindings",
+            bundle_root / "RELEASE_MANIFEST.json",
+        )
+    repository_root = _repository_root()
+    return (
+        repository_root,
+        repository_root / _RELEASE_MANIFEST_RELATIVE_PATH,
+    )
+
+
 def _sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def current_synthetic_environment_bindings() -> SyntheticEnvironmentBindings:
-    root = _repository_root()
+    root, release_manifest = _binding_root_and_release_manifest()
     source = {
         relative_path: _sha256_file(root / Path(relative_path))
         for relative_path in BOUND_SOURCE_RELATIVE_PATHS
@@ -44,7 +60,7 @@ def current_synthetic_environment_bindings() -> SyntheticEnvironmentBindings:
     source_bytes = json.dumps(source, sort_keys=True, separators=(",", ":")).encode("ascii")
     return SyntheticEnvironmentBindings(
         application_revision_digest=hashlib.sha256(source_bytes).hexdigest(),
-        release_manifest_digest=_sha256_file(root / _RELEASE_MANIFEST_RELATIVE_PATH),
+        release_manifest_digest=_sha256_file(release_manifest),
         pose_engine_digest=_sha256_file(root / _POSE_TASK_RELATIVE_PATH),
         encoder_policy_digest=hashlib.sha256(_ENCODER_POLICY).hexdigest(),
     )

@@ -41,13 +41,13 @@ STATUS = (
 S3A_AUDIT_SHA256 = "a63c0fefa7c7aba37685ccb65bec7fd605448e42873d5d8252975a82ea9269e5"
 CANDIDATE_SOURCE_REVISION: dict[str, str] = {
     "binding_schema_exact_bytes_sha256": (
-        "eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8"
+        "3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca"
     ),
     "candidate_exact_bytes_sha256": (
-        "d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10"
+        "a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639"
     ),
     "static_bindings_digest": (
-        "e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626"
+        "a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f"
     ),
 }
 CONTRACT: dict[str, str] = {
@@ -65,6 +65,7 @@ CONTRACT: dict[str, str] = {
     "uv": "0.10.10",
 }
 REQUIRED_MODULES: tuple[str, ...] = (
+    "fastapi",
     "pdu_exam_observer.api.synthetic_review",
     "pdu_exam_observer.m2_d1_contract",
     "pdu_exam_observer.m2_persistence",
@@ -76,6 +77,16 @@ REQUIRED_MODULES: tuple[str, ...] = (
     "pdu_exam_observer.m2_synthetic_preflight_fixture",
     "pdu_exam_observer.m2_synthetic_reproduction",
     "pdu_exam_observer.m2_synthetic_review",
+    "pydantic",
+    "uvicorn",
+)
+PROJECT_SYNC_ARGS: tuple[str, ...] = ("sync", "--locked", "--no-dev")
+PROJECT_DEPENDENCY_NAMES: tuple[str, ...] = (
+    "fastapi",
+    "mediapipe",
+    "pydantic",
+    "sse-starlette",
+    "uvicorn",
 )
 README_MARKERS: tuple[str, ...] = (
     "CURRENT-SOURCE LOCAL CANDIDATE — NOT A RELEASE",
@@ -222,6 +233,13 @@ def contract_snapshot() -> dict[str, str]:
 
 def required_modules() -> tuple[str, ...]:
     return REQUIRED_MODULES
+
+
+def runtime_build_environment_contract() -> dict[str, list[str]]:
+    return {
+        "project_dependency_names": list(PROJECT_DEPENDENCY_NAMES),
+        "project_sync_args": list(PROJECT_SYNC_ARGS),
+    }
 
 
 def required_readme_markers() -> tuple[str, ...]:
@@ -421,6 +439,14 @@ def _prepare_tool_environment(root: Path) -> tuple[Path, Path]:
     )
     python = tool_root / "Scripts" / "python.exe"
     viewer = tool_root / "Scripts" / "pyi-archive_viewer.exe"
+    sync_environment = dict(os.environ)
+    sync_environment["UV_PROJECT_ENVIRONMENT"] = str(tool_root)
+    _run(
+        [uv, *PROJECT_SYNC_ARGS],
+        cwd=ROOT,
+        env=sync_environment,
+        code="TOOLCHAIN_UNAVAILABLE",
+    )
     _run(
         [uv, "pip", "install", "--python", str(python), "pyinstaller==6.10.0"],
         cwd=ROOT,
@@ -719,13 +745,17 @@ def _validate_receipt_envelope(document: dict[str, Any]) -> None:
         raise CandidateError("RECEIPT_MISMATCH")
 
 
-def check_candidate() -> dict[str, object]:
+def _check_candidate(
+    expected_source_revision: dict[str, str],
+    *,
+    require_ai_receipt_match: bool,
+) -> dict[str, object]:
     _verify_historical_manifest()
     verify_candidate_manifest()
     validation = _strict_json(LOCAL_VALIDATION, "RECEIPT_MISMATCH")
     _validate_receipt_envelope(validation)
     body = validation["body"]
-    if body.get("source_revision") != CANDIDATE_SOURCE_REVISION:
+    if body.get("source_revision") != expected_source_revision:
         raise CandidateError("RP2_INVALID")
     records = _tree_records(CANDIDATE_ROOT, exclude=frozenset({"M2_S3B_BUILD_VALIDATION.json"}))
     digest = _tree_digest(records)
@@ -748,7 +778,11 @@ def check_candidate() -> dict[str, object]:
     ):
         raise CandidateError("FRONTEND_INCLUSION_MISMATCH")
     _validate_readme(BUNDLE_ROOT)
-    if AI_RECEIPT.is_file() and AI_RECEIPT.read_bytes() != LOCAL_VALIDATION.read_bytes():
+    if (
+        require_ai_receipt_match
+        and AI_RECEIPT.is_file()
+        and AI_RECEIPT.read_bytes() != LOCAL_VALIDATION.read_bytes()
+    ):
         raise CandidateError("RECEIPT_MISMATCH")
     _s3a_immutable_inputs()
     return {
@@ -756,6 +790,10 @@ def check_candidate() -> dict[str, object]:
         "result": "CANDIDATE_PACKAGE_INTEGRATED",
         "status": STATUS,
     }
+
+
+def check_candidate() -> dict[str, object]:
+    return _check_candidate(CANDIDATE_SOURCE_REVISION, require_ai_receipt_match=True)
 
 
 def build_candidate() -> dict[str, object]:
@@ -833,7 +871,7 @@ def build_candidate() -> dict[str, object]:
             readme_digest=readme_digest,
         )
         _write_atomic(LOCAL_VALIDATION, canonical_json_bytes(receipt))
-        result = check_candidate()
+        result = _check_candidate(typed_rp2, require_ai_receipt_match=False)
         _s3a_immutable_inputs()
         return result
     except CandidateError:

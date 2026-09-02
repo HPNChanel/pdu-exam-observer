@@ -40,20 +40,20 @@ STATUS = (
     "SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
 )
 FAILURE_STATUS = "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_NOT_VERIFIED"
-S3B_RECEIPT_SHA256 = "c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf"
-EXECUTABLE_SHA256 = "432b82534448d5e32c10ecd2099ee7267dc5e2f7d0079a3782c9d9db9861610d"
-MANIFEST_SHA256 = "5d796d341f20d449dc4ff469cc315e6a815506195d739166fe550a2ba8039749"
-TREE_SHA256 = "80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009"
+S3B_RECEIPT_SHA256 = "bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd"
+EXECUTABLE_SHA256 = "9a90abf58e7a0c36c5050c44213ec2f478070b5c8bfdd05570bed4bdc40efbec"
+MANIFEST_SHA256 = "e0b279a1e667cc39e5c5f62d6aa169e6973c2c2f957f78118f86f9de972e620f"
+TREE_SHA256 = "29a0d7749e8069978f54d9c0087261fe709da3c016c73acca9cffb5034f8c37e"
 README_SHA256 = "653585fd4c0e25a81ebca9ed1107d791ac8494cfffdea26370d005a41bff7570"
 CANDIDATE_SOURCE_REVISION: dict[str, str] = {
     "binding_schema_exact_bytes_sha256": (
-        "eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8"
+        "3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca"
     ),
     "candidate_exact_bytes_sha256": (
-        "d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10"
+        "a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639"
     ),
     "static_bindings_digest": (
-        "e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626"
+        "a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f"
     ),
 }
 _HEX64 = re.compile(r"[0-9a-f]{64}\Z")
@@ -118,7 +118,12 @@ def _is_link_or_reparse(path: Path) -> bool:
     return path.is_symlink() or bool(attributes & stat.FILE_ATTRIBUTE_REPARSE_POINT)
 
 
-def _strict_json(path: Path, code: PackagedSmokeFailureCode) -> dict[str, Any]:
+def _strict_json(
+    path: Path,
+    code: PackagedSmokeFailureCode,
+    *,
+    canonical_required: bool = True,
+) -> dict[str, Any]:
     if not path.is_file() or _is_link_or_reparse(path):
         raise _SmokeError(code)
     try:
@@ -126,7 +131,9 @@ def _strict_json(path: Path, code: PackagedSmokeFailureCode) -> dict[str, Any]:
         document = json.loads(payload)
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise _SmokeError(code) from exc
-    if not isinstance(document, dict) or payload != _canonical_bytes(document):
+    if not isinstance(document, dict) or (
+        canonical_required and payload != _canonical_bytes(document)
+    ):
         raise _SmokeError(code)
     return cast(dict[str, Any], document)
 
@@ -236,8 +243,20 @@ def _validate_fixed_inputs() -> dict[str, str]:
 
 
 def _load_harness_revision() -> dict[str, str]:
-    candidate = _strict_json(RP2_CANDIDATE, PackagedSmokeFailureCode.CANDIDATE_INPUT_MISMATCH)
+    candidate = _strict_json(
+        RP2_CANDIDATE,
+        PackagedSmokeFailureCode.CANDIDATE_INPUT_MISMATCH,
+        canonical_required=False,
+    )
+    static_bindings = candidate.get("static_bindings")
     static_digest = candidate.get("static_bindings_digest")
+    if (
+        not isinstance(static_bindings, dict)
+        or not isinstance(static_digest, str)
+        or _sha256_bytes(_canonical_bytes(static_bindings, trailing_lf=False))
+        != static_digest
+    ):
+        raise _SmokeError(PackagedSmokeFailureCode.CANDIDATE_INPUT_MISMATCH)
     revision = {
         "binding_schema_exact_bytes_sha256": _sha256_file(RP2_SCHEMA),
         "candidate_exact_bytes_sha256": _sha256_file(RP2_CANDIDATE),
@@ -245,7 +264,7 @@ def _load_harness_revision() -> dict[str, str]:
     }
     if not all(isinstance(value, str) and _HEX64.fullmatch(value) for value in revision.values()):
         raise _SmokeError(PackagedSmokeFailureCode.CANDIDATE_INPUT_MISMATCH)
-    return cast(dict[str, str], revision)
+    return revision
 
 
 @dataclass(frozen=True, slots=True)
@@ -687,9 +706,9 @@ def _submit_and_poll(
     raise _SmokeError(PackagedSmokeFailureCode.SYNTHETIC_RUN_TIMEOUT)
 
 
-def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
+def _terminate_process_tree(process: subprocess.Popen[bytes]) -> bool:
     if process.poll() is not None:
-        raise _SmokeError(PackagedSmokeFailureCode.PROCESS_CLEANUP_FAILED)
+        return False
     try:
         completed = subprocess.run(
             ["taskkill.exe", "/PID", str(process.pid), "/T", "/F"],
@@ -702,6 +721,7 @@ def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
         raise _SmokeError(PackagedSmokeFailureCode.PROCESS_CLEANUP_FAILED) from exc
     if completed.returncode != 0 or process.poll() is None:
         raise _SmokeError(PackagedSmokeFailureCode.PROCESS_CLEANUP_FAILED)
+    return True
 
 
 class _SubprocessSmokeAdapter:
@@ -779,9 +799,10 @@ class _SubprocessSmokeAdapter:
             primary = exc
         finally:
             cleanup_error: _SmokeError | None = None
+            forced_termination: bool | None = None
             if process is not None:
                 try:
-                    _terminate_process_tree(process)
+                    forced_termination = _terminate_process_tree(process)
                 except _SmokeError as exc:
                     cleanup_error = exc
             try:
@@ -790,6 +811,8 @@ class _SubprocessSmokeAdapter:
                 cleanup_error = exc
             if cleanup_error is not None:
                 primary = cleanup_error
+            elif primary is None and forced_termination is not True:
+                primary = _SmokeError(PackagedSmokeFailureCode.PROCESS_CLEANUP_FAILED)
         if primary is not None:
             raise primary
         if result is None:

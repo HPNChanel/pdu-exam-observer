@@ -442,16 +442,16 @@ release claim is opened.
 Require
 `M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY`
 and receipt SHA
-`c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf`.
+`bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd`.
 
 The gate recomputes or checks:
 
 - RP2 tuple
-  `static_bindings_digest=e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626`,
-  `candidate_exact_bytes_sha256=d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10`,
-  and `binding_schema_exact_bytes_sha256=eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8`;
+  `static_bindings_digest=a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f`,
+  `candidate_exact_bytes_sha256=a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639`,
+  and `binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca`;
 - byte-identical build A/B tree digest
-  `80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009`;
+  `29a0d7749e8069978f54d9c0087261fe709da3c016c73acca9cffb5034f8c37e`;
 - recursive executable/PYZ inclusion, isolated frontend equality, README
   boundary, candidate manifest integrity, and historical package immutability;
 - GAP-01/GAP-02/GAP-07 `CLOSED_FOR_CURRENT_CANDIDATE` with GAP-03/GAP-04/
@@ -483,6 +483,51 @@ authority_status=AUTHORITY_NOT_ISSUED
 G17 does not run the candidate and does not establish packaged smoke,
 portability, clean-machine evidence, distribution readiness, or release
 authority.
+
+## G18 - M2-S3C packaged synthetic runtime smoke integrity
+
+Required marker:
+`M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY`.
+
+```text
+packaged_smoke_receipt_sha256=479aa2e364216a8f4560fbf98a31a6935829d847dfbace65f7c66fae8778bbb7
+package_integration_receipt_sha256=bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd
+candidate_source_static_bindings_digest=a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f
+candidate_source_candidate_exact_bytes_sha256=a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639
+candidate_source_binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca
+static_bindings_digest=721783d4d89eb55a599a1505574741d9e631d66a5ceee7e443f4469058104a8a
+candidate_exact_bytes_sha256=ca5e80e847e11f93f8a8da33ddc743b1f106a50af864a7eb339194a1ef86929a
+binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca
+historical_package_unchanged=true
+candidate_package_unchanged=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=true
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT=OPEN
+GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT=OPEN
+GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN
+GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN
+```
+
+Quality evidence requires two fixed packaged invocations, four terminal
+synthetic runs, byte-identical projections, loopback inspection, forced tree
+termination, candidate immutability, and owned-root cleanup. Same-host and
+clean-machine portability remain false.
 
 ## External and residual gates
 

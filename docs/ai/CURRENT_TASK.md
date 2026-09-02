@@ -1,5 +1,74 @@
 # Current Task
 
+Milestone: `M2-S3C - packaged synthetic runtime smoke`
+
+Status:
+`M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY`
+
+Updated: `2026-09-02`
+
+## Active M2-S3C outcome
+
+`M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY`
+
+`OBSERVED`: the corrected one-folder candidate ran in exactly two independent
+process invocations on the build host. Each invocation completed built-in
+`PREFLIGHT_60S` (977 observations) and `NOMINAL_20M` (18,077 observations)
+with `BACKEND_CONTRACT_PASS`; the minimized projections were byte-identical.
+Candidate bytes, manifests, processes, listeners, and owned temporary roots
+were checked before closure.
+
+```text
+packaged_smoke_receipt_sha256=479aa2e364216a8f4560fbf98a31a6935829d847dfbace65f7c66fae8778bbb7
+package_integration_receipt_sha256=bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd
+candidate_source_static_bindings_digest=a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f
+candidate_source_candidate_exact_bytes_sha256=a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639
+candidate_source_binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca
+static_bindings_digest=721783d4d89eb55a599a1505574741d9e631d66a5ceee7e443f4469058104a8a
+candidate_exact_bytes_sha256=ca5e80e847e11f93f8a8da33ddc743b1f106a50af864a7eb339194a1ef86929a
+binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca
+source_tool_inventory_count=58
+policy_preimage_count=50
+historical_package_unchanged=true
+candidate_package_unchanged=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=true
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT=OPEN
+GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT=OPEN
+GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN
+GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN
+```
+
+This is same-host synthetic runtime evidence only. It does not establish
+same-host portability, clean-machine portability, camera/device behavior,
+participant collection, distribution readiness, signing, or release authority.
+The next planned package task is M2-S3D packaged S2D export and S2E
+reproduction round-trip; it remains unopened.
+
+`OBSERVED`: S3B focused tests `8 passed`, S3C focused tests `8 passed`, RP2
+artifact tests `6 passed`, governance `3 passed`, research `69 passed`, Ruff
+PASS, strict mypy PASS, both historical and candidate manifests verified,
+collection `966 tests`, and one clean full invocation returned
+`966 passed in 170.26s`.
+
+---
+
 Milestone: `M2-S3B - deterministic current-source package integration`
 
 Status:
@@ -9,24 +78,27 @@ Updated: `2026-09-01`
 
 ## Active M2-S3B outcome
 
+`M2_S3B_CURRENT_SOURCE_PACKAGE_CANDIDATE_DETERMINISTICALLY_INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY`
+
 `USER_STATED`: the user approved Direction A and authorized the S3B plan in
 the existing task-scoped dirty checkout.
 
 `OBSERVED`: two isolated builds from the same pinned source/toolchain produced
 byte-identical candidate payload trees. Recursive executable/PYZ inspection
-contains all 11 required S2A-S2E modules, the packaged frontend equals the
+contains all 14 required application and S2A-S2E runtime modules, the packaged frontend equals the
 isolated frontend build, and the candidate README preserves the synthetic and
-no-authority boundary. The candidate executable was not run.
+no-authority boundary. This S3B receipt is static; runtime execution is
+attested separately by S3C.
 
 ```text
-package_integration_receipt_sha256=c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf
-source_tool_inventory_count=56
-policy_preimage_count=46
-static_bindings_digest=e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626
-candidate_exact_bytes_sha256=d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10
-binding_schema_exact_bytes_sha256=eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8
-candidate_tree_sha256=80364f89c49affcd15b74e53d07b9b3cd0545055d5c9c4780e869a5417dd7009
-candidate_manifest_sha256=5d796d341f20d449dc4ff469cc315e6a815506195d739166fe550a2ba8039749
+package_integration_receipt_sha256=bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd
+source_tool_inventory_count=58
+policy_preimage_count=50
+static_bindings_digest=a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f
+candidate_exact_bytes_sha256=a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639
+binding_schema_exact_bytes_sha256=3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca
+candidate_tree_sha256=29a0d7749e8069978f54d9c0087261fe709da3c016c73acca9cffb5034f8c37e
+candidate_manifest_sha256=e0b279a1e667cc39e5c5f62d6aa169e6973c2c2f957f78118f86f9de972e620f
 historical_package_unchanged=true
 candidate_package_built=true
 candidate_package_contains_integration=true
@@ -54,10 +126,10 @@ remain `OPEN`. S3C is the next task and is the first task permitted to run the
 candidate for packaged synthetic smoke. No signing, portability, distribution,
 commit, push, deployment, or release authority is issued.
 
-`OBSERVED`: final gates returned S3B `8 passed`, RP2 artifacts `6 passed`,
-governance `3 passed`, research `69 passed`, and one full invocation
-`958 passed in 199.64s`. Both manifests verified; two read-only candidate
-checks were byte-identical; `S3B_TEMP_ROOT_COUNT=0`, `PDU_PROCESS_COUNT=0`,
+`OBSERVED`: final integrated gates returned S3B `8 passed`, S3C `8 passed`,
+RP2 artifacts `6 passed`, governance `3 passed`, research `69 passed`, and one
+full invocation `966 passed in 170.26s`. Both manifests verified; read-only
+candidate checks were byte-identical; `S3B_TEMP_ROOT_COUNT=0`, `PDU_PROCESS_COUNT=0`,
 and `PDU_LISTENER_COUNT=0`.
 
 ---

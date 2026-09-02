@@ -139,16 +139,32 @@ M2_S3B_RECEIPT = (
     "INTEGRATED_STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
 )
 M2_S3B_STATIC_BINDINGS_DIGEST = (
-    "e1ab400a388df7c573a177494a46de9af07c85e62ca0f1c95c4a5c3c9211d626"
+    "a7b0505cb283fb6998b3bc27aea155c78039b1dc5b7c0d4a11811d919cf9e16f"
 )
 M2_S3B_CANDIDATE_SHA256 = (
-    "d6c523d74f3188a43f060721073c3671ade0a6fa20e15fde583b6eeb84735d10"
+    "a6f209b7184fee723911cc2c9385fdd8df06f3313458e3b107859fcb3835e639"
 )
 M2_S3B_SCHEMA_SHA256 = (
-    "eb0a3df699c5a60a47e6419876fee64a7003ea7afa628ec746f01d180fe1a3c8"
+    "3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca"
 )
 M2_S3B_RECEIPT_SHA256 = (
-    "c3d67bd842cc56ae7f377350ced3be56b09fdca9ec1e161d3d4805407c0a36bf"
+    "bef341dc251edf45c12a707e3c47e32f0d4c7127bf4f78e950a47cba170afcbd"
+)
+M2_S3C_RECEIPT = (
+    "M2_S3C_PACKAGED_SYNTHETIC_RUNTIME_SMOKE_LOCALLY_VERIFIED_"
+    "SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+)
+M2_S3C_STATIC_BINDINGS_DIGEST = (
+    "721783d4d89eb55a599a1505574741d9e631d66a5ceee7e443f4469058104a8a"
+)
+M2_S3C_CANDIDATE_SHA256 = (
+    "ca5e80e847e11f93f8a8da33ddc743b1f106a50af864a7eb339194a1ef86929a"
+)
+M2_S3C_SCHEMA_SHA256 = (
+    "3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca"
+)
+M2_S3C_RECEIPT_SHA256 = (
+    "479aa2e364216a8f4560fbf98a31a6935829d847dfbace65f7c66fae8778bbb7"
 )
 
 
@@ -330,6 +346,40 @@ def test_current_m1_r1_evidence_tuple_is_consistent() -> None:
         assert "d1_go=false" in ledger, name
         assert "authority_status=AUTHORITY_NOT_ISSUED" in ledger, name
 
+    m2_s3c_ledgers = {
+        "roadmap": _section(_read("docs/plans/ROADMAP.md"), "## M2-S3C"),
+        "acceptance": _section(
+            _read("docs/plans/ACCEPTANCE_GATES.md"), "## G22"
+        ),
+        "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G18"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3C outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3C packaged synthetic runtime smoke boundary",
+        ),
+        "verification": _read("docs/ai/M2_S3C_VERIFICATION.md"),
+        "risk": risk,
+    }
+    for name, ledger in m2_s3c_ledgers.items():
+        assert M2_S3C_RECEIPT in ledger, name
+        assert M2_S3C_STATIC_BINDINGS_DIGEST in ledger, name
+        assert M2_S3C_CANDIDATE_SHA256 in ledger, name
+        assert M2_S3C_SCHEMA_SHA256 in ledger, name
+        assert M2_S3C_RECEIPT_SHA256 in ledger, name
+        assert M2_S3B_STATIC_BINDINGS_DIGEST in ledger, name
+        assert M2_S3B_CANDIDATE_SHA256 in ledger, name
+        assert M2_S3B_RECEIPT_SHA256 in ledger, name
+        assert "packaged_runtime_smoke_verified=true" in ledger, name
+        assert "same_host_portable_verified=false" in ledger, name
+        assert "clean_machine_verified=false" in ledger, name
+        assert "distribution_ready=false" in ledger, name
+        assert "release_authorized=false" in ledger, name
+        assert "device_gate_decision=UNVERIFIED" in ledger, name
+        assert "d1_go=false" in ledger, name
+        assert "authority_status=AUTHORITY_NOT_ISSUED" in ledger, name
+
     m2_s2d_ledgers = {
         "roadmap": _section(_read("docs/plans/ROADMAP.md"), "## M2-S2D"),
         "acceptance": _section(
@@ -402,8 +452,13 @@ def test_current_m1_r1_evidence_tuple_is_consistent() -> None:
             _read("docs/plans/ACCEPTANCE_GATES.md"), "## G21"
         ),
         "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G17"),
-        "current_task": _read("docs/ai/CURRENT_TASK.md"),
-        "task_contract": _read("docs/ai/TASK_CONTRACT.md"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3B outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3B deterministic candidate integration boundary",
+        ),
         "verification": _read("docs/ai/M2_S3B_VERIFICATION.md"),
         "risk": risk,
     }
@@ -563,20 +618,20 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
     artifacts = candidate["static_bindings"]["artifacts"]
 
     assert hashlib.sha256(static_bindings_bytes).hexdigest() == (
-        M2_S3B_STATIC_BINDINGS_DIGEST
+        M2_S3C_STATIC_BINDINGS_DIGEST
     )
-    assert hashlib.sha256(candidate_bytes).hexdigest() == M2_S3B_CANDIDATE_SHA256
+    assert hashlib.sha256(candidate_bytes).hexdigest() == M2_S3C_CANDIDATE_SHA256
     assert (
         hashlib.sha256(schema_path.read_bytes()).hexdigest()
-        == M2_S3B_SCHEMA_SHA256
+        == M2_S3C_SCHEMA_SHA256
     )
-    assert len(artifacts["source_inventory"]) == 56
+    assert len(artifacts["source_inventory"]) == 58
     assert set(artifacts) - {"source_inventory"} == {
         "uv_lock",
         "pose_landmarker_lite_task",
         "blaze_face_short_range_tflite",
     }
-    assert len(candidate["static_bindings"]["policy_preimages"]) == 46
+    assert len(candidate["static_bindings"]["policy_preimages"]) == 50
 
     contract = _read("docs/ai/M2_D1_N2_AUTHORITY_CONTRACT.md")
     current_contract = contract.split(
@@ -646,6 +701,59 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
         assert "evidence_kind=SIMULATED" in ledger, name
         assert "physical_camera_access_authorized=true" not in ledger, name
         assert "d1_go=true" not in ledger, name
+        assert "collection_authorized=true" not in ledger, name
+        assert "authority_status=ISSUED" not in ledger, name
+
+    m2_s3c_ledgers = {
+        "roadmap": _section(roadmap, "## M2-S3C"),
+        "acceptance": _section(_read("docs/plans/ACCEPTANCE_GATES.md"), "## G22"),
+        "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G18"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3C outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3C packaged synthetic runtime smoke boundary",
+        ),
+        "verification": _read("docs/ai/M2_S3C_VERIFICATION.md"),
+    }
+    m2_s3c_bindings = (
+        "historical_package_unchanged=true",
+        "candidate_package_unchanged=true",
+        "candidate_package_contains_integration=true",
+        "packaged_runtime_smoke_verified=true",
+        "same_host_portable_verified=false",
+        "clean_machine_verified=false",
+        "release_authorized=false",
+        "distribution_ready=false",
+        "production_reconciler_implemented=false",
+        "production_reconciler_real_storage_verified=false",
+        "real_data_deletion_authorized=false",
+        "execution_authorized=false",
+        "physical_camera_access_authorized=false",
+        "device_gate_decision=UNVERIFIED",
+        "d1_go=false",
+        "participant_collection_authorized=false",
+        "research_ready=false",
+        "collection_authorized=false",
+        "authority_status=AUTHORITY_NOT_ISSUED",
+        "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT=OPEN",
+        "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT=OPEN",
+        "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN",
+        "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN",
+    )
+    for name, ledger in m2_s3c_ledgers.items():
+        for binding in m2_s3c_bindings:
+            assert binding in ledger, f"{name}: {binding}"
+        assert M2_S3C_RECEIPT in ledger, name
+        assert "same_host_portable_verified=true" not in ledger, name
+        assert "clean_machine_verified=true" not in ledger, name
+        assert "release_authorized=true" not in ledger, name
+        assert "distribution_ready=true" not in ledger, name
+        assert "physical_camera_access_authorized=true" not in ledger, name
+        assert "d1_go=true" not in ledger, name
+        assert "research_ready=true" not in ledger, name
         assert "collection_authorized=true" not in ledger, name
         assert "authority_status=ISSUED" not in ledger, name
 
@@ -754,8 +862,13 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
         "roadmap": _section(roadmap, "## M2-S3B"),
         "acceptance": _section(_read("docs/plans/ACCEPTANCE_GATES.md"), "## G21"),
         "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G17"),
-        "current_task": _read("docs/ai/CURRENT_TASK.md"),
-        "task_contract": _read("docs/ai/TASK_CONTRACT.md"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3B outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3B deterministic candidate integration boundary",
+        ),
         "verification": _read("docs/ai/M2_S3B_VERIFICATION.md"),
     }
     m2_s3b_bindings = (

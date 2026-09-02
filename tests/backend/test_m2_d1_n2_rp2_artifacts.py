@@ -82,6 +82,10 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "SRC_M2_SYNTHETIC_REPRODUCTION_PY": (
             "src/pdu_exam_observer/m2_synthetic_reproduction.py"
         ),
+        "SRC_M2_PACKAGED_REPRODUCTION_PY": (
+            "src/pdu_exam_observer/m2_packaged_reproduction.py"
+        ),
+        "SRC_PDU_MAIN_PY": "src/pdu_exam_observer/__main__.py",
         "SRC_API_FACTORIES_PY": "src/pdu_exam_observer/api/factories.py",
         "SRC_LAUNCHER_PY": "src/pdu_exam_observer/launcher.py",
         "WEB_API_TS": "apps/web/src/api.ts",
@@ -126,6 +130,9 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "TEST_M2_S3C_PACKAGED_SMOKE_PY": (
             "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py"
         ),
+        "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": (
+            "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py"
+        ),
         "TEST_LAUNCHER_PY": "tests/backend/test_launcher.py",
         "TEST_WEB_API_TS": "apps/web/src/api.test.ts",
         "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": (
@@ -150,9 +157,12 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         ),
         "M2_S3B_CANDIDATE_README": "packaging/README_M2_S3B_CANDIDATE.txt",
         "M2_S3C_PACKAGED_SMOKE_SCRIPT": "scripts/run_m2_s3c_packaged_smoke.py",
+        "M2_S3D_BUILD_SCRIPT": "scripts/build_m2_s3d_candidate.py",
+        "M2_S3D_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.s3d.spec",
+        "M2_S3D_ROUND_TRIP_SCRIPT": "scripts/run_m2_s3d_packaged_round_trip.py",
     }
-    assert len(builder.SOURCE_IDS) == 58
-    assert len(builder.POLICY_PREIMAGES) == 50
+    assert len(builder.SOURCE_IDS) == 64
+    assert len(builder.POLICY_PREIMAGES) == 55
     assert {
         "synthetic_review_request_surface_policy_digest",
         "synthetic_review_single_flight_policy_digest",
@@ -176,6 +186,11 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "m2_s3c_fixed_candidate_binding_policy_digest",
         "m2_s3c_runtime_smoke_contract_policy_digest",
         "m2_s3c_authority_ceiling_policy_digest",
+        "m2_s3d_stdin_reproduction_surface_policy_digest",
+        "m2_s3d_environment_binding_policy_digest",
+        "m2_s3d_dual_cycle_round_trip_policy_digest",
+        "m2_s3d_no_device_or_disclosure_policy_digest",
+        "m2_s3d_authority_and_gap_policy_digest",
     }.issubset(builder.POLICY_PREIMAGES)
     assert (
         builder.POLICY_PREIMAGES["s3b_static_inclusion_policy_digest"]["fields"][

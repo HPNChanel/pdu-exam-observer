@@ -1,5 +1,60 @@
 # Product and Research Roadmap
 
+## M2-S3D - Packaged S2D export and S2E reproduction round-trip
+
+Status:
+`M2_S3D_PACKAGED_SYNTHETIC_EVIDENCE_ROUND_TRIP_LOCALLY_VERIFIED_SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY`
+as of `2026-09-02`.
+
+The deterministic S3D candidate completed two same-host synthetic cycles. Both
+preflight and nominal bundles were exported and exactly reproduced by the
+packaged stdin-only surface, with byte-identical cycle projections and complete
+process/listener/temp cleanup.
+
+```text
+round_trip_receipt_sha256=4d8a862408aec0470d86b084f1abdc9baa323a3ee53cb57dfe780c3d6e2258ed
+static_bindings_digest=034eb3e19f88377529f5ffc37c077938b42563a447d1d6e6a481c1b635cbf607
+candidate_exact_bytes_sha256=ced85d39533de902da652c4a7f56ea85eaf4891a5d8b27946badf8aebcae5c79
+binding_schema_exact_bytes_sha256=7125de572f5a78b986a768b484315b818e1c630d10ada48ea31bd0915c300058
+source_tool_inventory_count=64
+policy_preimage_count=55
+historical_package_unchanged=true
+candidate_package_unchanged=true
+candidate_package_contains_integration=true
+packaged_runtime_smoke_verified=true
+packaged_evidence_round_trip_verified=true
+same_host_portable_verified=false
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN
+GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE=CLOSED_FOR_CURRENT_CANDIDATE
+GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN
+```
+
+This is same-host synthetic evidence, not clean-machine portability, physical
+device validation, research readiness, distribution readiness, or release
+authority. M2-S3E remains the next portability task; M2-S3F remains the later
+promotion-readiness synthesis.
+
+---
+
 ## M2-S3C - Packaged synthetic runtime smoke
 
 Status:

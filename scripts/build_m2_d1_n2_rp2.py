@@ -56,6 +56,10 @@ ARTIFACT_PATHS = {
     "SRC_M2_SYNTHETIC_REPRODUCTION_PY": (
         "src/pdu_exam_observer/m2_synthetic_reproduction.py"
     ),
+    "SRC_M2_PACKAGED_REPRODUCTION_PY": (
+        "src/pdu_exam_observer/m2_packaged_reproduction.py"
+    ),
+    "SRC_PDU_MAIN_PY": "src/pdu_exam_observer/__main__.py",
     "SRC_API_FACTORIES_PY": "src/pdu_exam_observer/api/factories.py",
     "SRC_LAUNCHER_PY": "src/pdu_exam_observer/launcher.py",
     "WEB_API_TS": "apps/web/src/api.ts",
@@ -98,6 +102,9 @@ ARTIFACT_PATHS = {
     "TEST_M2_S3C_PACKAGED_SMOKE_PY": (
         "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py"
     ),
+    "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": (
+        "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py"
+    ),
     "TEST_LAUNCHER_PY": "tests/backend/test_launcher.py",
     "TEST_WEB_API_TS": "apps/web/src/api.test.ts",
     "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": (
@@ -120,6 +127,9 @@ ARTIFACT_PATHS = {
     "M2_S3B_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.current-source.spec",
     "M2_S3B_CANDIDATE_README": "packaging/README_M2_S3B_CANDIDATE.txt",
     "M2_S3C_PACKAGED_SMOKE_SCRIPT": "scripts/run_m2_s3c_packaged_smoke.py",
+    "M2_S3D_BUILD_SCRIPT": "scripts/build_m2_s3d_candidate.py",
+    "M2_S3D_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.s3d.spec",
+    "M2_S3D_ROUND_TRIP_SCRIPT": "scripts/run_m2_s3d_packaged_round_trip.py",
 }
 
 SOURCE_IDS = tuple(
@@ -137,6 +147,9 @@ SOURCE_IDS = tuple(
     "M2_S3B_PYINSTALLER_SPEC",
     "M2_S3B_CANDIDATE_README",
     "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+    "M2_S3D_BUILD_SCRIPT",
+    "M2_S3D_PYINSTALLER_SPEC",
+    "M2_S3D_ROUND_TRIP_SCRIPT",
 )
 NON_SOURCE_IDS = (
     "UV_LOCK",
@@ -829,6 +842,78 @@ POLICY_PREIMAGES = {
             "physical_camera_access_authorized": False,
             "release_authorized": False,
             "research_ready": False,
+            "same_host_portable_verified": False,
+        },
+    },
+    "m2_s3d_stdin_reproduction_surface_policy_digest": {
+        "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
+        "projection": "m2-s3d.closed-stdin-only-packaged-reproduction-surface",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "argument_count": 0,
+            "input_surface": "STDIN_BYTES_ONLY",
+            "maximum_bytes": 4000000,
+            "opens_http_listener": False,
+            "path_or_url_input": False,
+        },
+    },
+    "m2_s3d_environment_binding_policy_digest": {
+        "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
+        "projection": "m2-s3d.complete-reproduction-environment-binding",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "binds_entrypoint_dispatch": True,
+            "binds_packaged_protocol": True,
+            "binds_reproduction_core": True,
+            "legacy_bundle_integrity_separate_from_same_revision": True,
+        },
+    },
+    "m2_s3d_dual_cycle_round_trip_policy_digest": {
+        "source_id": "M2_S3D_ROUND_TRIP_SCRIPT",
+        "projection": "m2-s3d.fixed-dual-cycle-export-reproduction-contract",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "candidate_process_count": 6,
+            "cycle_count": 2,
+            "retry_count": 0,
+            "run_order": ["PREFLIGHT_60S", "NOMINAL_20M"],
+            "same_executable_reproduction": True,
+        },
+    },
+    "m2_s3d_no_device_or_disclosure_policy_digest": {
+        "source_id": "M2_S3D_ROUND_TRIP_SCRIPT",
+        "projection": "m2-s3d.no-api-path-device-or-sensitive-disclosure",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "camera_or_device_input_supplied": False,
+            "new_http_api": False,
+            "path_input": False,
+            "stderr_output": False,
+            "url_input": False,
+        },
+    },
+    "m2_s3d_authority_and_gap_policy_digest": {
+        "source_id": "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY",
+        "projection": "m2-s3d.same-host-round-trip-no-release-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "clean_machine_verified": False,
+            "closed_gap_ids": [
+                "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT",
+            ],
+            "distribution_ready": False,
+            "open_gap_ids": [
+                "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT",
+            ],
+            "release_authorized": False,
             "same_host_portable_verified": False,
         },
     },

@@ -89,6 +89,9 @@ def test_environment_binding_is_deterministic_and_uses_the_closed_source_invento
         "src/pdu_exam_observer/m2_synthetic_review.py",
         "src/pdu_exam_observer/m2_synthetic_evidence.py",
         "src/pdu_exam_observer/m2_synthetic_environment.py",
+        "src/pdu_exam_observer/m2_synthetic_reproduction.py",
+        "src/pdu_exam_observer/m2_packaged_reproduction.py",
+        "src/pdu_exam_observer/__main__.py",
     )
     first = current_synthetic_environment_bindings()
     second = current_synthetic_environment_bindings()

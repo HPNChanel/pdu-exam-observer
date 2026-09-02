@@ -19,6 +19,9 @@ BOUND_SOURCE_RELATIVE_PATHS = (
     "src/pdu_exam_observer/m2_synthetic_review.py",
     "src/pdu_exam_observer/m2_synthetic_evidence.py",
     "src/pdu_exam_observer/m2_synthetic_environment.py",
+    "src/pdu_exam_observer/m2_synthetic_reproduction.py",
+    "src/pdu_exam_observer/m2_packaged_reproduction.py",
+    "src/pdu_exam_observer/__main__.py",
 )
 
 _POSE_TASK_RELATIVE_PATH = (

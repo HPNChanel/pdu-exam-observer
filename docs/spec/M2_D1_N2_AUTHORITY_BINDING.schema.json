@@ -520,6 +520,84 @@
                   ],
                   "type": "object"
                 },
+                "M2_S3D_BUILD_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3D_BUILD_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/build_m2_s3d_candidate.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3D_PYINSTALLER_SPEC": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3D_PYINSTALLER_SPEC"
+                    },
+                    "path": {
+                      "const": "packaging/PDU-Exam-Observer.s3d.spec"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3D_ROUND_TRIP_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3D_ROUND_TRIP_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/run_m2_s3d_packaged_round_trip.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "RP2_ARTIFACT_BUILDER": {
                   "additionalProperties": false,
                   "properties": {
@@ -988,6 +1066,32 @@
                   ],
                   "type": "object"
                 },
+                "SRC_M2_PACKAGED_REPRODUCTION_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_M2_PACKAGED_REPRODUCTION_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/m2_packaged_reproduction.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "SRC_M2_SYNTHETIC_ENVIRONMENT_PY": {
                   "additionalProperties": false,
                   "properties": {
@@ -1178,6 +1282,32 @@
                     },
                     "path": {
                       "const": "src/pdu_exam_observer/m2_synthetic_review.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "SRC_PDU_MAIN_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "SRC_PDU_MAIN_PY"
+                    },
+                    "path": {
+                      "const": "src/pdu_exam_observer/__main__.py"
                     },
                     "sha256": {
                       "pattern": "^[0-9a-f]{64}$",
@@ -1464,6 +1594,32 @@
                     },
                     "path": {
                       "const": "tests/packaging/test_m2_s3c_packaged_synthetic_smoke.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY"
+                    },
+                    "path": {
+                      "const": "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py"
                     },
                     "sha256": {
                       "pattern": "^[0-9a-f]{64}$",
@@ -1819,6 +1975,8 @@
                 "SRC_M2_SYNTHETIC_EVIDENCE_PY",
                 "SRC_M2_SYNTHETIC_ENVIRONMENT_PY",
                 "SRC_M2_SYNTHETIC_REPRODUCTION_PY",
+                "SRC_M2_PACKAGED_REPRODUCTION_PY",
+                "SRC_PDU_MAIN_PY",
                 "SRC_API_FACTORIES_PY",
                 "SRC_LAUNCHER_PY",
                 "WEB_API_TS",
@@ -1841,6 +1999,7 @@
                 "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
                 "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
                 "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+                "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY",
                 "TEST_LAUNCHER_PY",
                 "TEST_WEB_API_TS",
                 "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
@@ -1853,7 +2012,10 @@
                 "M2_S3B_BUILD_SCRIPT",
                 "M2_S3B_PYINSTALLER_SPEC",
                 "M2_S3B_CANDIDATE_README",
-                "M2_S3C_PACKAGED_SMOKE_SCRIPT"
+                "M2_S3C_PACKAGED_SMOKE_SCRIPT",
+                "M2_S3D_BUILD_SCRIPT",
+                "M2_S3D_PYINSTALLER_SPEC",
+                "M2_S3D_ROUND_TRIP_SCRIPT"
               ],
               "type": "object"
             },
@@ -2073,6 +2235,26 @@
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             },
+            "m2_s3d_authority_and_gap_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3d_dual_cycle_round_trip_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3d_environment_binding_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3d_no_device_or_disclosure_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3d_stdin_reproduction_surface_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
             "ownership_cleanup_policy_digest": {
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
@@ -2257,7 +2439,12 @@
             "m2_s3c_status_policy_digest",
             "m2_s3c_fixed_candidate_binding_policy_digest",
             "m2_s3c_runtime_smoke_contract_policy_digest",
-            "m2_s3c_authority_ceiling_policy_digest"
+            "m2_s3c_authority_ceiling_policy_digest",
+            "m2_s3d_stdin_reproduction_surface_policy_digest",
+            "m2_s3d_environment_binding_policy_digest",
+            "m2_s3d_dual_cycle_round_trip_policy_digest",
+            "m2_s3d_no_device_or_disclosure_policy_digest",
+            "m2_s3d_authority_and_gap_policy_digest"
           ],
           "type": "object"
         },
@@ -2529,6 +2716,91 @@
                 },
                 "projection": "m2-s3c.same-host-packaged-synthetic-runtime-smoke",
                 "source_id": "TEST_M2_S3C_PACKAGED_SMOKE_PY",
+                "version": 1
+              }
+            },
+            "m2_s3d_authority_and_gap_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "clean_machine_verified": false,
+                  "closed_gap_ids": [
+                    "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT",
+                    "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT"
+                  ],
+                  "distribution_ready": false,
+                  "open_gap_ids": [
+                    "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                    "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+                  ],
+                  "release_authorized": false,
+                  "same_host_portable_verified": false
+                },
+                "projection": "m2-s3d.same-host-round-trip-no-release-authority-ceiling",
+                "source_id": "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY",
+                "version": 1
+              }
+            },
+            "m2_s3d_dual_cycle_round_trip_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "candidate_process_count": 6,
+                  "cycle_count": 2,
+                  "retry_count": 0,
+                  "run_order": [
+                    "PREFLIGHT_60S",
+                    "NOMINAL_20M"
+                  ],
+                  "same_executable_reproduction": true
+                },
+                "projection": "m2-s3d.fixed-dual-cycle-export-reproduction-contract",
+                "source_id": "M2_S3D_ROUND_TRIP_SCRIPT",
+                "version": 1
+              }
+            },
+            "m2_s3d_environment_binding_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "binds_entrypoint_dispatch": true,
+                  "binds_packaged_protocol": true,
+                  "binds_reproduction_core": true,
+                  "legacy_bundle_integrity_separate_from_same_revision": true
+                },
+                "projection": "m2-s3d.complete-reproduction-environment-binding",
+                "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
+                "version": 1
+              }
+            },
+            "m2_s3d_no_device_or_disclosure_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "camera_or_device_input_supplied": false,
+                  "new_http_api": false,
+                  "path_input": false,
+                  "stderr_output": false,
+                  "url_input": false
+                },
+                "projection": "m2-s3d.no-api-path-device-or-sensitive-disclosure",
+                "source_id": "M2_S3D_ROUND_TRIP_SCRIPT",
+                "version": 1
+              }
+            },
+            "m2_s3d_stdin_reproduction_surface_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "argument_count": 0,
+                  "input_surface": "STDIN_BYTES_ONLY",
+                  "maximum_bytes": 4000000,
+                  "opens_http_listener": false,
+                  "path_or_url_input": false
+                },
+                "projection": "m2-s3d.closed-stdin-only-packaged-reproduction-surface",
+                "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
                 "version": 1
               }
             },
@@ -3102,7 +3374,12 @@
             "m2_s3c_status_policy_digest",
             "m2_s3c_fixed_candidate_binding_policy_digest",
             "m2_s3c_runtime_smoke_contract_policy_digest",
-            "m2_s3c_authority_ceiling_policy_digest"
+            "m2_s3c_authority_ceiling_policy_digest",
+            "m2_s3d_stdin_reproduction_surface_policy_digest",
+            "m2_s3d_environment_binding_policy_digest",
+            "m2_s3d_dual_cycle_round_trip_policy_digest",
+            "m2_s3d_no_device_or_disclosure_policy_digest",
+            "m2_s3d_authority_and_gap_policy_digest"
           ],
           "type": "object"
         },

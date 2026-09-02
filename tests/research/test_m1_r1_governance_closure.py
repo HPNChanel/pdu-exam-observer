@@ -166,6 +166,22 @@ M2_S3C_SCHEMA_SHA256 = (
 M2_S3C_RECEIPT_SHA256 = (
     "479aa2e364216a8f4560fbf98a31a6935829d847dfbace65f7c66fae8778bbb7"
 )
+M2_S3D_RECEIPT = (
+    "M2_S3D_PACKAGED_SYNTHETIC_EVIDENCE_ROUND_TRIP_LOCALLY_VERIFIED_"
+    "SAME_HOST_ONLY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+)
+M2_S3D_STATIC_BINDINGS_DIGEST = (
+    "034eb3e19f88377529f5ffc37c077938b42563a447d1d6e6a481c1b635cbf607"
+)
+M2_S3D_CANDIDATE_SHA256 = (
+    "ced85d39533de902da652c4a7f56ea85eaf4891a5d8b27946badf8aebcae5c79"
+)
+M2_S3D_SCHEMA_SHA256 = (
+    "7125de572f5a78b986a768b484315b818e1c630d10ada48ea31bd0915c300058"
+)
+M2_S3D_RECEIPT_SHA256 = (
+    "4d8a862408aec0470d86b084f1abdc9baa323a3ee53cb57dfe780c3d6e2258ed"
+)
 
 
 def _read(relative: str) -> str:
@@ -618,20 +634,20 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
     artifacts = candidate["static_bindings"]["artifacts"]
 
     assert hashlib.sha256(static_bindings_bytes).hexdigest() == (
-        M2_S3C_STATIC_BINDINGS_DIGEST
+        M2_S3D_STATIC_BINDINGS_DIGEST
     )
-    assert hashlib.sha256(candidate_bytes).hexdigest() == M2_S3C_CANDIDATE_SHA256
+    assert hashlib.sha256(candidate_bytes).hexdigest() == M2_S3D_CANDIDATE_SHA256
     assert (
         hashlib.sha256(schema_path.read_bytes()).hexdigest()
-        == M2_S3C_SCHEMA_SHA256
+        == M2_S3D_SCHEMA_SHA256
     )
-    assert len(artifacts["source_inventory"]) == 58
+    assert len(artifacts["source_inventory"]) == 64
     assert set(artifacts) - {"source_inventory"} == {
         "uv_lock",
         "pose_landmarker_lite_task",
         "blaze_face_short_range_tflite",
     }
-    assert len(candidate["static_bindings"]["policy_preimages"]) == 50
+    assert len(candidate["static_bindings"]["policy_preimages"]) == 55
 
     contract = _read("docs/ai/M2_D1_N2_AUTHORITY_CONTRACT.md")
     current_contract = contract.split(
@@ -756,6 +772,78 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
         assert "research_ready=true" not in ledger, name
         assert "collection_authorized=true" not in ledger, name
         assert "authority_status=ISSUED" not in ledger, name
+
+    m2_s3d_ledgers = {
+        "roadmap": _section(roadmap, "## M2-S3D"),
+        "acceptance": _section(_read("docs/plans/ACCEPTANCE_GATES.md"), "## G23"),
+        "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G19"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3D outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3D packaged evidence round-trip boundary",
+        ),
+        "verification": _read("docs/ai/M2_S3D_VERIFICATION.md"),
+    }
+    m2_s3d_bindings = (
+        "round_trip_receipt_sha256=" + M2_S3D_RECEIPT_SHA256,
+        "static_bindings_digest=" + M2_S3D_STATIC_BINDINGS_DIGEST,
+        "candidate_exact_bytes_sha256=" + M2_S3D_CANDIDATE_SHA256,
+        "binding_schema_exact_bytes_sha256=" + M2_S3D_SCHEMA_SHA256,
+        "source_tool_inventory_count=64",
+        "policy_preimage_count=55",
+        "historical_package_unchanged=true",
+        "candidate_package_unchanged=true",
+        "candidate_package_contains_integration=true",
+        "packaged_runtime_smoke_verified=true",
+        "packaged_evidence_round_trip_verified=true",
+        "same_host_portable_verified=false",
+        "clean_machine_verified=false",
+        "release_authorized=false",
+        "distribution_ready=false",
+        "production_reconciler_implemented=false",
+        "production_reconciler_real_storage_verified=false",
+        "real_data_deletion_authorized=false",
+        "execution_authorized=false",
+        "physical_camera_access_authorized=false",
+        "device_gate_decision=UNVERIFIED",
+        "d1_go=false",
+        "participant_collection_authorized=false",
+        "research_ready=false",
+        "collection_authorized=false",
+        "authority_status=AUTHORITY_NOT_ISSUED",
+        "GAP-01_CURRENT_PYTHON_RUNTIME_INCLUSION_NOT_DEMONSTRATED=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-02_CURRENT_FRONTEND_ASSETS_NOT_PACKAGED=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-03_PACKAGED_M2SYNTHETIC_RUNTIME_SMOKE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-04_PACKAGED_S2D_EXPORT_ROUND_TRIP_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-05_PACKAGED_S2E_REPRODUCTION_EVIDENCE_ABSENT=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN",
+        "GAP-07_PACKAGE_README_SYNTHETIC_BOUNDARY_STALE=CLOSED_FOR_CURRENT_CANDIDATE",
+        "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN",
+    )
+    for name, ledger in m2_s3d_ledgers.items():
+        assert M2_S3D_RECEIPT in ledger, name
+        for binding in m2_s3d_bindings:
+            assert binding in ledger, f"{name}: {binding}"
+        assert "same_host_portable_verified=true" not in ledger, name
+        assert "clean_machine_verified=true" not in ledger, name
+        assert "release_authorized=true" not in ledger, name
+        assert "distribution_ready=true" not in ledger, name
+        assert "physical_camera_access_authorized=true" not in ledger, name
+        assert "d1_go=true" not in ledger, name
+        assert "research_ready=true" not in ledger, name
+        assert "collection_authorized=true" not in ledger, name
+        assert "authority_status=ISSUED" not in ledger, name
+
+    s3d_receipt_bytes = (
+        ROOT / "docs/ai/M2_S3D_PACKAGED_EVIDENCE_ROUND_TRIP.json"
+    ).read_bytes()
+    assert hashlib.sha256(s3d_receipt_bytes).hexdigest() == M2_S3D_RECEIPT_SHA256
+    s3d_receipt = json.loads(s3d_receipt_bytes)
+    assert s3d_receipt["status"] == M2_S3D_RECEIPT
+    assert s3d_receipt["body"]["reproducibility"]["byte_identical"] is True
+    assert s3d_receipt["body"]["authority_ceiling"]["clean_machine_verified"] is False
 
     m2_s2b_ledgers = {
         "roadmap": _section(roadmap, "## M2-S2B"),

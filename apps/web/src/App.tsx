@@ -3,6 +3,7 @@ import { ApiError, BrowserEventStream, DemoApiClient, HttpApiClient, isReviewerA
 import type { AnswerIntent, ApiClient, EventStream, ResearchApi, ReviewerEvent, SessionSnapshot, SessionState, StreamMessage } from './api';
 import './styles.css';
 import { ResearchPreparation } from './ResearchPreparation';
+import { WorkspacePanel } from './WorkspacePanel';
 
 type AppProps = { route?: '/exam' | '/monitor'; api?: ApiClient; events?: EventStream; initialReviewer?: boolean; demoMode?: boolean };
 const questions = [{ id: 'q1', prompt: 'Một ngăn xếp (stack) tuân theo nguyên tắc nào?', choices: ['FIFO', 'LIFO', 'Chia để trị', 'Ngẫu nhiên'] }, { id: 'q2', prompt: 'Độ phức tạp tìm kiếm nhị phân trên mảng đã sắp xếp là?', choices: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'] }, { id: 'q3', prompt: 'Cấu trúc dữ liệu nào phù hợp cho hàng đợi?', choices: ['Queue', 'Tree', 'Graph', 'Set'] }];
@@ -17,11 +18,19 @@ export function App({ route = window.location.pathname === '/monitor' ? '/monito
   useEffect(() => { void activeApi.health().then(() => setHealth('live')).catch(() => setHealth('failed')); }, [activeApi]);
   return <div className="appShell">{isDemo && <p className="offlineBanner demoBanner" role="status">DEMO NGOẠI TUYẾN - dữ liệu minh họa, không phải phiên nghiên cứu hay dữ liệu camera.</p>}{health === 'failed' ? <main className="blockingSheet" aria-label="Không thể kết nối hệ thống"><h1>Không thể kết nối hệ thống cục bộ</h1><p>Không có dữ liệu demo tự động và phiên thi không được mở.</p><button className="inkButton" onClick={checkHealth}>Thử kết nối lại</button></main> : route === '/monitor' ? <Monitor api={activeApi} events={events} initialReviewer={initialReviewer} health={health} /> : <Exam api={activeApi} health={health} />}</div>;
 }
-function AppHeader({ title, subtitle }: { title: string; subtitle: string }) { return <header className="appHeader"><p className="eyebrow">PDU / NGHIÊN CỨU M0</p><h1 className="nfcText">{normalizeVietnameseText(title)}</h1><p>{normalizeVietnameseText(subtitle)}</p></header>; }
+function AppHeader({ title, subtitle }: { title: string; subtitle: string }) { return <header className="appHeader"><p className="eyebrow">PDU / NGHIÊN CỨU</p><h1 className="nfcText">{normalizeVietnameseText(title)}</h1><p>{normalizeVietnameseText(subtitle)}</p></header>; }
 
 function Exam({ api, health }: { api: ApiClient; health: 'checking' | 'live' | 'failed' }) {
   const [pairingCode, setPairingCode] = useState(''); const [sessionId, setSessionId] = useState<string>(); const [snapshot, setSnapshot] = useState<SessionSnapshot>(); const [current, setCurrent] = useState(0); const [answers, setAnswers] = useState<Record<string, string>>({}); const [pendingAnswer, setPendingAnswer] = useState<(AnswerIntent & { key: string })>(); const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle'); const [remaining, setRemaining] = useState<number | null>(null); const [submitOpen, setSubmitOpen] = useState(false); const [submitKey, setSubmitKey] = useState<string>(); const [submitError, setSubmitError] = useState('');
   const recording = snapshot?.state === 'RECORDING' && !snapshot.submitted;
+  useEffect(() => {
+    if (!recording || !api.focus) return;
+    const reportFocus = () => { void api.focus!(document.visibilityState === 'visible' && document.hasFocus()).catch(() => undefined); };
+    reportFocus();
+    const interval = window.setInterval(reportFocus, 1000);
+    window.addEventListener('focus', reportFocus); window.addEventListener('blur', reportFocus); document.addEventListener('visibilitychange', reportFocus);
+    return () => { window.clearInterval(interval); window.removeEventListener('focus', reportFocus); window.removeEventListener('blur', reportFocus); document.removeEventListener('visibilitychange', reportFocus); };
+  }, [api, recording]);
   const applySnapshot = (next: SessionSnapshot) => { setSnapshot(next); setRemaining(next.remainingSeconds); };
   useEffect(() => { if (!recording) return; const timer = window.setInterval(() => setRemaining((value) => value === null ? null : Math.max(0, value - 1)), 1000); return () => window.clearInterval(timer); }, [recording]);
   useEffect(() => { if (!sessionId || !['PREFLIGHT_READY', 'RECORDING'].includes(snapshot?.state ?? '')) return; const timer = window.setInterval(() => void api.status().then(applySnapshot).catch(() => undefined), 5000); return () => window.clearInterval(timer); }, [api, sessionId, snapshot?.state]);
@@ -103,6 +112,7 @@ function Monitor({ api, events, initialReviewer, health }: { api: ApiClient; eve
   if (!reviewer) return <><AppHeader title="Bàn quan sát" subtitle="Chỉ dành cho người đánh giá nghiên cứu" /><main className="loginSheet reveal" aria-labelledby="reviewer-auth-heading"><h2 id="reviewer-auth-heading" className="nfcText">Xác thực người đánh giá</h2><p id="reviewer-auth-description" role="status">Nhập mã PIN để mở bàn quan sát cục bộ.</p><label htmlFor="reviewer-pin">Mã PIN người đánh giá</label><input ref={pinInputRef} id="reviewer-pin" type="password" inputMode="numeric" aria-describedby="reviewer-auth-description" value={pin} onChange={(event) => setPin(event.target.value)} /><button className="inkButton" disabled={health !== 'live'} onClick={() => void login()}>Mở bàn quan sát</button>{loginError && <p role="alert">{loginError}</p>}<p>PIN chỉ xác minh trong phiên trình duyệt hiện tại.</p></main></>;
 
   const phase = phaseFor(snapshot?.state);
+  if (new URLSearchParams(window.location.search).get('workspace') === '1' && api instanceof HttpApiClient) return <WorkspacePanel api={api} onLogout={() => void logout()} />;
   const canStart = snapshot?.state === 'PREFLIGHT_READY';
   const canStop = snapshot?.state === 'RECORDING';
   const showPairingCode = Boolean(session) && snapshot?.state !== 'SEALED';

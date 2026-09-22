@@ -252,6 +252,7 @@ export interface ApiClient {
   start(sessionId: string): Promise<SessionSnapshot>;
   stop(sessionId: string): Promise<SessionSnapshot>;
   status(): Promise<SessionSnapshot>;
+  focus?(focused: boolean): Promise<void>;
   answer(answer: AnswerIntent, idempotencyKey: string): Promise<{ accepted: boolean }>;
   submit(idempotencyKey: string): Promise<{ submitted: boolean }>;
   snapshot(sessionId: string): Promise<SessionSnapshot>;
@@ -319,7 +320,7 @@ export class HttpApiClient implements ApiClient, ResearchApi, SyntheticReviewApi
       if (csrf !== undefined) headers['X-CSRF-Token'] = decodeURIComponent(csrf);
       credentials = 'include';
     }
-    if (init.body !== undefined) headers['Content-Type'] = 'application/json';
+    if (init.body !== undefined && !(init.body instanceof Blob)) headers['Content-Type'] = 'application/json';
 
     const response = await fetch(`/api/v1${path}`, { ...init, credentials, headers });
     if (!response.ok) {
@@ -356,6 +357,29 @@ export class HttpApiClient implements ApiClient, ResearchApi, SyntheticReviewApi
   onReviewerAuthLoss(listener: () => void): () => void {
     this.authLossListeners.add(listener);
     return () => this.authLossListeners.delete(listener);
+  }
+
+  async workspaceRequest(path: string, init: RequestInit = {}): Promise<Record<string, unknown>> {
+    if (this.surface !== 'monitor') throw new ApiError(403);
+    return this.request(`/workspace${path}`, init, true);
+  }
+
+  async focus(focused: boolean): Promise<void> {
+    if (this.surface !== 'exam') throw new ApiError(403);
+    await this.request('/exam/focus', { method: 'POST', body: JSON.stringify({ focused }) });
+  }
+
+  async workspaceDownload(path: string): Promise<Blob> {
+    if (this.surface !== 'monitor') throw new ApiError(403);
+    const response = await this.requestResponse(`/workspace${path}`, {}, true);
+    return response.blob();
+  }
+
+  async workspaceImport(file: File, key: string): Promise<Record<string, unknown>> {
+    if (this.surface !== 'monitor') throw new ApiError(403);
+    return this.request('/workspace/models/import', { method: 'POST', body: file, headers: {
+      'Content-Type': 'application/zip', 'Idempotency-Key': key,
+    } }, true);
   }
 
   async health(): Promise<Health> {

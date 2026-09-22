@@ -598,6 +598,136 @@
                   ],
                   "type": "object"
                 },
+                "M2_S3E_HANDOFF_BUILD_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3E_HANDOFF_BUILD_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/build_m2_s3e_handoff_pack.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3E_HANDOFF_README": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3E_HANDOFF_README"
+                    },
+                    "path": {
+                      "const": "packaging/README_M2_S3E_HANDOFF.txt"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3E_POWERSHELL_VERIFIER": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3E_POWERSHELL_VERIFIER"
+                    },
+                    "path": {
+                      "const": "packaging/VERIFY_M2_S3E_CLEAN_ENVIRONMENT.ps1"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3E_RESPONSE_TEMPLATE": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3E_RESPONSE_TEMPLATE"
+                    },
+                    "path": {
+                      "const": "packaging/M2_S3E_CLEAN_ENVIRONMENT_RESPONSE.template.json"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
+                "M2_S3E_SAME_HOST_SCRIPT": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "M2_S3E_SAME_HOST_SCRIPT"
+                    },
+                    "path": {
+                      "const": "scripts/run_m2_s3e_same_host_portability.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "RP2_ARTIFACT_BUILDER": {
                   "additionalProperties": false,
                   "properties": {
@@ -1638,6 +1768,32 @@
                   ],
                   "type": "object"
                 },
+                "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "artifact_id": {
+                      "const": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY"
+                    },
+                    "path": {
+                      "const": "tests/packaging/test_m2_s3e_same_host_portability.py"
+                    },
+                    "sha256": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "sha256",
+                    "size_bytes"
+                  ],
+                  "type": "object"
+                },
                 "TEST_M2_SYNTHETIC_EVIDENCE_PY": {
                   "additionalProperties": false,
                   "properties": {
@@ -2000,6 +2156,7 @@
                 "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
                 "TEST_M2_S3C_PACKAGED_SMOKE_PY",
                 "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY",
+                "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
                 "TEST_LAUNCHER_PY",
                 "TEST_WEB_API_TS",
                 "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX",
@@ -2015,7 +2172,12 @@
                 "M2_S3C_PACKAGED_SMOKE_SCRIPT",
                 "M2_S3D_BUILD_SCRIPT",
                 "M2_S3D_PYINSTALLER_SPEC",
-                "M2_S3D_ROUND_TRIP_SCRIPT"
+                "M2_S3D_ROUND_TRIP_SCRIPT",
+                "M2_S3E_HANDOFF_BUILD_SCRIPT",
+                "M2_S3E_SAME_HOST_SCRIPT",
+                "M2_S3E_POWERSHELL_VERIFIER",
+                "M2_S3E_HANDOFF_README",
+                "M2_S3E_RESPONSE_TEMPLATE"
               ],
               "type": "object"
             },
@@ -2255,6 +2417,26 @@
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             },
+            "m2_s3e_a_status_and_gap_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3e_authority_ceiling_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3e_deterministic_handoff_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3e_external_response_boundary_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "m2_s3e_two_relocation_contract_policy_digest": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
             "ownership_cleanup_policy_digest": {
               "pattern": "^[0-9a-f]{64}$",
               "type": "string"
@@ -2444,7 +2626,12 @@
             "m2_s3d_environment_binding_policy_digest",
             "m2_s3d_dual_cycle_round_trip_policy_digest",
             "m2_s3d_no_device_or_disclosure_policy_digest",
-            "m2_s3d_authority_and_gap_policy_digest"
+            "m2_s3d_authority_and_gap_policy_digest",
+            "m2_s3e_a_status_and_gap_policy_digest",
+            "m2_s3e_deterministic_handoff_policy_digest",
+            "m2_s3e_two_relocation_contract_policy_digest",
+            "m2_s3e_external_response_boundary_policy_digest",
+            "m2_s3e_authority_ceiling_policy_digest"
           ],
           "type": "object"
         },
@@ -2801,6 +2988,88 @@
                 },
                 "projection": "m2-s3d.closed-stdin-only-packaged-reproduction-surface",
                 "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
+                "version": 1
+              }
+            },
+            "m2_s3e_a_status_and_gap_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "clean_environment_handoff_ready": true,
+                  "clean_machine_verified": false,
+                  "open_gap_ids": [
+                    "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                    "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+                  ],
+                  "same_host_portable_verified": true,
+                  "status": "M2_S3E_A_SAME_HOST_ISOLATED_PORTABILITY_LOCALLY_VERIFIED_CLEAN_ENVIRONMENT_HANDOFF_READY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+                },
+                "projection": "m2-s3e-a.same-host-portability-status-and-open-external-gaps",
+                "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+                "version": 1
+              }
+            },
+            "m2_s3e_authority_ceiling_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "authority_status": "AUTHORITY_NOT_ISSUED",
+                  "clean_machine_verified": false,
+                  "collection_authorized": false,
+                  "d1_go": false,
+                  "distribution_ready": false,
+                  "physical_camera_access_authorized": false,
+                  "release_authorized": false,
+                  "research_ready": false
+                },
+                "projection": "m2-s3e-a.same-host-portability-no-release-authority-ceiling",
+                "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+                "version": 1
+              }
+            },
+            "m2_s3e_deterministic_handoff_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "duplicate_or_unsafe_entries_allowed": false,
+                  "fixed_zip_metadata": true,
+                  "source_candidate": "M2_S3D_IMMUTABLE_CANDIDATE",
+                  "two_builds_byte_identical": true
+                },
+                "projection": "m2-s3e-a.closed-deterministic-offline-handoff-zip",
+                "source_id": "M2_S3E_HANDOFF_BUILD_SCRIPT",
+                "version": 1
+              }
+            },
+            "m2_s3e_external_response_boundary_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "air_gapped_machine_verified": false,
+                  "argument_count": 0,
+                  "clean_machine_verified": false,
+                  "external_environment_classification": "UNVERIFIED_PENDING_SOURCE_IMPORT",
+                  "network_scope": "LOOPBACK_ONLY_OBSERVED"
+                },
+                "projection": "m2-s3e-a.external-response-pending-source-import-boundary",
+                "source_id": "M2_S3E_POWERSHELL_VERIFIER",
+                "version": 1
+              }
+            },
+            "m2_s3e_two_relocation_contract_policy_digest": {
+              "const": {
+                "canonicalization": "json-v1-sort-keys-compact-utf8",
+                "fields": {
+                  "candidate_process_count": 6,
+                  "full_cycle_count": 2,
+                  "profiles": [
+                    "PATH_WITH_SPACES",
+                    "UNICODE_PATH_WITH_SPACES"
+                  ],
+                  "retry_count": 0
+                },
+                "projection": "m2-s3e-a.fixed-two-relocation-full-cycle-contract",
+                "source_id": "M2_S3E_SAME_HOST_SCRIPT",
                 "version": 1
               }
             },
@@ -3379,7 +3648,12 @@
             "m2_s3d_environment_binding_policy_digest",
             "m2_s3d_dual_cycle_round_trip_policy_digest",
             "m2_s3d_no_device_or_disclosure_policy_digest",
-            "m2_s3d_authority_and_gap_policy_digest"
+            "m2_s3d_authority_and_gap_policy_digest",
+            "m2_s3e_a_status_and_gap_policy_digest",
+            "m2_s3e_deterministic_handoff_policy_digest",
+            "m2_s3e_two_relocation_contract_policy_digest",
+            "m2_s3e_external_response_boundary_policy_digest",
+            "m2_s3e_authority_ceiling_policy_digest"
           ],
           "type": "object"
         },

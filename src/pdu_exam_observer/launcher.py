@@ -3,13 +3,14 @@
 import os
 import time
 import webbrowser
+from pathlib import Path
 from threading import Thread
 
 import uvicorn
 from fastapi import FastAPI
 
 from pdu_exam_observer.api.factories import AppConfig, create_exam_app, create_monitor_app
-from pdu_exam_observer.configuration import load_native_config
+from pdu_exam_observer.configuration import load_native_config, validate_storage_root
 from pdu_exam_observer.m1 import M1Backend
 from pdu_exam_observer.m1_r1 import M1R1Backend
 from pdu_exam_observer.m2_synthetic_review import SyntheticReviewService
@@ -39,10 +40,11 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
     if exam_port == monitor_port:
         raise RuntimeError("PDU_EXAM_PORT and PDU_MONITOR_PORT must differ")
     mode = os.getenv("PDU_RUNTIME_MODE", "m0").lower()
-    if mode not in {"m0", "m1", "m1r1", "m2synthetic"}:
-        raise RuntimeError("PDU_RUNTIME_MODE must be m0, m1, m1r1, or m2synthetic")
+    if mode not in {"m0", "m1", "m1r1", "m2synthetic", "m2research"}:
+        raise RuntimeError("PDU_RUNTIME_MODE must be m0, m1, m1r1, m2synthetic, or m2research")
     backend = None
     synthetic_review_service = None
+    workspace = None
     if mode == "m1":
         native = load_native_config()
         backend = M1Backend(
@@ -59,6 +61,32 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
         )
     elif mode == "m2synthetic":
         synthetic_review_service = SyntheticReviewService.create_owned()
+    elif mode == "m2research":
+        from pdu_exam_observer.research_runtime import ResearchRuntimeService
+        from pdu_exam_observer.showcase.model_import import ModelRegistry
+        from pdu_exam_observer.workspace_service import WorkspaceBackend, WorkspaceService
+
+        root_value = os.getenv("PDU_WORKSPACE_ROOT")
+        if not root_value:
+            raise RuntimeError("PDU_WORKSPACE_ROOT must be configured by the native launcher")
+        root = Path(root_value)
+        if not root.is_absolute() or str(root).startswith("\\\\"):
+            raise RuntimeError("PDU_WORKSPACE_ROOT must be an absolute local directory")
+        if root.is_symlink() or any(parent.is_symlink() for parent in root.parents):
+            raise RuntimeError("PDU_WORKSPACE_ROOT cannot traverse symlinks")
+        root = validate_storage_root(root, create=True)
+        models = ModelRegistry(root / "models")
+        runtime = ResearchRuntimeService(root / "research", model_provider=models.model_provider)
+        try:
+            backend = WorkspaceBackend(root / "exam", encryption_status="UNVERIFIED",
+                                       acl_status="UNVERIFIED")
+            workspace = WorkspaceService(root / "metadata", backend, runtime, models,
+                                         authority_reference=os.getenv("PDU_COLLECTION_AUTHORITY_REF"))
+        except Exception:
+            runtime.close()
+            if backend is not None:
+                backend.store.close()
+            raise
     if backend is None:
         config = AppConfig(
             reviewer_pin=reviewer_pin,
@@ -74,16 +102,25 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
             monitor_origin=f"http://localhost:{monitor_port}",
             allowed_hosts=("127.0.0.1", "localhost"),
             backend=backend,
+            workspace=workspace,
         )
     try:
         return create_exam_app(config), create_monitor_app(config)
     except Exception:
+        if workspace is not None:
+            workspace.close()
         if synthetic_review_service is not None:
             synthetic_review_service.close()
         raise
 
 
 def _close_synthetic_review_service(monitor: FastAPI) -> None:
+    workspace = getattr(monitor.state, "workspace", None)
+    if workspace is not None:
+        workspace.close()
+        backend = getattr(monitor.state, "backend", None)
+        if isinstance(backend, M1Backend):
+            backend.store.close()
     service = getattr(monitor.state, "synthetic_review_service", None)
     if service is not None:
         service.close()
@@ -103,7 +140,8 @@ def main() -> None:
         for _ in range(100):
             if monitor_server.started and exam_server.started:
                 if should_open_browser():
-                    webbrowser.open(f"http://localhost:{monitor_port}/monitor")
+                    query = "?workspace=1" if os.getenv("PDU_RUNTIME_MODE") == "m2research" else ""
+                    webbrowser.open(f"http://localhost:{monitor_port}/monitor{query}")
                     webbrowser.open(f"http://127.0.0.1:{exam_port}/exam")
                 break
             time.sleep(0.05)

@@ -1,0 +1,18 @@
+{
+  "claim_status": "DEMO_ONLY_SYNTHETIC_SMOKE_INPUT",
+  "class_count": 4,
+  "context_shape": [
+    48,
+    6
+  ],
+  "fixture_sha256": "54594e05eabb5320c5ecdec59d39bb8eabf49a79eeb6baa6328bfc6b5a23cf72",
+  "participant_count": 12,
+  "schema_version": 1,
+  "seed": 20260908,
+  "tensor_shape": [
+    48,
+    5,
+    90,
+    33
+  ]
+}

@@ -73,6 +73,27 @@ def test_s3d_builder_uses_a_new_candidate_lineage_and_fixed_contract() -> None:
     assert builder.CONTRACT["source_date_epoch"] == "1788220800"
     assert builder.S3B_CANDIDATE_ROOT.name == "m2-s3b-current-source"
     assert builder.S3B_CANDIDATE_ROOT != builder.CANDIDATE_ROOT
+    assert builder.S3D_SOURCE_REVISION == {
+        "binding_schema_exact_bytes_sha256": (
+            "7125de572f5a78b986a768b484315b818e1c630d10ada48ea31bd0915c300058"
+        ),
+        "candidate_exact_bytes_sha256": (
+            "ced85d39533de902da652c4a7f56ea85eaf4891a5d8b27946badf8aebcae5c79"
+        ),
+        "static_bindings_digest": (
+            "034eb3e19f88377529f5ffc37c077938b42563a447d1d6e6a481c1b635cbf607"
+        ),
+    }
+    original = builder.base._load_rp2
+    builder.base._load_rp2 = lambda: {
+        "binding_schema_exact_bytes_sha256": "a" * 64,
+        "candidate_exact_bytes_sha256": "b" * 64,
+        "static_bindings_digest": "c" * 64,
+    }
+    try:
+        assert builder.check_candidate()["result"] == "S3D_CANDIDATE_PACKAGE_INTEGRATED"
+    finally:
+        builder.base._load_rp2 = original
 
 
 def test_s3d_spec_contains_the_packaged_protocol_and_all_synthetic_modules() -> None:

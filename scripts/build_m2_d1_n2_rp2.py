@@ -105,6 +105,9 @@ ARTIFACT_PATHS = {
     "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": (
         "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py"
     ),
+    "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY": (
+        "tests/packaging/test_m2_s3e_same_host_portability.py"
+    ),
     "TEST_LAUNCHER_PY": "tests/backend/test_launcher.py",
     "TEST_WEB_API_TS": "apps/web/src/api.test.ts",
     "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": (
@@ -130,6 +133,13 @@ ARTIFACT_PATHS = {
     "M2_S3D_BUILD_SCRIPT": "scripts/build_m2_s3d_candidate.py",
     "M2_S3D_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.s3d.spec",
     "M2_S3D_ROUND_TRIP_SCRIPT": "scripts/run_m2_s3d_packaged_round_trip.py",
+    "M2_S3E_HANDOFF_BUILD_SCRIPT": "scripts/build_m2_s3e_handoff_pack.py",
+    "M2_S3E_SAME_HOST_SCRIPT": "scripts/run_m2_s3e_same_host_portability.py",
+    "M2_S3E_POWERSHELL_VERIFIER": "packaging/VERIFY_M2_S3E_CLEAN_ENVIRONMENT.ps1",
+    "M2_S3E_HANDOFF_README": "packaging/README_M2_S3E_HANDOFF.txt",
+    "M2_S3E_RESPONSE_TEMPLATE": (
+        "packaging/M2_S3E_CLEAN_ENVIRONMENT_RESPONSE.template.json"
+    ),
 }
 
 SOURCE_IDS = tuple(
@@ -150,6 +160,11 @@ SOURCE_IDS = tuple(
     "M2_S3D_BUILD_SCRIPT",
     "M2_S3D_PYINSTALLER_SPEC",
     "M2_S3D_ROUND_TRIP_SCRIPT",
+    "M2_S3E_HANDOFF_BUILD_SCRIPT",
+    "M2_S3E_SAME_HOST_SCRIPT",
+    "M2_S3E_POWERSHELL_VERIFIER",
+    "M2_S3E_HANDOFF_README",
+    "M2_S3E_RESPONSE_TEMPLATE",
 )
 NON_SOURCE_IDS = (
     "UV_LOCK",
@@ -915,6 +930,78 @@ POLICY_PREIMAGES = {
             ],
             "release_authorized": False,
             "same_host_portable_verified": False,
+        },
+    },
+    "m2_s3e_a_status_and_gap_policy_digest": {
+        "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+        "projection": "m2-s3e-a.same-host-portability-status-and-open-external-gaps",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "clean_environment_handoff_ready": True,
+            "clean_machine_verified": False,
+            "open_gap_ids": [
+                "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+                "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT",
+            ],
+            "same_host_portable_verified": True,
+            "status": (
+                "M2_S3E_A_SAME_HOST_ISOLATED_PORTABILITY_LOCALLY_VERIFIED_"
+                "CLEAN_ENVIRONMENT_HANDOFF_READY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+            ),
+        },
+    },
+    "m2_s3e_deterministic_handoff_policy_digest": {
+        "source_id": "M2_S3E_HANDOFF_BUILD_SCRIPT",
+        "projection": "m2-s3e-a.closed-deterministic-offline-handoff-zip",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "duplicate_or_unsafe_entries_allowed": False,
+            "fixed_zip_metadata": True,
+            "source_candidate": "M2_S3D_IMMUTABLE_CANDIDATE",
+            "two_builds_byte_identical": True,
+        },
+    },
+    "m2_s3e_two_relocation_contract_policy_digest": {
+        "source_id": "M2_S3E_SAME_HOST_SCRIPT",
+        "projection": "m2-s3e-a.fixed-two-relocation-full-cycle-contract",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "candidate_process_count": 6,
+            "full_cycle_count": 2,
+            "profiles": ["PATH_WITH_SPACES", "UNICODE_PATH_WITH_SPACES"],
+            "retry_count": 0,
+        },
+    },
+    "m2_s3e_external_response_boundary_policy_digest": {
+        "source_id": "M2_S3E_POWERSHELL_VERIFIER",
+        "projection": "m2-s3e-a.external-response-pending-source-import-boundary",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "air_gapped_machine_verified": False,
+            "argument_count": 0,
+            "clean_machine_verified": False,
+            "external_environment_classification": "UNVERIFIED_PENDING_SOURCE_IMPORT",
+            "network_scope": "LOOPBACK_ONLY_OBSERVED",
+        },
+    },
+    "m2_s3e_authority_ceiling_policy_digest": {
+        "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+        "projection": "m2-s3e-a.same-host-portability-no-release-authority-ceiling",
+        "version": 1,
+        "canonicalization": POLICY_CANONICALIZATION,
+        "fields": {
+            "authority_status": "AUTHORITY_NOT_ISSUED",
+            "clean_machine_verified": False,
+            "collection_authorized": False,
+            "d1_go": False,
+            "distribution_ready": False,
+            "physical_camera_access_authorized": False,
+            "release_authorized": False,
+            "research_ready": False,
         },
     },
 }

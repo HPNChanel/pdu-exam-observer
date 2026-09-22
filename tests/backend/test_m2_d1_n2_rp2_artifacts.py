@@ -133,6 +133,9 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": (
             "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py"
         ),
+        "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY": (
+            "tests/packaging/test_m2_s3e_same_host_portability.py"
+        ),
         "TEST_LAUNCHER_PY": "tests/backend/test_launcher.py",
         "TEST_WEB_API_TS": "apps/web/src/api.test.ts",
         "TEST_WEB_SYNTHETIC_VALIDATION_PANEL_TSX": (
@@ -160,9 +163,18 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "M2_S3D_BUILD_SCRIPT": "scripts/build_m2_s3d_candidate.py",
         "M2_S3D_PYINSTALLER_SPEC": "packaging/PDU-Exam-Observer.s3d.spec",
         "M2_S3D_ROUND_TRIP_SCRIPT": "scripts/run_m2_s3d_packaged_round_trip.py",
+        "M2_S3E_HANDOFF_BUILD_SCRIPT": "scripts/build_m2_s3e_handoff_pack.py",
+        "M2_S3E_SAME_HOST_SCRIPT": "scripts/run_m2_s3e_same_host_portability.py",
+        "M2_S3E_POWERSHELL_VERIFIER": (
+            "packaging/VERIFY_M2_S3E_CLEAN_ENVIRONMENT.ps1"
+        ),
+        "M2_S3E_HANDOFF_README": "packaging/README_M2_S3E_HANDOFF.txt",
+        "M2_S3E_RESPONSE_TEMPLATE": (
+            "packaging/M2_S3E_CLEAN_ENVIRONMENT_RESPONSE.template.json"
+        ),
     }
-    assert len(builder.SOURCE_IDS) == 64
-    assert len(builder.POLICY_PREIMAGES) == 55
+    assert len(builder.SOURCE_IDS) == 70
+    assert len(builder.POLICY_PREIMAGES) == 60
     assert {
         "synthetic_review_request_surface_policy_digest",
         "synthetic_review_single_flight_policy_digest",
@@ -191,6 +203,11 @@ def test_rp2_fixed_inventory_contains_exact_h3_production_sources_and_tool() -> 
         "m2_s3d_dual_cycle_round_trip_policy_digest",
         "m2_s3d_no_device_or_disclosure_policy_digest",
         "m2_s3d_authority_and_gap_policy_digest",
+        "m2_s3e_a_status_and_gap_policy_digest",
+        "m2_s3e_deterministic_handoff_policy_digest",
+        "m2_s3e_two_relocation_contract_policy_digest",
+        "m2_s3e_external_response_boundary_policy_digest",
+        "m2_s3e_authority_ceiling_policy_digest",
     }.issubset(builder.POLICY_PREIMAGES)
     assert (
         builder.POLICY_PREIMAGES["s3b_static_inclusion_policy_digest"]["fields"][

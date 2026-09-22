@@ -51,6 +51,17 @@ README_MARKERS: tuple[str, ...] = (
     "CLEAN-MACHINE PORTABILITY UNVERIFIED",
     "UNSIGNED",
 )
+S3D_SOURCE_REVISION: dict[str, str] = {
+    "binding_schema_exact_bytes_sha256": (
+        "7125de572f5a78b986a768b484315b818e1c630d10ada48ea31bd0915c300058"
+    ),
+    "candidate_exact_bytes_sha256": (
+        "ced85d39533de902da652c4a7f56ea85eaf4891a5d8b27946badf8aebcae5c79"
+    ),
+    "static_bindings_digest": (
+        "034eb3e19f88377529f5ffc37c077938b42563a447d1d6e6a481c1b635cbf607"
+    ),
+}
 
 
 @contextmanager
@@ -187,7 +198,7 @@ def check_candidate() -> dict[str, object]:
         base.verify_candidate_manifest()
         validation = _validate_receipt(base._strict_json(LOCAL_VALIDATION, "RECEIPT_MISMATCH"))
         body = validation["body"]
-        if not isinstance(body, dict) or body.get("source_revision") != base._load_rp2():
+        if not isinstance(body, dict) or body.get("source_revision") != S3D_SOURCE_REVISION:
             raise base.CandidateError("RP2_INVALID")
         records = _candidate_records()
         digest = base._tree_digest(records)

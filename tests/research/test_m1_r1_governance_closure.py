@@ -182,6 +182,30 @@ M2_S3D_SCHEMA_SHA256 = (
 M2_S3D_RECEIPT_SHA256 = (
     "4d8a862408aec0470d86b084f1abdc9baa323a3ee53cb57dfe780c3d6e2258ed"
 )
+M2_S3E_A_RECEIPT = (
+    "M2_S3E_A_SAME_HOST_ISOLATED_PORTABILITY_LOCALLY_VERIFIED_"
+    "CLEAN_ENVIRONMENT_HANDOFF_READY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+)
+M2_S3E_A_STATIC_BINDINGS_DIGEST = (
+    "ca925c67903757b776fceff0f785eb46fe2a74f8a1fd18681da4a6ff7dea212b"
+)
+M2_S3E_A_CANDIDATE_SHA256 = (
+    "dfbea5e5cb6bfa93fc33e3ed7225b25b43ba92091729f026dc116b7fbd8d2f83"
+)
+M2_S3E_A_SCHEMA_SHA256 = (
+    "302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003"
+)
+M2_S3E_A_RECEIPT_SHA256 = (
+    "e952c3364be3513dc2decd7d2ff55d9328d91b1e6a629b51b30d55419ce73b85"
+)
+# Current source binding was refreshed for the approved workspace implementation.
+# The S3E constants above remain pinned to the immutable historical receipt.
+WORKSPACE_STATIC_BINDINGS_DIGEST = (
+    "167dc3dd03b60b8c44cbdec47b7050b1531a350b0f7bf647a3aac578f4223395"
+)
+WORKSPACE_CANDIDATE_SHA256 = (
+    "25fd492678a2d4a4d9f1b5220e8cfc8a0846c73f183f1ebda9b5c6dc19fb5ecc"
+)
 
 
 def _read(relative: str) -> str:
@@ -310,7 +334,7 @@ def test_current_m1_r1_evidence_tuple_is_consistent() -> None:
         "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G11"),
         "current_task": _read("docs/ai/CURRENT_TASK.md"),
         "task_contract": _read("docs/ai/TASK_CONTRACT.md"),
-        "risk": risk,
+        "risk": _read("docs/plans/RISK_REGISTER.md"),
     }
     for name, ledger in m2_s2a_ledgers.items():
         assert M2_S2A_RECEIPT in ledger, name
@@ -634,20 +658,20 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
     artifacts = candidate["static_bindings"]["artifacts"]
 
     assert hashlib.sha256(static_bindings_bytes).hexdigest() == (
-        M2_S3D_STATIC_BINDINGS_DIGEST
+        WORKSPACE_STATIC_BINDINGS_DIGEST
     )
-    assert hashlib.sha256(candidate_bytes).hexdigest() == M2_S3D_CANDIDATE_SHA256
+    assert hashlib.sha256(candidate_bytes).hexdigest() == WORKSPACE_CANDIDATE_SHA256
     assert (
         hashlib.sha256(schema_path.read_bytes()).hexdigest()
-        == M2_S3D_SCHEMA_SHA256
+        == M2_S3E_A_SCHEMA_SHA256
     )
-    assert len(artifacts["source_inventory"]) == 64
+    assert len(artifacts["source_inventory"]) == 70
     assert set(artifacts) - {"source_inventory"} == {
         "uv_lock",
         "pose_landmarker_lite_task",
         "blaze_face_short_range_tflite",
     }
-    assert len(candidate["static_bindings"]["policy_preimages"]) == 55
+    assert len(candidate["static_bindings"]["policy_preimages"]) == 60
 
     contract = _read("docs/ai/M2_D1_N2_AUTHORITY_CONTRACT.md")
     current_contract = contract.split(
@@ -844,6 +868,74 @@ def test_authority_ceiling_and_m2_boundary_remain_closed() -> None:
     assert s3d_receipt["status"] == M2_S3D_RECEIPT
     assert s3d_receipt["body"]["reproducibility"]["byte_identical"] is True
     assert s3d_receipt["body"]["authority_ceiling"]["clean_machine_verified"] is False
+
+    m2_s3e_a_ledgers = {
+        "roadmap": _section(roadmap, "## M2-S3E-A"),
+        "acceptance": _section(_read("docs/plans/ACCEPTANCE_GATES.md"), "## G24"),
+        "quality": _section(_read("docs/ai/QUALITY_GATES.md"), "## G20"),
+        "current_task": _section(
+            _read("docs/ai/CURRENT_TASK.md"), "## Active M2-S3E-A outcome"
+        ),
+        "task_contract": _section(
+            _read("docs/ai/TASK_CONTRACT.md"),
+            "## M2-S3E-A same-host isolated portability boundary",
+        ),
+        "verification": _read("docs/ai/M2_S3E_A_VERIFICATION.md"),
+        "risk": _read("docs/plans/RISK_REGISTER.md"),
+    }
+    m2_s3e_a_bindings = (
+        "same_host_portability_receipt_sha256=" + M2_S3E_A_RECEIPT_SHA256,
+        "static_bindings_digest=" + M2_S3E_A_STATIC_BINDINGS_DIGEST,
+        "candidate_exact_bytes_sha256=" + M2_S3E_A_CANDIDATE_SHA256,
+        "binding_schema_exact_bytes_sha256=" + M2_S3E_A_SCHEMA_SHA256,
+        "source_tool_inventory_count=70",
+        "policy_preimage_count=60",
+        "historical_package_unchanged=true",
+        "candidate_package_unchanged=true",
+        "candidate_package_contains_integration=true",
+        "packaged_runtime_smoke_verified=true",
+        "packaged_evidence_round_trip_verified=true",
+        "same_host_portable_verified=true",
+        "clean_environment_handoff_ready=true",
+        "clean_machine_verified=false",
+        "release_authorized=false",
+        "distribution_ready=false",
+        "production_reconciler_implemented=false",
+        "production_reconciler_real_storage_verified=false",
+        "real_data_deletion_authorized=false",
+        "execution_authorized=false",
+        "physical_camera_access_authorized=false",
+        "device_gate_decision=UNVERIFIED",
+        "d1_go=false",
+        "participant_collection_authorized=false",
+        "research_ready=false",
+        "collection_authorized=false",
+        "authority_status=AUTHORITY_NOT_ISSUED",
+        "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT=OPEN",
+        "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT=OPEN",
+    )
+    for name, ledger in m2_s3e_a_ledgers.items():
+        assert M2_S3E_A_RECEIPT in ledger, name
+        for binding in m2_s3e_a_bindings:
+            assert binding in ledger, f"{name}: {binding}"
+        assert "clean_machine_verified=true" not in ledger, name
+        assert "release_authorized=true" not in ledger, name
+        assert "distribution_ready=true" not in ledger, name
+        assert "physical_camera_access_authorized=true" not in ledger, name
+        assert "d1_go=true" not in ledger, name
+        assert "research_ready=true" not in ledger, name
+        assert "collection_authorized=true" not in ledger, name
+        assert "authority_status=ISSUED" not in ledger, name
+
+    s3e_a_receipt_bytes = (
+        ROOT / "docs/ai/M2_S3E_A_SAME_HOST_PORTABILITY.json"
+    ).read_bytes()
+    assert hashlib.sha256(s3e_a_receipt_bytes).hexdigest() == M2_S3E_A_RECEIPT_SHA256
+    s3e_a_receipt = json.loads(s3e_a_receipt_bytes)
+    assert s3e_a_receipt["status"] == M2_S3E_A_RECEIPT
+    assert s3e_a_receipt["body"]["reproducibility"]["byte_identical"] is True
+    assert s3e_a_receipt["body"]["authority_ceiling"]["same_host_portable_verified"] is True
+    assert s3e_a_receipt["body"]["authority_ceiling"]["clean_machine_verified"] is False
 
     m2_s2b_ledgers = {
         "roadmap": _section(roadmap, "## M2-S2B"),

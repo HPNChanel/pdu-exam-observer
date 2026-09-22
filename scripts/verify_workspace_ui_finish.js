@@ -1,0 +1,32 @@
+async (page) => {
+  await page.getByRole('button', { name: 'Dừng', exact: true }).click();
+  await page.getByRole('button', { name: 'Niêm phong', exact: true }).click();
+  await page.getByRole('heading', { name: 'Đã niêm phong', exact: true }).waitFor();
+  await page.getByRole('textbox', { name: 'Lý do', exact: true }).fill('Đã đối chiếu toàn bộ clip mô phỏng kỹ thuật.');
+  await page.getByRole('button', { name: 'Lưu quyết định', exact: true }).click();
+  await page.getByRole('button', { name: 'Xem video cục bộ', exact: true }).click();
+  const video = page.getByLabel('Video cục bộ đã niêm phong');
+  await video.evaluate(async (element) => { await element.play(); });
+  await page.waitForFunction(() => document.querySelector('video')?.currentTime > 0.15);
+  const media = await video.evaluate((element) => ({ duration: element.duration, currentTime: element.currentTime, readyState: element.readyState, error: element.error?.code ?? null }));
+  await video.screenshot({ path: 'output/completion-2026-09-08/final-video.png' });
+  await page.getByRole('button', { name: 'Gán nhãn đoạn video khác', exact: true }).click();
+  const manual = page.locator('.workspaceEvent').last();
+  await manual.getByRole('combobox', { name: 'Nhãn', exact: true }).selectOption('BENIGN_CONFOUNDER');
+  await manual.getByRole('textbox', { name: 'Lý do', exact: true }).fill('Kiểm tra gán nhãn thủ công trên chính dữ liệu mô phỏng.');
+  await manual.getByRole('button', { name: 'Lưu quyết định', exact: true }).click();
+  await page.getByRole('button', { name: 'Khóa dữ liệu đã duyệt', exact: true }).click();
+  const exportPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Xuất dữ liệu pose', exact: true }).click();
+  const exported = await exportPromise;
+  await exported.saveAs('output/completion-2026-09-08/final-ui-export.zip');
+  const reportPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Lưu báo cáo duyệt cục bộ', exact: true }).click();
+  const report = await reportPromise;
+  await report.saveAs('output/completion-2026-09-08/final-ui-report.json');
+  await page.screenshot({ path: 'output/completion-2026-09-08/final-review.png', fullPage: true });
+  await page.getByText('Dọn dữ liệu thử của phiên', { exact: true }).click();
+  await page.getByRole('button', { name: 'Rút và xóa dữ liệu thử', exact: true }).click();
+  await page.getByRole('heading', { name: 'Đã rút dữ liệu', exact: true }).waitFor();
+  return { sealed: true, media, manualAnnotation: true, locked: true, exported: true, report: true, withdrawal: true };
+}

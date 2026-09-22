@@ -1,0 +1,23 @@
+{
+  "architecture": "ST_GCN_MEDIAPIPE33",
+  "batch_size": 32,
+  "class_order": [
+    "NORMAL",
+    "BENIGN_CONFOUNDER",
+    "PROLONGED_HEAD_DOWN",
+    "PROLONGED_SIDE_LOOK"
+  ],
+  "early_stopping_patience": 10,
+  "learning_rate": 0.001,
+  "maximum_epochs": 100,
+  "minimum_coverage": 0.75,
+  "optimizer": "AdamW",
+  "preprocessing_id": "mediapipe33-bodycenter-resample90-v1",
+  "primary_tiou": null,
+  "protocol_freeze_required_for_research": true,
+  "schema_version": 1,
+  "seed": 20260908,
+  "tiou_sweep": [0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95],
+  "weight_decay": 0.0001
+}
+

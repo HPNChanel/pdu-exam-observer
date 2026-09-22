@@ -23,9 +23,11 @@ def _finite_source(frame_queue: object, ready_queue: object, stop: object, _devi
 def _full_queue_source(
     frame_queue: object, ready_queue: object, stop: object, _device: int
 ) -> None:
-    ready_queue.put(("READY",))  # type: ignore[union-attr]
+    # Fill the bounded queue before READY so the consumer cannot drain a slot
+    # before the producer's first post-fill put — the drop is deterministic.
     for index in range(2):
         frame_queue.put_nowait(("FRAME", bytes([index]), index, 0))  # type: ignore[union-attr]
+    ready_queue.put(("READY",))  # type: ignore[union-attr]
     dropped = 0
     while not stop.is_set():  # type: ignore[union-attr]
         try:

@@ -107,8 +107,8 @@
         "M2_S3B_BUILD_SCRIPT": {
           "artifact_id": "M2_S3B_BUILD_SCRIPT",
           "path": "scripts/build_m2_s3b_candidate.py",
-          "sha256": "383700e8292c3013d16c1bb0d08c495a4c5dd095e6628c48ec405b6386dcf7ad",
-          "size_bytes": 32277
+          "sha256": "8eefa586a9942422de2b594c032e39961c79c36c1d0da85e9fc5a076985f71d4",
+          "size_bytes": 33011
         },
         "M2_S3B_CANDIDATE_README": {
           "artifact_id": "M2_S3B_CANDIDATE_README",
@@ -281,8 +281,8 @@
         "SRC_M2_D1_NATIVE_PY": {
           "artifact_id": "SRC_M2_D1_NATIVE_PY",
           "path": "src/pdu_exam_observer/m2_d1_native.py",
-          "sha256": "b599e835f38b44df09b9ee751771f0d32e9a4c31f4b1536f445c7a53a98625df",
-          "size_bytes": 161835
+          "sha256": "783235cb77118126d8f5937af51f7afe2a97b8964621217a07495df7e624b6a0",
+          "size_bytes": 161981
         },
         "SRC_M2_PACKAGED_REPRODUCTION_PY": {
           "artifact_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
@@ -395,8 +395,8 @@
         "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": {
           "artifact_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
           "path": "tests/packaging/test_m2_s3a_package_gap_audit.py",
-          "sha256": "c8d90ff636da807257fea9e4b0e480558710964b8799d731ad4c9116b63d15ea",
-          "size_bytes": 9719
+          "sha256": "104617cc1889ba2e266a477b01743b062560347dc0af9f08a1b2d90c95eb21ba",
+          "size_bytes": 10277
         },
         "TEST_M2_S3B_PACKAGE_INTEGRATION_PY": {
           "artifact_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
@@ -1510,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "a516c65a9327fb79f9b63c50fa1181c6c5a4d84f65b8fec6634bcfa32ab72100",
+  "static_bindings_digest": "c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456",
   "valid_for_native_launch": false
 }

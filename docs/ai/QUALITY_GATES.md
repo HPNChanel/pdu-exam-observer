@@ -6,6 +6,18 @@ Updated: `2026-08-30`
 
 This ledger separates local observations from user and external acceptance. Final local verifier status for the current M1-R1 governance revision is `OBSERVED`/`VERIFIED`; it is not a release or production receipt.
 
+> **As-of 2026-09-22 (audit remediation, Tasks 01–10):** one fresh full
+> invocation passed `1110` Python tests; frontend gates passed
+> typecheck/lint/`82` tests/build; repository-wide Ruff PASS (the pre-existing
+> `UP038` note in G1 is resolved); strict mypy PASS over `64` source files.
+> Fresh outputs are retained under `output/audit-remediation-2026-09-22/`.
+> RP2 was regenerated exactly once for this reconciliation:
+> `static_bindings_digest=c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456`,
+> `candidate_exact_bytes_sha256=c6b3992519222ae33e85f6cb33c073b561631c95b98534e23ea565d76c0dcd9c`,
+> `binding_schema_exact_bytes_sha256=302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003`
+> (70 source/tool entries, 60 policy preimages). Counts in G1/G2/G5 below are
+> historical and superseded by this note; per-gate sections are unchanged.
+
 ## G0 - Source and workspace
 
 - Canonical source is `SOURCE_VERIFIED`; project copy and archive witness retain SHA-256 `2CD5F6FDB17D70FD5593E50B8387BC38DABF70430DFFFECDBE64439DC884AFD5`.

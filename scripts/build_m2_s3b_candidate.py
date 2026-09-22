@@ -39,6 +39,15 @@ STATUS = (
     "STATICALLY_VERIFIED_SMOKE_PENDING_NO_RELEASE_AUTHORITY"
 )
 S3A_AUDIT_SHA256 = "a63c0fefa7c7aba37685ccb65bec7fd605448e42873d5d8252975a82ea9269e5"
+# Audit-pinned inputs whose recorded path is a volatile, untracked build
+# artifact. The audited bytes are preserved inside the immutable candidate-06
+# bundle; the digest check still applies, only the location is resolved.
+_S3A_PRESERVED_INPUT_PATHS = {
+    "current_observed_frontend_dist": (
+        "packaging/candidates/completion-2026-09-08/candidate-06/"
+        "PDU-Workspace/_internal/assets/web/assets/index-DB9w6fTP.js"
+    ),
+}
 CANDIDATE_SOURCE_REVISION: dict[str, str] = {
     "binding_schema_exact_bytes_sha256": (
         "3acb8578f3e1666bfd7ca83f59312875e5c1678f56037c0fbc38773e872b14ca"
@@ -279,7 +288,11 @@ def _s3a_immutable_inputs() -> dict[str, dict[str, str]]:
         if not isinstance(relative, str) or not isinstance(expected, str):
             raise CandidateError("SOURCE_INPUT_MISMATCH")
         relative = _safe_relative(relative)
-        path = ROOT / Path(relative)
+        # The audit pinned an untracked build-artifact path for the frontend
+        # bundle; the audited bytes are preserved byte-identical inside the
+        # immutable candidate-06 bundle. Verify the digest there instead.
+        resolved = _S3A_PRESERVED_INPUT_PATHS.get(name, relative)
+        path = ROOT / Path(resolved)
         if not path.is_file() or _is_link_or_reparse(path) or _sha256_file(path) != expected:
             raise CandidateError("HISTORICAL_PACKAGE_MISMATCH")
         result[name] = {"path": relative, "sha256": expected}

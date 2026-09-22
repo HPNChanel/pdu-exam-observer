@@ -32,17 +32,21 @@ itself is intentionally not modified.
   `5af82a0d4fe2b9eae211b967332ea97edfc51c6b328ca35b827e73eac560dc0d`
   (byte-identical to the candidate-06 bundled binary).
 - `PDUWorkspace.exe` SHA-256:
-  `02dc32b1eea1a2bcd51ca101409981f998c3f06900cfc856ecc810bd3e435eca`
+  `c418d82219a015e5e5df81fa4bdb09b52c872aa9c0a179f768b47b0ad98cb2da`
 - `PDU-Workspace-local.zip` SHA-256:
-  `b1e1e11f2b06d35a795577138378660b24437c2d9ee9aca40c877bf93b83830c`
+  `738e6a8fa3ce4b6587965665c465502f61630a08e6018a7ac824bb67ce9257ad`
 - `DELIVERY_MANIFEST.json` SHA-256:
-  `8332d84b175f7b81888abd2d0769f79971adc6150030a028e21480841167fd51`
+  `d436aeb9a6f94059e9862c4ed59fd60c519f759e20d4618a9a311e9b01351cee`
 - `build-receipt.json`, `build.log`, `SOURCE_MANIFEST.json`,
   `RELEASE_MANIFEST.detached.json` are retained beside the bundle.
 - One transient build failure occurred mid-build: the source manifest guard
   correctly detected documentation edited during the first attempt
   (`source changed during build`) and the run was discarded and rebuilt on a
   quiescent tree. The guard behaved as designed.
+- Rebuilt once on 2026-09-22 after the S3A pin repair exposed that the first
+  bundle had been packed from a stale `apps/web/dist` (pre-Task-07 frontend).
+  The bundle now carries the current `index-Bl2iPLFx.js` frontend; this is a
+  same-name rebuild of the same source tree, not a new candidate.
 
 ## Packaged verification (OBSERVED, same host)
 

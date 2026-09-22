@@ -140,12 +140,16 @@ class _DisabledMediaPipeAudio(ModuleType):
     _allowed = frozenset({"__name__", "__package__", "__loader__", "__spec__", "DISABLED"})
 
     def __getattribute__(self, name: str) -> object:
-        if name in _DisabledMediaPipeAudio._allowed:
+        if name in _DisabledMediaPipeAudio._allowed or (
+            name.startswith("__") and name.endswith("__")
+        ):
             return super().__getattribute__(name)
         raise RuntimeError("MediaPipe audio namespace is disabled for D1-N1")
 
     def __setattr__(self, name: str, value: object) -> None:
-        if name in {"__name__", "__package__", "__loader__", "__spec__", "DISABLED"}:
+        if name in {"__name__", "__package__", "__loader__", "__spec__", "DISABLED"} or (
+            name.startswith("__") and name.endswith("__")
+        ):
             super().__setattr__(name, value)
             return
         raise RuntimeError("MediaPipe audio namespace is sealed for D1-N1")

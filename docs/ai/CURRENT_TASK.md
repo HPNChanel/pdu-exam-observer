@@ -1,5 +1,58 @@
 # Current task — full system and Colab completion
 
+Updated: 2026-09-22. Status:
+`AUDIT_REMEDIATION_2026_09_22_TASKS_01_10_COMPLETED_LOCAL_GATES_GREEN_NO_NEW_AUTHORITY`.
+
+`OBSERVED`: audit remediation Tasks 01–10 are implemented and committed
+(`4e52921`..`5d8853b` plus the Task 10 fix/reconciliation commit). One fresh
+full-source invocation passed `1110` Python tests; frontend gates passed
+typecheck/lint/`82` tests/build; Ruff PASS; strict mypy PASS over `64` source
+files. Fresh outputs are retained under `output/audit-remediation-2026-09-22/`.
+
+```text
+static_bindings_digest=c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456
+candidate_exact_bytes_sha256=c6b3992519222ae33e85f6cb33c073b561631c95b98534e23ea565d76c0dcd9c
+binding_schema_exact_bytes_sha256=302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003
+source_tool_inventory_count=70
+policy_preimage_count=60
+candidate_07_executable_sha256=c418d82219a015e5e5df81fa4bdb09b52c872aa9c0a179f768b47b0ad98cb2da
+candidate_07_zip_sha256=738e6a8fa3ce4b6587965665c465502f61630a08e6018a7ac824bb67ce9257ad
+candidate_07_packaged_synthetic_round_trip=PASS_SAME_HOST_ONLY
+candidate_06_zip_unchanged=true
+historical_m2_receipts_unchanged=true
+same_host_portable_verified=true
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+New gap state after remediation: the S3A `current_observed_frontend_dist`
+pin targets a volatile, untracked build artifact; the audited bytes are
+verified at their preserved location inside the immutable candidate-06
+bundle (see `docs/plans/audit-remediation-2026-09-22/00-findings.md` and
+`AUDIT_REMEDIATION_2026_09_22.md`). candidate-07 was rebuilt once after this
+pin repair exposed a stale packaged frontend. GAP-06
+(`CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT`) is closed by the
+candidate-07 SOURCE_MANIFEST/receipts; GAP-08
+(`CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT`) remains `OPEN` — deferred to Task 11.
+
+The full remediation receipt is `docs/ai/AUDIT_REMEDIATION_2026_09_22.md`.
+Historical ceilings below describe their original milestones. They do not
+cancel the remediation scope or grant research authority.
+
+---
+
 Updated: 2026-09-08. Status: LOCAL_TECHNICAL_DELIVERY_VERIFIED.
 The current-source application ZIP and self-contained Colab bundle are delivered;
 the final EXE passed synthetic model import/inference, browser workflow and

@@ -28,6 +28,7 @@ dist/
 release/
 packaging/candidates/
 packaging/handoffs/
+packaging/manifest-metadata.json
 *.zip
 
 # Local evidence and legacy archive

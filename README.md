@@ -81,7 +81,8 @@ research/                  Pre-collection governance packs, institutional
                            submission drafts, and training/Colab code
 demo/                      Non-personal deterministic fixtures
 tests/                     Backend, runtime, training, packaging, and research
-packaging/                 PyInstaller and release assembly
+packaging/                 PyInstaller and release assembly (lineage map:
+                           packaging/HISTORICAL_LINEAGE.md)
 scripts/                   Local development and verification commands
 docs/source/               Immutable proposal and provenance
 docs/spec/                 Binding product and research specifications

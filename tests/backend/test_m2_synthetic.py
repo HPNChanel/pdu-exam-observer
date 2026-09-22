@@ -401,7 +401,7 @@ def test_pure_seam_exposes_no_forbidden_research_or_io_interface() -> None:
     imports = {
         alias.name
         for node in ast.walk(ast.parse(source))
-        if isinstance(node, (ast.Import, ast.ImportFrom))
+        if isinstance(node, ast.Import | ast.ImportFrom)
         for alias in node.names
     }
     forbidden_imports = {

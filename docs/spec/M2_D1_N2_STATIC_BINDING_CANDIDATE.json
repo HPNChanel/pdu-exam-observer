@@ -131,8 +131,8 @@
         "M2_S3D_BUILD_SCRIPT": {
           "artifact_id": "M2_S3D_BUILD_SCRIPT",
           "path": "scripts/build_m2_s3d_candidate.py",
-          "sha256": "d011b7d8926ae5a0ab4f1ceb63689c659b3982f1fcc1ab6633d3beca1f61cdc6",
-          "size_bytes": 12628
+          "sha256": "038fdf8fbea4bc86faa649129deab73b849e99b59dc2ec79000087836bc46972",
+          "size_bytes": 13032
         },
         "M2_S3D_PYINSTALLER_SPEC": {
           "artifact_id": "M2_S3D_PYINSTALLER_SPEC",
@@ -146,23 +146,53 @@
           "sha256": "92c578a331ff8efee7a03647b2f358c1e18efd91742425d6e6954399023d13a3",
           "size_bytes": 26742
         },
+        "M2_S3E_HANDOFF_BUILD_SCRIPT": {
+          "artifact_id": "M2_S3E_HANDOFF_BUILD_SCRIPT",
+          "path": "scripts/build_m2_s3e_handoff_pack.py",
+          "sha256": "cad0d116a4cb4414816391964645a18d6c32902e1ca21650be3b0e90686d16e2",
+          "size_bytes": 15440
+        },
+        "M2_S3E_HANDOFF_README": {
+          "artifact_id": "M2_S3E_HANDOFF_README",
+          "path": "packaging/README_M2_S3E_HANDOFF.txt",
+          "sha256": "8d92bf68a72d29eee7582c2c69db72f7d854ae4f555e0c6191fa58d57c848403",
+          "size_bytes": 802
+        },
+        "M2_S3E_POWERSHELL_VERIFIER": {
+          "artifact_id": "M2_S3E_POWERSHELL_VERIFIER",
+          "path": "packaging/VERIFY_M2_S3E_CLEAN_ENVIRONMENT.ps1",
+          "sha256": "2aae76acae3f50d6a515b5bef0afbba52900fe07c420f692ea3ae483e3ebc6ab",
+          "size_bytes": 22163
+        },
+        "M2_S3E_RESPONSE_TEMPLATE": {
+          "artifact_id": "M2_S3E_RESPONSE_TEMPLATE",
+          "path": "packaging/M2_S3E_CLEAN_ENVIRONMENT_RESPONSE.template.json",
+          "sha256": "5f87245dbd08f4ffffe1eaac971369ae6c0ac69376bc8d347ebda47e693f0c8f",
+          "size_bytes": 1009
+        },
+        "M2_S3E_SAME_HOST_SCRIPT": {
+          "artifact_id": "M2_S3E_SAME_HOST_SCRIPT",
+          "path": "scripts/run_m2_s3e_same_host_portability.py",
+          "sha256": "e29762f62aad2bfadaf1044508319a340016363b516728a988bfc3631d726bd3",
+          "size_bytes": 20594
+        },
         "RP2_ARTIFACT_BUILDER": {
           "artifact_id": "RP2_ARTIFACT_BUILDER",
           "path": "scripts/build_m2_d1_n2_rp2.py",
-          "sha256": "e929b57a6052cdb901a949bffa662ccdeb582b8ecda6cb771b014666164e4a72",
-          "size_bytes": 55830
+          "sha256": "5026aa85805a17b72b89c4f61a123722a48424190327701fc6cc84c23f608dbf",
+          "size_bytes": 59562
         },
         "SRC_API_FACTORIES_PY": {
           "artifact_id": "SRC_API_FACTORIES_PY",
           "path": "src/pdu_exam_observer/api/factories.py",
-          "sha256": "ef1c3bc632b08a3cd62251c8f908f2b143f4fcde98834044772b1b6b1524d0a0",
-          "size_bytes": 31369
+          "sha256": "9680db5fa350799a342f11c2f299ebca0260c0b34d473944d61714348be4c724",
+          "size_bytes": 32768
         },
         "SRC_LAUNCHER_PY": {
           "artifact_id": "SRC_LAUNCHER_PY",
           "path": "src/pdu_exam_observer/launcher.py",
-          "sha256": "ba3ec09434552ecb4ee62d3e41757e81b65346b1ad6f7df3ec8365a31026ee75",
-          "size_bytes": 4436
+          "sha256": "54fe93d6b98562971daf3e66bd9ecf08a907041fd07b34e1a26befd4a06c0c67",
+          "size_bytes": 6486
         },
         "SRC_M2_D1_N2_A0_PY": {
           "artifact_id": "SRC_M2_D1_N2_A0_PY",
@@ -311,8 +341,8 @@
         "SRC_PDU_MAIN_PY": {
           "artifact_id": "SRC_PDU_MAIN_PY",
           "path": "src/pdu_exam_observer/__main__.py",
-          "sha256": "0a69cae1311a27b718ce1e5c698a5cced48934092c49a5071d012940d680f4b4",
-          "size_bytes": 696
+          "sha256": "60b8e13b5e7955427c46a57aaa3f1af72e6e61809bb59793451e73344284a299",
+          "size_bytes": 1164
         },
         "TEST_LAUNCHER_PY": {
           "artifact_id": "TEST_LAUNCHER_PY",
@@ -359,8 +389,8 @@
         "TEST_M2_D1_N2_RP2_ARTIFACTS_PY": {
           "artifact_id": "TEST_M2_D1_N2_RP2_ARTIFACTS_PY",
           "path": "tests/backend/test_m2_d1_n2_rp2_artifacts.py",
-          "sha256": "bf039987504cb21311980cc57556704578958e310ae255de22e572f095681a6c",
-          "size_bytes": 20110
+          "sha256": "552261c298f87e748e226276baf0cf879afb2376c6b64e626e5c29d83c87cf71",
+          "size_bytes": 20971
         },
         "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": {
           "artifact_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
@@ -383,8 +413,14 @@
         "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY": {
           "artifact_id": "TEST_M2_S3D_PACKAGED_ROUND_TRIP_PY",
           "path": "tests/packaging/test_m2_s3d_packaged_evidence_round_trip.py",
-          "sha256": "6544e7ce0205174e3743f500f9feaabeee7dbb7ff561104cc8fd9f6ea3efbc87",
-          "size_bytes": 7469
+          "sha256": "ae45f4206113dbe856f2cfdff979585592939a78c5b5294f17b2a669be3c96b1",
+          "size_bytes": 8299
+        },
+        "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY": {
+          "artifact_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+          "path": "tests/packaging/test_m2_s3e_same_host_portability.py",
+          "sha256": "46f784709ecd0dc6170fb910e44212656496ceb48e8a8f352638239b152ec7bd",
+          "size_bytes": 9769
         },
         "TEST_M2_SYNTHETIC_EVIDENCE_PY": {
           "artifact_id": "TEST_M2_SYNTHETIC_EVIDENCE_PY",
@@ -437,14 +473,14 @@
         "WEB_API_TS": {
           "artifact_id": "WEB_API_TS",
           "path": "apps/web/src/api.ts",
-          "sha256": "2afac917ccb429355c1c3ffc71c574b46bed103af6eb74c18effbdb848f17371",
-          "size_bytes": 49548
+          "sha256": "fb90860c18e9012eaa72849c8f0af03230d21834dac21f9e0f56a7b7b9699e72",
+          "size_bytes": 50608
         },
         "WEB_APP_TSX": {
           "artifact_id": "WEB_APP_TSX",
           "path": "apps/web/src/App.tsx",
-          "sha256": "51432af5c347dbf4b9abafd930b3b577a1b1ed4c30c65aa2161f2aea657eb3b3",
-          "size_bytes": 20290
+          "sha256": "00c013ebb41277382a7ef1c0fdc042b5e9f285aae90ce615101a99c5278eb519",
+          "size_bytes": 21310
         },
         "WEB_STYLES_CSS": {
           "artifact_id": "WEB_STYLES_CSS",
@@ -462,8 +498,8 @@
       "uv_lock": {
         "artifact_id": "UV_LOCK",
         "path": "uv.lock",
-        "sha256": "d41fd8a4fe28415f94358e7c936f166e212b39448ebf89e2c55ffd6a63fae87c",
-        "size_bytes": 118334
+        "sha256": "86a872fa83514a480d094663f1084ddaff397aecc9e19724e23b1dc2d9ee9d97",
+        "size_bytes": 184309
       }
     },
     "authority_contract": {
@@ -499,7 +535,7 @@
     },
     "policy_digests": {
       "a0_approval_policy_digest": "ac22c090564799ec2377ee0a39da83345561804f4519c5db65fe155dc17ee327",
-      "binding_schema_canonical_sha256": "788a62ec4185b35ebdc7402813c8801c68a68acc20415f507fdf515438298ac3",
+      "binding_schema_canonical_sha256": "35b725ee0fc0f66f891c2ea606bfdc3d48a93e22fe23b2393228ae636112a530",
       "bootstrap_bundle_policy_digest": "740432c7a7809d8120c7f8618aab13d324928ac50c2a04d6f6bf3b6f64cac0ff",
       "bootstrap_cng_policy_digest": "2455117e6e166d3ebe4827c5ebaf5e9de6c95e258f872d6dc707ac1bb5e7b457",
       "bootstrap_epoch_policy_digest": "8df0a2dbed4c839c8e071c665eb3138221aca9304b32c2dbdcae050f77fc83e1",
@@ -521,6 +557,11 @@
       "m2_s3d_environment_binding_policy_digest": "82c5a093d0d4695096d0a2b7aef97f5721221ce6e3f890785c26d31170be9d87",
       "m2_s3d_no_device_or_disclosure_policy_digest": "1d6b48374e826e938c31d7d00efec2bf74b31a47140eb899408e9bd2215a6e5e",
       "m2_s3d_stdin_reproduction_surface_policy_digest": "20136fe281a50bbe2aaa5cfee043b4b395c5370f8700fd26274cd9556e639aa3",
+      "m2_s3e_a_status_and_gap_policy_digest": "ff32cedaaa2c30dd1c451c50aff04b7b164e13fd3fab12dcb543ad6ee1d98748",
+      "m2_s3e_authority_ceiling_policy_digest": "dd31da21416ef07328e9253809e294562664c4a4bad39d5474876cbbdef5ab20",
+      "m2_s3e_deterministic_handoff_policy_digest": "bc26245cf160472890b80ec6f70e1780cd7af8701159b772d951e7c26f9e4643",
+      "m2_s3e_external_response_boundary_policy_digest": "a0806aa346111c88562e6856b54afbddbc92e220979349c81d0db85e79f20516",
+      "m2_s3e_two_relocation_contract_policy_digest": "785786c09cc0625095c3751036b6aafb35eefc87cf0c47edde9c030be3403ad9",
       "ownership_cleanup_policy_digest": "3511491b6efa116ea99dd84a519670e1f9fec9fc7336f3c143bc4a2179267929",
       "package_gap_audit_authority_ceiling_policy_digest": "c8499e633e01f18533f9bce09846cc5482b6b00edfe3775365cca47424f0b8c5",
       "package_gap_audit_status_policy_digest": "b2e045c25c54d0c63b8cee637eb2cf2c2318cf8b776009d6a2c8114ecd3af792",
@@ -863,6 +904,78 @@
         },
         "projection": "m2-s3d.closed-stdin-only-packaged-reproduction-surface",
         "source_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
+        "version": 1
+      },
+      "m2_s3e_a_status_and_gap_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "clean_environment_handoff_ready": true,
+          "clean_machine_verified": false,
+          "open_gap_ids": [
+            "GAP-06_CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT",
+            "GAP-08_CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT"
+          ],
+          "same_host_portable_verified": true,
+          "status": "M2_S3E_A_SAME_HOST_ISOLATED_PORTABILITY_LOCALLY_VERIFIED_CLEAN_ENVIRONMENT_HANDOFF_READY_DEVICE_UNVERIFIED_NO_RELEASE_AUTHORITY"
+        },
+        "projection": "m2-s3e-a.same-host-portability-status-and-open-external-gaps",
+        "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+        "version": 1
+      },
+      "m2_s3e_authority_ceiling_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "authority_status": "AUTHORITY_NOT_ISSUED",
+          "clean_machine_verified": false,
+          "collection_authorized": false,
+          "d1_go": false,
+          "distribution_ready": false,
+          "physical_camera_access_authorized": false,
+          "release_authorized": false,
+          "research_ready": false
+        },
+        "projection": "m2-s3e-a.same-host-portability-no-release-authority-ceiling",
+        "source_id": "TEST_M2_S3E_SAME_HOST_PORTABILITY_PY",
+        "version": 1
+      },
+      "m2_s3e_deterministic_handoff_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "duplicate_or_unsafe_entries_allowed": false,
+          "fixed_zip_metadata": true,
+          "source_candidate": "M2_S3D_IMMUTABLE_CANDIDATE",
+          "two_builds_byte_identical": true
+        },
+        "projection": "m2-s3e-a.closed-deterministic-offline-handoff-zip",
+        "source_id": "M2_S3E_HANDOFF_BUILD_SCRIPT",
+        "version": 1
+      },
+      "m2_s3e_external_response_boundary_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "air_gapped_machine_verified": false,
+          "argument_count": 0,
+          "clean_machine_verified": false,
+          "external_environment_classification": "UNVERIFIED_PENDING_SOURCE_IMPORT",
+          "network_scope": "LOOPBACK_ONLY_OBSERVED"
+        },
+        "projection": "m2-s3e-a.external-response-pending-source-import-boundary",
+        "source_id": "M2_S3E_POWERSHELL_VERIFIER",
+        "version": 1
+      },
+      "m2_s3e_two_relocation_contract_policy_digest": {
+        "canonicalization": "json-v1-sort-keys-compact-utf8",
+        "fields": {
+          "candidate_process_count": 6,
+          "full_cycle_count": 2,
+          "profiles": [
+            "PATH_WITH_SPACES",
+            "UNICODE_PATH_WITH_SPACES"
+          ],
+          "retry_count": 0
+        },
+        "projection": "m2-s3e-a.fixed-two-relocation-full-cycle-contract",
+        "source_id": "M2_S3E_SAME_HOST_SCRIPT",
         "version": 1
       },
       "ownership_cleanup_policy_digest": {
@@ -1397,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "034eb3e19f88377529f5ffc37c077938b42563a447d1d6e6a481c1b635cbf607",
+  "static_bindings_digest": "167dc3dd03b60b8c44cbdec47b7050b1531a350b0f7bf647a3aac578f4223395",
   "valid_for_native_launch": false
 }

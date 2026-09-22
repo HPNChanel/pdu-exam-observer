@@ -17,6 +17,7 @@ apps/web/coverage/
 !.env.example
 data/
 runtime/
+!tests/runtime/
 exports/
 models/imported/
 *.partial
@@ -26,6 +27,7 @@ build/
 dist/
 release/
 packaging/candidates/
+packaging/handoffs/
 *.zip
 
 # Local evidence and legacy archive

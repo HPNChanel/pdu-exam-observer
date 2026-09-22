@@ -15,6 +15,7 @@ from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Request, Re
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
+from pdu_exam_observer.api.workspace import FocusRequest, WorkspacePort, register_workspace_routes
 from pdu_exam_observer.contracts import (
     SCHEMA_VERSION,
     AnswerRequest,
@@ -62,6 +63,7 @@ class AppConfig:
     backend: M0Backend = field(default_factory=M0Backend)
     static_dir: Path | None = None
     synthetic_review_service: SyntheticReviewService | None = None
+    workspace: WorkspacePort | None = None
     reviewer_auth: ReviewerAuthenticator = field(init=False, repr=False)
 
     def __post_init__(self, reviewer_pin: str) -> None:
@@ -136,11 +138,17 @@ def _create_app(
             if request.headers.get("origin") != expected_origin:
                 return _secure(JSONResponse({"detail": "Origin rejected"}, status_code=403))
             content_length = request.headers.get("content-length")
+            maximum_body = (
+                64 * 1024 * 1024
+                if config.workspace is not None and session_cookie is None
+                and request.url.path == "/api/v1/workspace/models/import"
+                else 65536
+            )
             if (
                 request.headers.get("transfer-encoding") is not None
                 or content_length is None
                 or not content_length.isdigit()
-                or int(content_length) > 65536
+                or int(content_length) > maximum_body
             ):
                 return _secure(JSONResponse({"detail": "Request body too large"}, status_code=413))
             reconciliation_json = request.url.path.startswith(
@@ -173,7 +181,10 @@ def _create_app(
             for legacy_cookie in ("reviewer_session", "pdu_monitor_csrf"):
                 if legacy_cookie in request.cookies:
                     response.delete_cookie(legacy_cookie)
-        return _secure(response)
+        response = _secure(response)
+        if config.workspace is not None and session_cookie is None and request.url.path == "/monitor":
+            response.headers["Content-Security-Policy"] += "; media-src 'self' blob:; object-src 'none'"
+        return response
 
     @app.get("/api/v1/health")
     async def health() -> JSONResponse:
@@ -254,6 +265,10 @@ def create_monitor_app(config: AppConfig) -> FastAPI:
         register_synthetic_review_routes(
             app, config.synthetic_review_service, require_reviewer
         )
+
+    if config.workspace is not None:
+        app.state.workspace = config.workspace
+        register_workspace_routes(app, config.workspace, require_reviewer)
 
     @app.post("/api/v1/reviewer/login")
     async def reviewer_login(
@@ -724,6 +739,20 @@ def create_exam_app(config: AppConfig) -> FastAPI:
             "remaining_seconds": snapshot.remaining_seconds,
             "started_at_utc": snapshot.started_at_utc,
         }
+
+    if config.workspace is not None:
+        workspace = config.workspace
+
+        @app.post("/api/v1/exam/focus", status_code=204)
+        def focus_context(
+            payload: FocusRequest, candidate_session: str | None = Cookie(default=None)
+        ) -> Response:
+            session_id = require_candidate(candidate_session)
+            try:
+                workspace.focus(session_id, payload.focused)
+            except (RuntimeError, ValueError, OSError) as exc:
+                raise HTTPException(409, detail="TECHNICAL_INSUFFICIENT") from exc
+            return Response(status_code=204)
 
     @app.post("/api/v1/exam/answers")
     async def save_answer(

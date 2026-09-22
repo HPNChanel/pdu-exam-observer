@@ -9,7 +9,6 @@ import os
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-
 MANIFEST_NAME = "RELEASE_MANIFEST.json"
 DETACHED_MANIFEST_NAME = "RELEASE_MANIFEST.detached.json"
 REQUIRED_METADATA = {
@@ -30,16 +29,20 @@ class ManifestError(ValueError):
 
 
 def canonical_json_bytes(document: dict[str, Any]) -> bytes:
-    return (json.dumps(document, ensure_ascii=True, sort_keys=True, separators=(",", ":")) + "\n").encode(
-        "utf-8"
-    )
+    return (
+        json.dumps(document, ensure_ascii=True, sort_keys=True, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
 
 
 def _safe_manifest_path(value: Any) -> str:
     if not isinstance(value, str) or not value or "\x00" in value or "\\" in value:
         raise ManifestError(f"unsafe manifest path: {value!r}")
     path = PurePosixPath(value)
-    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts) or ":" in path.parts[0]:
+    if (
+        path.is_absolute()
+        or any(part in {"", ".", ".."} for part in path.parts)
+        or ":" in path.parts[0]
+    ):
         raise ManifestError(f"unsafe manifest path: {value!r}")
     normalized = path.as_posix()
     if normalized != value:
@@ -91,7 +94,9 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_manifest(bundle_root: Path, metadata: dict[str, Any], detached_path: Path) -> tuple[Path, Path]:
+def build_manifest(
+    bundle_root: Path, metadata: dict[str, Any], detached_path: Path
+) -> tuple[Path, Path]:
     root = _root_path(Path(bundle_root))
     missing = REQUIRED_METADATA - set(metadata)
     if missing:
@@ -158,8 +163,10 @@ def verify_manifest(bundle_root: Path, bundled_path: Path, detached_path: Path) 
             raise ManifestError(f"duplicate manifest file entry: {relative}")
         if not isinstance(entry["size"], int) or entry["size"] < 0:
             raise ManifestError(f"invalid size for: {relative}")
-        if not isinstance(entry["sha256"], str) or len(entry["sha256"]) != 64 or any(
-            char not in "0123456789abcdef" for char in entry["sha256"]
+        if (
+            not isinstance(entry["sha256"], str)
+            or len(entry["sha256"]) != 64
+            or any(char not in "0123456789abcdef" for char in entry["sha256"])
         ):
             raise ManifestError(f"invalid sha256 for: {relative}")
         listed[relative] = entry

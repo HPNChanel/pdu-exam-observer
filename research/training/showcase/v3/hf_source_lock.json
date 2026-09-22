@@ -1,0 +1,15 @@
+{
+  "execute_remote_code": false,
+  "file_path": "model.py",
+  "file_sha256": "3a389e01deac50628939c78165ed3b8939e66b87a5d0a5baf67e0ac4f6ec7554",
+  "license": "apache-2.0",
+  "provider": "HUGGING_FACE",
+  "repository_id": "xiyuanz/UniMTS",
+  "reuse_mode": "ARCHITECTURE_REFERENCE_ONLY",
+  "revision": "378531dbc1ec649b5bb792fd2e8f4c9a1a3ff99d",
+  "schema_version": 1,
+  "target_topology": "mediapipe-33-v1",
+  "upstream_topology_nodes": 22,
+  "use_pretrained_weights": false
+}
+

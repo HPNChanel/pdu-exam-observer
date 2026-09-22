@@ -63,8 +63,9 @@ của tài liệu do người vận hành cung cấp.
 
 Tạo phiên REAL trước để lấy `session_id`. Bản ghi native nằm trong thư mục
 `research` của workspace. Mẫu và danh sách trường được cung cấp bởi
-`research_runtime/authority_cli.py`; mẫu chỉ chứa placeholder. Công cụ đóng gói
-có lệnh `PDUWorkspace.exe authority --help`. Cài hồ sơ bằng các đối số
+`research_runtime/authority_cli.py` (`template_main`; hiện chỉ gọi được từ mã
+nguồn — chưa nối vào `PDUWorkspace.exe`); mẫu chỉ chứa placeholder. Công cụ
+đóng gói có lệnh `PDUWorkspace.exe authority --help`. Cài hồ sơ bằng các đối số
 `--root`, `--record`, `--approval-file`, `--consent-file`, `--retention-file`,
 `--storage-evidence-file`; tất cả chỉ được nhập ở terminal native. Khi thay hồ
 sơ cũ, bắt buộc `--expected-current-sha256`. Cấu hình

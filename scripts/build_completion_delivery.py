@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PARENT = ROOT / "packaging/candidates/completion-2026-09-08"
+REQUIRED_PYINSTALLER_VERSION = "6.10.0"
 
 
 def digest(path: Path) -> str:
@@ -120,6 +121,22 @@ def main() -> None:
     if target.exists():
         parser.error("candidate already exists; choose a fresh name to preserve prior bytes")
     target.mkdir(parents=True)
+    probe = subprocess.run(
+        [
+            str(args.build_python.resolve()),
+            "-c",
+            "import PyInstaller; print(PyInstaller.__version__, end='')",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if probe.returncode != 0 or probe.stdout.strip() != REQUIRED_PYINSTALLER_VERSION:
+        parser.error(
+            "build python must provide PyInstaller "
+            f"{REQUIRED_PYINSTALLER_VERSION} (the verified candidate toolchain); "
+            f"got: {probe.stdout.strip() or probe.stderr.strip() or 'not installed'}"
+        )
     before = source_manifest()
     env = {
         **os.environ,

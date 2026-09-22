@@ -15,6 +15,12 @@ The current scope and acceptance ledger are in COMPLETION_2026_09_08.md.
 Historical ceilings below describe their original milestones. They do not
 cancel the newly authorized implementation scope or grant research authority.
 
+Note on scopes: `physical_camera_access_authorized=false` in the ceiling
+fields refers to the D1/D1-N2 collection-device authorization ladder. The
+user-authorized current-device technical camera diagnostic
+(`scripts/check_workspace_camera.py`, `workspace-camera.json`) is a separate
+scope and does not open any collection gate.
+
 ## Historical task record
 # Current Task
 

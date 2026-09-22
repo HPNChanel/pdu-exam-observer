@@ -45,6 +45,8 @@ Enumerate cameras and displays server-side. Browser input selects opaque IDs fro
 
 Raw video is never mounted as a static directory and is never returned by an arbitrary path. Authorized review requests resolve an opaque artifact ID through the repository, verify ownership and state, and stream with no-store headers.
 
+The Python-level outbound-socket guard used by the native device-validation paths observes only sockets created inside the process that installs it; it cannot observe egress by native libraries (cv2, mediapipe, onnxruntime, FFmpeg). It is a detection aid, not an egress boundary — the actual boundary is that no code path performs network egress at all.
+
 Logs exclude video frames, landmark arrays, names, tokens, cookies, PINs, URLs, window titles, process names, local usernames, full paths, and exported record bodies.
 
 ## Failure behavior

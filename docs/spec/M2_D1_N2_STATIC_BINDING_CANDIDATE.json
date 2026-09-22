@@ -185,13 +185,13 @@
         "SRC_API_FACTORIES_PY": {
           "artifact_id": "SRC_API_FACTORIES_PY",
           "path": "src/pdu_exam_observer/api/factories.py",
-          "sha256": "9680db5fa350799a342f11c2f299ebca0260c0b34d473944d61714348be4c724",
-          "size_bytes": 32768
+          "sha256": "2a7f2974b8ff669d1672074c5c6d2c097b8ad23288453456cdf4dd793d3b59ed",
+          "size_bytes": 32942
         },
         "SRC_LAUNCHER_PY": {
           "artifact_id": "SRC_LAUNCHER_PY",
           "path": "src/pdu_exam_observer/launcher.py",
-          "sha256": "54fe93d6b98562971daf3e66bd9ecf08a907041fd07b34e1a26befd4a06c0c67",
+          "sha256": "9b30b32a416ce7c545a4ca29236a097703e8ad67c39145fd2c5e95c21642c7be",
           "size_bytes": 6486
         },
         "SRC_M2_D1_N2_A0_PY": {
@@ -341,14 +341,14 @@
         "SRC_PDU_MAIN_PY": {
           "artifact_id": "SRC_PDU_MAIN_PY",
           "path": "src/pdu_exam_observer/__main__.py",
-          "sha256": "60b8e13b5e7955427c46a57aaa3f1af72e6e61809bb59793451e73344284a299",
-          "size_bytes": 1164
+          "sha256": "168b6112cc00e2d47c3f8d3ca26165ebf4a08dad9e2abe0198769c7bd6827faf",
+          "size_bytes": 1368
         },
         "TEST_LAUNCHER_PY": {
           "artifact_id": "TEST_LAUNCHER_PY",
           "path": "tests/backend/test_launcher.py",
-          "sha256": "0cf76ddbd1eff1456d798af00d0cb57cd2a1b04bab1ac3dd99481778c0c62780",
-          "size_bytes": 3191
+          "sha256": "9f9153c2ad35e79ad45e2b1555fb1f6dea012e856233e2ab7879b1175423d156",
+          "size_bytes": 3180
         },
         "TEST_M2_D1_N2_A0_PY": {
           "artifact_id": "TEST_M2_D1_N2_A0_PY",
@@ -1510,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "167dc3dd03b60b8c44cbdec47b7050b1531a350b0f7bf647a3aac578f4223395",
+  "static_bindings_digest": "a516c65a9327fb79f9b63c50fa1181c6c5a4d84f65b8fec6634bcfa32ab72100",
   "valid_for_native_launch": false
 }

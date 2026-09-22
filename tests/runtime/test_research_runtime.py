@@ -26,6 +26,11 @@ def _authority(root: Path, reference: str) -> dict[str, str]:
         "participant_pseudonym": "participant-approved-01",
         "consent_status": "CONFIRMED",
         "retention_expires_at": time.time() + 3600,
+        "protocol_version": "protocol-2026-v1",
+        "consent_receipt_id": "receipt-2026-001",
+        "consent_version": "consent-v1",
+        "operator_pseudonym": "operator-7f2a",
+        "device_gate_decision": "UNVERIFIED",
     }
 
 

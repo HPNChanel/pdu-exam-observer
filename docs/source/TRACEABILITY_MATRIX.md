@@ -49,6 +49,12 @@ runtime or hardware evidence.
 | FR-015 demo labeled, never implies real | `CreateRequest` defaults `AI_RENDERED`; `synthetic:true` events | TESTED — workspace/research tests |
 | Governance: real-capture authority record | `authority_cli.install_authority` (root-bound digests, compare-and-swap) + `service.py` revalidation | TESTED — `test_authority_cli.py`, `test_privacy_lifecycle.py`; authenticity of referenced documents is out of scope by design (R-43) |
 | Governance: withdrawal deletes owned inventory only | `service.py` `withdraw` + `_withdrawal_artifact_inventory_locked` (untracked files rejected) | TESTED — `test_privacy_lifecycle.py` |
+| Governance: withdrawal follow-up tasks persisted | `runtime_withdrawal_tasks` rows per external export (idempotent via terminal state) | TESTED — `test_data_model_governance.py` |
+| Capture integrity accounting | `dropped_frames`/`gap_events`/`max_gap_frames` on `runtime_sessions`; writer fills counted; >45-frame gap → `FRAME_GAP_EXCEEDED` | TESTED — `test_data_model_governance.py` |
+| Operator contamination flag is real | `mark_contamination` sets `contaminated_from_seq`; exports flag observations at/after boundary | TESTED — `test_data_model_governance.py`; workspace action `mark-contamination` |
+| Reviewer lifecycle audit (local-only, no secrets) | `M0Backend` audit hooks → `reviewer_audit` (runtime DB) + `audit_events` (M1 store) | TESTED — `test_data_model_governance.py` |
+| Runtime store schema v2 (additive) | `_MIGRATED_COLUMNS` ALTERs; `user_version=2`; export `SCHEMA_VERSION` stays 1 | TESTED — `test_data_model_governance.py::test_v1_database_migrates_additively` |
+| Authority governance fields | `protocol_version`/`consent_receipt_id`/`consent_version`/`operator_pseudonym`/`device_gate_decision` required at install (`authority_cli`) and revalidated (`_validate_authority`) | TESTED — `test_authority_cli.py`, `test_data_model_governance.py` |
 | Protocol freeze before outer-test | `research/training/showcase/v3/protocol.py` self-hash `status=FROZEN` | TESTED — `test_protocol_freeze.py` |
 | Participant-disjoint splits; pilot excluded; synthetic never in cal/test | `research/training/showcase/v3/splits.py` | TESTED — `test_split_augmentation_contract.py` |
 | Evaluation (tIoU sweep, class-aware matching, continuous denominators) | `research/training/showcase/v3/evaluation.py` | TESTED — `test_continuous_event_evaluation.py` |

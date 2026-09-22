@@ -104,6 +104,9 @@ class M0Backend:
     _reviewer_session_revocation_callback: Callable[[str], None] | None = field(
         default=None, init=False, repr=False
     )
+    _reviewer_audit_hooks: list[Callable[[str], None]] = field(
+        default_factory=list, init=False, repr=False
+    )
     subscriber_queue_size: int = 512
     max_subscribers_per_session: int = 8
     _subscribers: dict[str, list[asyncio.Queue[dict[str, object]]]] = field(default_factory=dict)
@@ -149,6 +152,7 @@ class M0Backend:
         self._reviewer_token_expiry = expiry
         self._reviewer_token_monotonic_issued = monotonic_issued
         self._reviewer_token_monotonic_expiry = monotonic_expiry
+        self._emit_reviewer_audit("REVIEWER_LOGIN")
         return token
 
     def register_reviewer_session_revocation(
@@ -156,13 +160,25 @@ class M0Backend:
     ) -> None:
         self._reviewer_session_revocation_callback = callback
 
-    def _invalidate_reviewer_session(self) -> None:
+    def register_reviewer_audit_hook(self, callback: Callable[[str], None]) -> None:
+        """Audit sinks receive a fixed event kind only; bearer material never leaves."""
+        self._reviewer_audit_hooks.append(callback)
+
+    def _emit_reviewer_audit(self, event_kind: str) -> None:
+        for callback in self._reviewer_audit_hooks:
+            callback(event_kind)
+
+    def _invalidate_reviewer_session(
+        self, audit_kind: str = "REVIEWER_SESSION_ENDED"
+    ) -> None:
         digest = self._reviewer_token_digest
         try:
             if digest is not None and self._reviewer_session_revocation_callback is not None:
                 self._reviewer_session_revocation_callback(digest.hex())
         finally:
             self._clear_reviewer_token()
+            if digest is not None:
+                self._emit_reviewer_audit(audit_kind)
 
     def _clear_reviewer_token(self) -> None:
         self._reviewer_token_digest = None
@@ -226,7 +242,7 @@ class M0Backend:
             return
         candidate_digest = hashlib.sha256(token.encode("utf-8")).digest()
         if hmac.compare_digest(self._reviewer_token_digest, candidate_digest):
-            self._invalidate_reviewer_session()
+            self._invalidate_reviewer_session("REVIEWER_LOGOUT")
 
     def create_session(self) -> tuple[SessionRecord, str]:
         session_id = token_urlsafe(18)

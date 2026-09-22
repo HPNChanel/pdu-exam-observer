@@ -41,7 +41,7 @@ def test_runtime_buffers_pose_sequence_and_stale_focus_abstains(
         "_analyze_frame",
         analyze,
     )
-    monkeypatch.setattr(runtime, "_write_frame_locked", lambda *_args: None)
+    monkeypatch.setattr(runtime, "_write_frame_locked", lambda *_args: 0)
     frame = np.zeros((720, 1280, 3), dtype=np.uint8)
     try:
         for index in range(100):

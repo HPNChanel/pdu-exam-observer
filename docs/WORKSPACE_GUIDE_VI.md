@@ -36,6 +36,11 @@ không nhận đường dẫn lưu trữ, URL tùy ý hay lệnh hệ thống.
    skeleton trực tiếp, chất lượng và trạng thái phiên; bài thi không nhận nhãn
    nghiên cứu, confidence hay điều khiển reviewer.
 5. Bấm **Dừng**, rồi **Niêm phong**. Chỉ sau seal mới xem được video cục bộ.
+   Nếu reviewer đã thao tác vào máy trong lúc phiên đang RECORDING, bấm **Đánh
+   dấu nhiễm thao tác** trước khi dừng: mọi quan sát sau điểm đánh dấu sẽ mang
+   cờ `contaminated_by_operator` trong export. Đây là siêu dữ liệu provenance,
+   không phải đánh giá hành vi. Bộ đếm `Khung mất`/`Đứt đoạn` trên panel là
+   kế toán chất lượng dữ liệu đã lưu; khoảng đứt quá lớn làm phiên FAILED.
 6. Duyệt từng sự kiện: sửa biên thời gian tính bằng mili giây, chọn nhãn và
    xác nhận/từ chối/chưa đủ bằng chứng, ghi lý do. Mỗi lần sửa thêm một phiên
    bản. **Gán nhãn đoạn video khác** cho phép ghi nhận đoạn bỏ sót hoặc đoạn
@@ -75,6 +80,15 @@ Tạo phiên REAL trước để lấy `session_id`. Bản ghi native nằm tron
 `--storage-evidence-file`; tất cả chỉ được nhập ở terminal native. Khi thay hồ
 sơ cũ, bắt buộc `--expected-current-sha256`. Cấu hình
 `PDU_COLLECTION_AUTHORITY_REF` trong môi trường launcher khớp hồ sơ được cài.
+
+Bản ghi JSON trong `--record` bắt buộc đủ trường quản trị: `protocol_version`
+(phiên bản protocol đã đóng băng), `cohort` (`PILOT`/`CONFIRMATORY`),
+`consent_receipt_id` + `consent_version` (biên nhận và phiên bản consent),
+`operator_pseudonym` (bí danh vận hành, không phải tên thật — gắn vào review
+và export nội bộ, không lọt vào gói Colab) và `device_gate_decision` — chỉ nhận
+các giá trị trung thực (`UNVERIFIED`, `NO_GO`, `BACKEND_CONTRACT_PASS`,
+`D1_N1_PREFLIGHT_PASS`, `D1_N2_PREFLIGHT_PASS`); ghi `UNVERIFIED` khi chưa có
+bằng chứng cổng thiết bị, không tự chế giá trị GO.
 
 Nguồn REAL chỉ được export khi consent còn hiệu lực, retention chưa hết hạn,
 phiên đã seal và khóa. `timing.phase` được lấy từ cohort PILOT/CONFIRMATORY

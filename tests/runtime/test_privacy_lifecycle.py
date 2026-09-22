@@ -25,6 +25,11 @@ def authority(root: Path) -> dict[str, object]:
         "participant_pseudonym": "unit-participant",
         "consent_status": "CONFIRMED",
         "retention_expires_at": time.time() + 3600,
+        "protocol_version": "protocol-2026-v1",
+        "consent_receipt_id": "receipt-2026-001",
+        "consent_version": "consent-v1",
+        "operator_pseudonym": "operator-7f2a",
+        "device_gate_decision": "UNVERIFIED",
         "withdrawal_authority_sha256": "d" * 64,
         "withdrawal_decision": "DELETE_OWNED_RUNTIME_ARTIFACTS",
     }

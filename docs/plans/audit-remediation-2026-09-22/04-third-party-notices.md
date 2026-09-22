@@ -53,3 +53,25 @@ for any future distribution.
 - Ruff + strict mypy clean on the new script.
 - Spot-check 3 licenses against upstream (e.g. mediapipe Apache-2.0,
   onnxruntime MIT, certifi MPL-2.0) — record as OBSERVED in the task receipt.
+
+## Execution note (2026-09-22)
+
+- NEW `scripts/generate_third_party_notices.py`: deterministic renderer over
+  `uv.lock` (tomllib) + `package-lock.json`; ships-set = the 37-package
+  default dependency closure from `uv export --no-dev` (mediapipe transitively
+  pulls matplotlib/opencv-contrib-python/sounddevice — they ship).
+- License expressions verified against installed wheel dist-info METADATA
+  (all 37 read; e.g. certifi MPL-2.0, cffi MIT-0, numpy BSD-3-Clause+bundled,
+  pillow MIT-CMU, python-dateutil dual Apache-2.0/BSD-3-Clause).
+- `vite`/`@vitejs/plugin-react` moved to `devDependencies` — they are
+  build tools, not shipped code; `npm ci` still green, dist output
+  byte-identical.
+- Vendored section covers FFmpeg (LGPL, FFMPEG_LICENSE.txt), PortAudio,
+  Python 3.11/PSF, OpenSSL 3, SQLite, MSVC runtime, libffi, MediaPipe model
+  assets, setuptools vendored wheels, PyInstaller bootloader exception.
+- NEW `tests/packaging/test_third_party_notices.py`: coverage (every shipped
+  name+version), token gate, frontend prod-dep equality, byte-identical
+  regeneration. `--check` mode gives CI a staleness gate.
+- DEVIATION (recorded for Task 10 receipt): candidate-06 shipped the old
+  15-line informational notices; this regeneration lands in the next
+  candidate lineage — candidate-06 bytes untouched.

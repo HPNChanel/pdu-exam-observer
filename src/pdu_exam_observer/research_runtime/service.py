@@ -13,7 +13,6 @@ import hashlib
 import json
 import math
 import os
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -44,6 +43,26 @@ except ImportError:  # pragma: no cover - package gate covers it
 
 SCHEMA_VERSION = 1
 CAPTURE_PROFILE = "capture.v1.1280x720@15fps.no-audio"
+MAX_POSE_TIMELINE_BYTES = 256 * 1024 * 1024
+_SESSION_COLUMNS = frozenset(
+    {
+        "source_kind",
+        "participant_pseudonym",
+        "state",
+        "revision",
+        "created_at",
+        "started_at",
+        "stopped_at",
+        "sealed_at",
+        "failure_code",
+        "locked",
+        "frame_seq",
+        "focus_state",
+        "quality_state",
+        "authority_reference",
+        "artifact_directory",
+    }
+)
 ALLOWED_SOURCE_KINDS = frozenset({"REAL", "AI_RENDERED", "AUGMENTED"})
 ALLOWED_FOCUS = frozenset({"EXAM_FOCUSED", "EXAM_NOT_FOCUSED", "FOCUS_UNKNOWN"})
 ALLOWED_LABELS = frozenset(
@@ -1057,6 +1076,8 @@ class ResearchRuntimeService:
         grayscale = frame[..., :3].mean(axis=2)
         blur = float(np.var(np.diff(grayscale, axis=0)))
         exposure = float(grayscale.mean())
+        if not (math.isfinite(blur) and math.isfinite(exposure)):
+            return {"state": "INSUFFICIENT"}, [], 0, "POSE_SCHEMA_FAILED"
         quality: dict[str, object] = {
             "state": "SUFFICIENT" if blur >= 1.0 and 10.0 <= exposure <= 245.0 else "INSUFFICIENT",
             "blur": blur,
@@ -1605,6 +1626,8 @@ class ResearchRuntimeService:
 
     def _duration_ms_locked(self, row: sqlite3.Row) -> int:
         timeline = self._owned_artifact_directory(row) / "pose_timeline.jsonl"
+        if timeline.is_file() and timeline.stat().st_size > MAX_POSE_TIMELINE_BYTES:
+            raise InvalidTransition("ARTIFACT_TOO_LARGE")
         first: int | None = None
         last = 0
         with open_regular_read(timeline) as handle:
@@ -1628,8 +1651,27 @@ class ResearchRuntimeService:
         bundled = Path(getattr(sys, "_MEIPASS", "")) / "tools" / "ffmpeg.exe"
         if bundled.is_file():
             return bundled.resolve()
-        discovered = shutil.which("ffmpeg")
-        return Path(discovered).resolve() if discovered else None
+        configured = os.environ.get("PDU_FFMPEG_PATH")
+        expected = os.environ.get("PDU_FFMPEG_SHA256", "").lower()
+        if (
+            configured is None
+            or len(expected) != 64
+            or any(character not in "0123456789abcdef" for character in expected)
+        ):
+            return None
+        candidate = Path(configured)
+        if (
+            not candidate.is_absolute()
+            or str(candidate).startswith("\\\\")
+            or candidate.is_symlink()
+            or not candidate.is_file()
+        ):
+            return None
+        digest = hashlib.sha256()
+        with candidate.open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        return candidate.resolve() if digest.hexdigest() == expected else None
 
     def _export_records(
         self, row: sqlite3.Row, reviews: list[dict[str, object]], events: list[dict[str, object]]
@@ -1639,6 +1681,8 @@ class ResearchRuntimeService:
             raise InvalidTransition("POSE_TIMELINE_UNAVAILABLE")
         observations: list[dict[str, object]] = []
         if timeline.is_file():
+            if timeline.stat().st_size > MAX_POSE_TIMELINE_BYTES:
+                raise InvalidTransition("ARTIFACT_TOO_LARGE")
             with open_regular_read(timeline) as handle:
                 content = handle.read()
                 expected = self._connection.execute(
@@ -1768,6 +1812,9 @@ class ResearchRuntimeService:
     def _update_session_locked(self, session_id: str, **changes: object) -> None:
         if not changes:
             return
+        unknown = set(changes) - _SESSION_COLUMNS
+        if unknown:
+            raise RuntimeErrorBase(f"runtime_sessions column not allowed: {sorted(unknown)}")
         columns = ", ".join(f"{name}=?" for name in changes)
         self._connection.execute(
             f"UPDATE runtime_sessions SET {columns} WHERE session_id=?",

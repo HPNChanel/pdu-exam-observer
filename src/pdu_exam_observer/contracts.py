@@ -173,10 +173,12 @@ class SessionCreateResponse(BaseModel):
 
 
 class PairingRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     pairing_code: str = Field(min_length=1, max_length=128)
 
 
 class ReviewerLoginRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     pin: str = Field(min_length=1, max_length=128)
 
 
@@ -197,15 +199,18 @@ class ReviewerSessionResponse(BaseModel):
 
 
 class EventStreamRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     session_id: str = Field(min_length=1, max_length=128)
     after_event_seq: int = Field(ge=0)
 
 
 class AnswerRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     answer_id: str = Field(min_length=1, max_length=128)
     question_id: str = Field(min_length=1, max_length=128)
     value: str | int | float | bool | None
 
 
 class DemoReplayRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     session_id: str = Field(min_length=1, max_length=128)

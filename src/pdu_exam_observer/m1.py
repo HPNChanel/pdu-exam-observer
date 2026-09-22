@@ -681,8 +681,7 @@ class M1Backend(M0Backend):
         return {"event_seq": sequence, "type": event_type, **payload}
 
     def _publish(self, session_id: str, event: dict[str, object]) -> None:
-        for subscriber in self._subscribers.get(session_id, []):
-            subscriber.put_nowait(event)
+        self._fanout(session_id, event)
 
     def _key(self, key: str | None, fallback: str) -> str:
         value = key or fallback

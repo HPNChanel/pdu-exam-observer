@@ -463,7 +463,7 @@ class ConfirmationService:
         login = self.authenticator.authenticate(
             pin,
             "reconciliation-step-up:" + client_key,
-            now,
+            monotonic_now,
         )
         if not login.accepted:
             suffix = "" if login.retry_after is None else f":{login.retry_after}"

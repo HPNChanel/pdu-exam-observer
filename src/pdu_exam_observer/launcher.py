@@ -130,7 +130,7 @@ def main() -> None:
     exam, monitor = build_apps_from_environment()
     exam_port = _port("PDU_EXAM_PORT", 8765)
     monitor_port = _port("PDU_MONITOR_PORT", 8766)
-    monitor_server = uvicorn.Server(uvicorn.Config(monitor, host="localhost", port=monitor_port))
+    monitor_server = uvicorn.Server(uvicorn.Config(monitor, host="127.0.0.1", port=monitor_port))
     exam_server = uvicorn.Server(uvicorn.Config(exam, host="127.0.0.1", port=exam_port))
     monitor_thread = Thread(target=monitor_server.run, name="pdu-monitor", daemon=True)
     exam_thread = Thread(target=exam_server.run, name="pdu-exam", daemon=True)

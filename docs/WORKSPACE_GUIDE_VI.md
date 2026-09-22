@@ -54,6 +54,11 @@ Chế độ REAL cần đủ màn hình vật lý, camera đúng profile, lưu t
 native gắn đúng participant/session/root. Hai cửa sổ trên một màn hình không
 đáp ứng điều kiện hai màn hình. Camera dùng device 0, 1280×720, yêu cầu 15 FPS,
 không mở audio. Một tiến trình riêng sở hữu camera; khởi tạo/đọc/đóng có timeout.
+Bản đóng gói dùng `tools/ffmpeg.exe` đi kèm để kết xuất video. Khi chạy từ mã
+nguồn, runtime không tự tìm ffmpeg trên PATH — phải chỉ định rõ
+`PDU_FFMPEG_PATH` (đường dẫn tuyệt đối, không UNC, không symlink) cùng
+`PDU_FFMPEG_SHA256` khớp băm của binary; thiếu hoặc sai băm sẽ báo
+`ENCODER_FFMPEG_UNAVAILABLE` thay vì dùng binary lạ.
 
 Trước khi thu bất kỳ người tham gia nào, người có thẩm quyền phải cung cấp
 phê duyệt tổ chức, consent, retention và bằng chứng storage. Không sửa JSON để
@@ -62,9 +67,9 @@ băm tài liệu và ràng buộc bản ghi; nó không chứng minh tính xác 
 của tài liệu do người vận hành cung cấp.
 
 Tạo phiên REAL trước để lấy `session_id`. Bản ghi native nằm trong thư mục
-`research` của workspace. Mẫu và danh sách trường được cung cấp bởi
-`research_runtime/authority_cli.py` (`template_main`; hiện chỉ gọi được từ mã
-nguồn — chưa nối vào `PDUWorkspace.exe`); mẫu chỉ chứa placeholder. Công cụ
+`research` của workspace. Mẫu draft được tạo bằng
+`PDUWorkspace.exe authority-template --root <thư-mục> --session-id <uuid>`
+(mẫu chỉ chứa placeholder, không cấp quyền). Công cụ
 đóng gói có lệnh `PDUWorkspace.exe authority --help`. Cài hồ sơ bằng các đối số
 `--root`, `--record`, `--approval-file`, `--consent-file`, `--retention-file`,
 `--storage-evidence-file`; tất cả chỉ được nhập ở terminal native. Khi thay hồ

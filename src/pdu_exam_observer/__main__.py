@@ -9,6 +9,10 @@ if __name__ == "__main__":
         from pdu_exam_observer.research_runtime.authority_cli import main as authority_main
 
         raise SystemExit(authority_main(sys.argv[2:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "authority-template":
+        from pdu_exam_observer.research_runtime.authority_cli import template_main
+
+        raise SystemExit(template_main(sys.argv[2:]))
     if len(sys.argv) > 1 and sys.argv[1] == "workspace":
         from pdu_exam_observer.workspace_cli import main as workspace_main
 

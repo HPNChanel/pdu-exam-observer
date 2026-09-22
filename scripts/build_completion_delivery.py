@@ -114,10 +114,16 @@ def main() -> None:
     parser.add_argument("--build-python", type=Path, required=True)
     parser.add_argument("--ffmpeg", type=Path, required=True)
     parser.add_argument("--name", default="candidate-01")
+    parser.add_argument(
+        "--parent",
+        type=Path,
+        default=DEFAULT_PARENT,
+        help="candidate parent directory; a new lineage must use a new parent",
+    )
     args = parser.parse_args()
     if not args.name.replace("-", "").isalnum():
         parser.error("name must contain only letters, digits and hyphens")
-    target = DEFAULT_PARENT / args.name
+    target = args.parent.resolve() / args.name
     if target.exists():
         parser.error("candidate already exists; choose a fresh name to preserve prior bytes")
     target.mkdir(parents=True)

@@ -99,3 +99,18 @@ source-level no-camera capability probe is approved and executed. Python stdout 
 unbuffered; only the two application bytearrays are zero-verified. OS pipe, driver, MediaPipe native,
 and device-internal buffering remain UNVERIFIED and are not covered by raw_retained=false.
 
+
+### FFmpeg acquisition recipe (2026-09-22 amendment, DG-3)
+
+The encoder binary is not vendored in the repository. The pinned input is
+`ffmpeg version 8.0.1-essentials_build-www.gyan.dev` (GPL configuration,
+`--enable-gpl --enable-version3 --enable-static`, MSYS2 gcc 15.2.0), SHA-256
+`5af82a0d4fe2b9eae211b967332ea97edfc51c6b328ca35b827e73eac560dc0d`. A
+third party may obtain the identical binary from the upstream essentials
+channel or from the immutable candidate-06 bundle
+(`packaging/candidates/completion-2026-09-08/candidate-06/PDU-Workspace/_internal/tools/ffmpeg.exe`,
+verified byte-identical to the recorded digest on 2026-09-22). Verification
+command: `certutil -hashfile <binary> SHA256`. The GPL-3.0 license text ships
+as `FFMPEG_LICENSE.txt` in the bundle root; `build_completion_delivery.py`
+requires `LICENSE` beside the binary's parent directory.
+

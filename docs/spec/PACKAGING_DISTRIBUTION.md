@@ -35,6 +35,9 @@ PDU-Workspace/
 `packaging/PDU-Exam-Observer.spec` path) is retained for provenance and is
 not the current-source delivery.
 
+The exact pinned toolchain and FFmpeg acquisition recipe required to attempt
+a rebuild are recorded in `docs/spec/BUILD_TOOLCHAIN.md`.
+
 The historical portable release has this conceptual shape:
 
 ~~~text

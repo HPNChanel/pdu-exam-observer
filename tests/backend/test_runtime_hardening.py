@@ -128,6 +128,40 @@ def test_sse_queue_overflow_marks_subscriber_stale() -> None:
     assert queue.qsize() == 1
 
 
+def test_sse_stream_terminates_for_stalled_consumer() -> None:
+    """A consumer slower than the producer must be disconnected, not buffered forever."""
+
+    async def scenario() -> tuple[int, int]:
+        backend = M0Backend(subscriber_queue_size=4)
+        record, _ = backend.create_session()
+        session_id = record.session_id
+        stream = backend.stream_events(session_id, 0, heartbeat_seconds=0.02)
+        snapshot = await anext(stream)
+        assert snapshot["type"] == "SessionSnapshot"
+        delivered = 0
+
+        async def consume() -> None:
+            nonlocal delivered
+            async for event in stream:
+                if event is not None:
+                    delivered += 1
+                await asyncio.sleep(0.05)  # stalled relative to the producer
+
+        async def produce() -> None:
+            for index in range(16):
+                backend.append_event(session_id, "Flood", {"index": index})
+                await asyncio.sleep(0)
+
+        await asyncio.gather(consume(), produce())
+        return delivered, len(backend._subscribers.get(session_id, ()))
+
+    delivered, remaining_subscribers = asyncio.run(scenario())
+    # One event is handed directly to the pending getter, four fill the bounded
+    # queue, and the rest are dropped — never 16 buffered events.
+    assert delivered == 5
+    assert remaining_subscribers == 0  # finally block detached the subscriber
+
+
 def test_authority_template_dispatches(tmp_path: Path) -> None:
     root = tmp_path / "workspace"
     root.mkdir()

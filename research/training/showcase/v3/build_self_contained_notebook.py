@@ -40,7 +40,11 @@ def _archive_b64() -> str:
             path = ROOT / name
             if not path.is_file():
                 raise FileNotFoundError(f"required embedded source is missing: {name}")
-            archive.writestr(name, path.read_bytes())
+            # Pinned metadata keeps the embedded archive byte-deterministic.
+            info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, path.read_bytes())
     return base64.b64encode(payload.getvalue()).decode("ascii")
 
 

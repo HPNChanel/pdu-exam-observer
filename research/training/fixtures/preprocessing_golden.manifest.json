@@ -1,6 +1,6 @@
 {
   "claim_status": "GOLDEN_NUMERIC_CONTRACT_ONLY",
-  "fixture_sha256": "f828d89b9f84e986b0ce049ded1580361a78ac50196a87dbb7c1002598b3a7e2",
+  "fixture_sha256": "6df278c7918336ceb7ec42d8af9be704860577e84d7318319619c6c958735a97",
   "preprocessing_id": "mediapipe33-bodycenter-resample90-v1",
   "preprocessing_source_sha256": "66569e669a1fa8f351918806e1991e6ad66312529fab7fcd6c09518fe345f63b",
   "schema_version": 1

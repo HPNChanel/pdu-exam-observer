@@ -56,6 +56,22 @@ DEVICE_GATE_DECISIONS = frozenset(
         "D1_N2_PREFLIGHT_PASS",
     }
 )
+
+
+def _camera_profile_ready(height: int, width: int, fps: float) -> bool:
+    """Pure capture-profile gate: 1280x720 within the 12-18 fps band."""
+    return (height, width) == (720, 1280) and math.isfinite(fps) and 12 <= fps <= 18
+
+
+def _evaluate_native_preflight(
+    *, camera_ready: bool, display_count: int, disk_ok: bool
+) -> dict[str, str]:
+    """Pure evaluation of measured facts; hardware probes stay in the caller."""
+    return {
+        "camera": "READY" if camera_ready else "UNAVAILABLE",
+        "display": "READY" if display_count >= 2 else "UNAVAILABLE",
+        "disk": "READY" if disk_ok else "UNAVAILABLE",
+    }
 _SESSION_COLUMNS = frozenset(
     {
         "source_kind",
@@ -1162,7 +1178,9 @@ class ResearchRuntimeService:
                         timestamps.append(timestamp)
                 elapsed = (timestamps[-1] - timestamps[0]) / 1_000_000_000
                 fps = 15 / elapsed if elapsed > 0 else 0.0
-                profile_ok = frame.shape[:2] == (720, 1280) and 12 <= fps <= 18
+                profile_ok = _camera_profile_ready(
+                    int(frame.shape[0]), int(frame.shape[1]), fps
+                )
                 return {
                     "camera": "READY" if profile_ok else "UNAVAILABLE",
                     "recording": False,
@@ -1183,26 +1201,28 @@ class ResearchRuntimeService:
 
     def _native_preflight(self) -> Mapping[str, object]:
         camera = self.diagnose_current_camera()
-        display = "UNAVAILABLE"
+        display_count = 0
         if os.name == "nt":
             try:
                 import ctypes
 
-                display = (
-                    "READY" if ctypes.windll.user32.GetSystemMetrics(80) >= 2 else "UNAVAILABLE"
-                )
+                display_count = int(ctypes.windll.user32.GetSystemMetrics(80))
             except Exception:
-                display = "UNAVAILABLE"
+                display_count = 0
         try:
             probe = self.root / ".runtime-disk-probe"
             probe.write_bytes(b"pdu")
             with probe.open("r+b") as handle:
                 os.fsync(handle.fileno())
             probe.unlink()
-            disk = "READY"
+            disk_ok = True
         except OSError:
-            disk = "UNAVAILABLE"
-        return {"camera": camera["camera"], "display": display, "disk": disk}
+            disk_ok = False
+        return _evaluate_native_preflight(
+            camera_ready=camera["camera"] == "READY",
+            display_count=display_count,
+            disk_ok=disk_ok,
+        )
 
     def _validate_authority(
         self, reference: str, *, withdrawal: bool = False

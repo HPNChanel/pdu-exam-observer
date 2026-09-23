@@ -48,6 +48,10 @@ candidate-07 SOURCE_MANIFEST/receipts; GAP-08
 (`CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT`) remains `OPEN` — deferred to Task 11.
 
 The full remediation receipt is `docs/ai/AUDIT_REMEDIATION_2026_09_22.md`.
+Everything that remains open for reasons code cannot close (clean machine,
+camera/displays, institutional approval, consent/retention/storage, research
+performance, push/distribution) is tracked in
+`docs/plans/EXTERNAL_GATES.md` — no item there is authorized or verified.
 Historical ceilings below describe their original milestones. They do not
 cancel the remediation scope or grant research authority.
 

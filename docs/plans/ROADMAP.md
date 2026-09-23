@@ -6,6 +6,8 @@ The audit-remediation plan
 ([audit-remediation-2026-09-22](audit-remediation-2026-09-22/00-README.md))
 is implemented; its reconciled evidence receipt is
 [AUDIT_REMEDIATION_2026_09_22.md](../ai/AUDIT_REMEDIATION_2026_09_22.md).
+Open items that require the physical world or user/institutional authority
+— not code — are tracked in [EXTERNAL_GATES.md](EXTERNAL_GATES.md).
 
 ## Prior implementation — 2026-09-08
 

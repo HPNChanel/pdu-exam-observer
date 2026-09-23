@@ -2,7 +2,8 @@
 
 Status: `EXTERNAL_GATES_TRACKER_OPEN_ITEMS_NON_CODE`
 
-Updated: 2026-09-22 (audit remediation Task 11)
+Updated: 2026-09-22 (audit remediation Task 11); commit/push row closed
+2026-09-23 (user-authorized merge + push to `origin/main` at `39a3787`)
 
 This page is the single honest checklist of everything that remains open
 **not because of code** but because it requires the physical world or the
@@ -23,7 +24,7 @@ and is imported into the ledger.
 | Institutional approval | External submission of the GOV-P5 request pack (`research/institutional_submission/v1/` templates) plus a recorded institutional decision; GOV-P3 verbal confirmation is `USER_STATED` only, GOV-P4 recorded the cycle deadline passed, GOV-P5 request is `NOT_SUBMITTED` | `NOT_PERFORMED` | Any real participant |
 | Consent + retention + storage | Signed real consent form (annex-b draft in `research/institutional_submission/v1/`), recorded retention decision (`retention-storage-withdrawal-decision.vi.v1.md` executed, not drafted), approved storage root with OBSERVED encryption/ACL evidence (not attested) | `NOT_PERFORMED` | Any real participant |
 | Research performance | Pilot/confirmatory collection → real training → evaluation per `docs/spec/` model-evaluation requirements; continuous-session denominators already implemented | `NOT_PERFORMED` — `SYNTHETIC_SMOKE` evidence only | Any scientific claim about detection quality |
-| Commit/push of delivery (H4 residue) | Commit authority was granted and exercised: baseline + Tasks 01–10 are committed (`4e52921`..`3b9a9ad` on `codex/complete-system-colab`). Remaining: scoped push authorization if an off-host backup is wanted | `COMMITTED_LOCALLY` / `PUSH_NOT_AUTHORIZED` | Off-host recoverability of delivered source |
+| Commit/push of delivery (H4 residue) | Commit and push authority were granted and exercised: baseline + remediation + hardening are committed and pushed — `origin/main` at `39a3787` (merge of `codex/complete-system-colab` through `6781ca5`), 2026-09-23 | `CLOSED` — `PUSHED_TO_ORIGIN_MAIN_2026_09_23` | Off-host recoverability of delivered source |
 | Distribution / release | THIRD_PARTY_NOTICES regenerated (done, Task 04) + signing decision + explicit distribution authorization | `NOT_AUTHORIZED` | Any sharing beyond the local machine |
 
 ## Notes and honest caveats
@@ -49,4 +50,5 @@ and is imported into the ledger.
 - Current ceilings: `docs/ai/CURRENT_TASK.md` (Task-10 milestone block)
 - Roadmap header: `docs/plans/ROADMAP.md`
 - Findings: `docs/plans/audit-remediation-2026-09-22/00-findings.md`
-  (H5, and the push/distribution residue of H4)
+  (H5, and the push/distribution residue of H4 — push half closed
+  2026-09-23; distribution/release remains `NOT_AUTHORIZED`)

@@ -42,3 +42,30 @@ sequence — encode it once.
   outputs and a JSON summary.
 - No change to any gate semantics; the script only orchestrates.
 - Execution note appended here; commit separately.
+
+## Execution note — 2026-09-23
+
+Implemented `scripts/run_all_gates.py` (stdlib only, DG-3 Python):
+
+- Fixed argv tuples, pinned cwd, no shell; `subprocess.Popen` line-streamed
+  tee to console + per-gate file (hung gate stays observable).
+- Order: pytest → frontend (typecheck/lint/test/build, one shared
+  `frontend-gates.txt`) → ruff → mypy. `--keep-going`, `--skip-frontend`,
+  `--skip-pytest`, `--python`, `--npm`, `--output` supported.
+- `gate-summary.json`: schema_version, status, per-step
+  `{gate, command, cwd, exit_code, duration_s}`, skipped list,
+  stop_on_failure flag. Exit code mirrors overall status.
+- Encoding hardening learned on first real run: console cp1252 cannot
+  encode vitest's U+2713 — `sys.stdout/stderr.reconfigure(errors="replace")`
+  added so console glyphs degrade instead of crashing; per-gate files
+  always get exact utf-8.
+- npm resolved via `shutil.which` (same FRONTEND_TOOLCHAIN_UNAVAILABLE
+  token as the delivery builder).
+
+Docs: BUILD_TOOLCHAIN.md gained a "Canonical local gate runner" section.
+Tests: `test_run_all_gates_help_is_bounded` +
+`test_run_all_gates_step_surface_is_fixed_argv` in
+`tests/backend/test_cli_surfaces.py` (no real gate runs).
+
+Verified by running itself: `output/gates-2026-09-23/` — all 7 steps
+exit 0 (pytest 361s, frontend ~136s, ruff, mypy), `status: PASS`.

@@ -90,6 +90,24 @@ build.
 - License: GPL build — ship `FFMPEG_LICENSE.txt` (GPL-3.0 text) in the bundle
   root; the build script copies `LICENSE` from beside the binary.
 
+## Canonical local gate runner (v1.1 addition)
+
+One command reproduces the full local verification sequence with captured
+outputs and a machine-readable summary:
+
+~~~powershell
+.venv/Scripts/python.exe scripts/run_all_gates.py --output output/gates-<date>
+# scoped: --skip-frontend | --skip-pytest | --keep-going
+~~~
+
+Order: `pytest tests -q` → frontend (`typecheck`, `lint`, `test --run`,
+`build` in `apps/web`) → `ruff check .` → `mypy` (strict, pyproject
+config). Each step's stdout/stderr tees into its own file under the output
+dir; `gate-summary.json` records `{gate, command, exit_code, duration_s}`
+plus overall `status`. Stop-on-failure by default; exit code mirrors the
+overall status. The script orchestrates only — it changes no gate
+semantics.
+
 ## Non-goals
 
 This record does not claim bit-for-bit reproducibility (PyInstaller embeds

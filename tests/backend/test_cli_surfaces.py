@@ -51,9 +51,7 @@ def _run_module(*args: str, env: dict[str, str] | None = None) -> subprocess.Com
 
 def test_main_dispatches_authority_template(tmp_path: Path) -> None:
     session_id = "6a840ce2-e8c8-4160-9836-0b56f72b63b9"
-    result = _run_module(
-        "authority-template", "--root", str(tmp_path), "--session-id", session_id
-    )
+    result = _run_module("authority-template", "--root", str(tmp_path), "--session-id", session_id)
     assert result.returncode == 0, result.stderr
     document = json.loads(result.stdout)
     assert document["authority_reference"] == "REPLACE_WITH_NATIVE_REFERENCE"
@@ -82,9 +80,7 @@ def test_workspace_cli_rejects_relative_root(monkeypatch: pytest.MonkeyPatch) ->
 
 
 @pytest.mark.usefixtures("preserve_process_env")
-def test_workspace_cli_rejects_short_pin(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_workspace_cli_rejects_short_pin(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PDU_REVIEWER_PIN", raising=False)
     monkeypatch.setattr("getpass.getpass", lambda _prompt: "12345")
     with pytest.raises(SystemExit) as exc:
@@ -102,9 +98,7 @@ def test_workspace_cli_happy_path_cleans_pin_in_finally(
     monkeypatch.setattr("getpass.getpass", lambda _prompt: "123456")
     import pdu_exam_observer.launcher as launcher
 
-    monkeypatch.setattr(
-        launcher, "main", lambda: launched.append(dict(os.environ))
-    )
+    monkeypatch.setattr(launcher, "main", lambda: launched.append(dict(os.environ)))
     workspace_cli.main(["--root", str(tmp_path), "--no-browser"])
     assert launched, "launcher main must be invoked exactly once"
     inside = launched[0]
@@ -130,6 +124,49 @@ def test_workspace_cli_cleans_pin_when_launcher_raises(
     with pytest.raises(RuntimeError):
         workspace_cli.main(["--root", str(tmp_path)])
     assert "PDU_REVIEWER_PIN" not in os.environ
+
+
+def test_run_all_gates_help_is_bounded() -> None:
+    script = REPOSITORY / "scripts" / "run_all_gates.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "--help"],
+        capture_output=True,
+        text=True,
+        cwd=REPOSITORY,
+        timeout=60,
+    )
+    assert result.returncode == 0
+    assert "--keep-going" in result.stdout
+    assert "--skip-frontend" in result.stdout
+    assert "--skip-pytest" in result.stdout
+
+
+def test_run_all_gates_step_surface_is_fixed_argv() -> None:
+    import importlib.util
+
+    script = REPOSITORY / "scripts" / "run_all_gates.py"
+    spec = importlib.util.spec_from_file_location("run_all_gates", script)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    steps = module.build_steps("/venv/python", "npm", skip_pytest=False, skip_frontend=False)
+    gates = [step.gate for step in steps]
+    assert gates == [
+        "pytest",
+        "frontend-typecheck",
+        "frontend-lint",
+        "frontend-test",
+        "frontend-build",
+        "ruff",
+        "mypy",
+    ]
+    assert all(isinstance(step.argv, tuple) for step in steps)
+    assert all(step.argv[0] in {"/venv/python", "npm"} for step in steps)
+    assert [step.gate for step in module.build_steps("/venv/python", "npm", True, True)] == [
+        "ruff",
+        "mypy",
+    ]
 
 
 def test_training_cli_research_requires_export_and_freeze(tmp_path: Path) -> None:

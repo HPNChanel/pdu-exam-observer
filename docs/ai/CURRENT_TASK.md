@@ -1,22 +1,25 @@
 # Current task — full system and Colab completion
 
-Updated: 2026-09-22. Status:
-`AUDIT_REMEDIATION_2026_09_22_TASKS_01_10_COMPLETED_LOCAL_GATES_GREEN_NO_NEW_AUTHORITY`.
+Updated: 2026-09-23. Status:
+`POST_REMEDIATION_HARDENING_2026_09_23_TASKS_01_07_COMPLETED_LOCAL_GATES_GREEN_NO_NEW_AUTHORITY`.
 
-`OBSERVED`: audit remediation Tasks 01–10 are implemented and committed
-(`4e52921`..`5d8853b` plus the Task 10 fix/reconciliation commit). One fresh
-full-source invocation passed `1110` Python tests; frontend gates passed
-typecheck/lint/`82` tests/build; Ruff PASS; strict mypy PASS over `64` source
-files. Fresh outputs are retained under `output/audit-remediation-2026-09-22/`.
+`OBSERVED`: audit remediation Tasks 01–11 are complete (through `2004fc4`);
+post-remediation hardening Tasks 01–07 are implemented and committed
+(`564dcd6`..`8da42c8` plus this ledger commit). One fresh canonical
+gate-runner invocation passed `1125` Python tests; frontend gates passed
+typecheck/lint/`85` tests/build; Ruff PASS; strict mypy PASS over `64`
+source files. Captured under `output/gates-2026-09-23/`
+(`gate-summary.json` status PASS). Prior remediation evidence retained
+under `output/audit-remediation-2026-09-22/`.
 
 ```text
-static_bindings_digest=c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456
-candidate_exact_bytes_sha256=c6b3992519222ae33e85f6cb33c073b561631c95b98534e23ea565d76c0dcd9c
+static_bindings_digest=ae02b69f5d363936f2ba9b42d8eeb10fec29f5add52fb7169a0c421de8756a6f
+candidate_exact_bytes_sha256=60e65b931161eda5859ebfee41800b0b46c78ce3c16558dc5c5018e698cd27c6
 binding_schema_exact_bytes_sha256=302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003
 source_tool_inventory_count=70
 policy_preimage_count=60
-candidate_07_executable_sha256=c418d82219a015e5e5df81fa4bdb09b52c872aa9c0a179f768b47b0ad98cb2da
-candidate_07_zip_sha256=738e6a8fa3ce4b6587965665c465502f61630a08e6018a7ac824bb67ce9257ad
+candidate_07_executable_sha256=e31a7f2e49acf3edde1be3d27b3b4b1dc046a3847656e1452376229c4141d48e
+candidate_07_zip_sha256=c3426f1c5e42711b3be812181a593c2a7af49e7d6292faf6ca5739ace8763eea
 candidate_07_packaged_synthetic_round_trip=PASS_SAME_HOST_ONLY
 candidate_06_zip_unchanged=true
 historical_m2_receipts_unchanged=true
@@ -37,15 +40,22 @@ collection_authorized=false
 authority_status=AUTHORITY_NOT_ISSUED
 ```
 
-New gap state after remediation: the S3A `current_observed_frontend_dist`
-pin targets a volatile, untracked build artifact; the audited bytes are
-verified at their preserved location inside the immutable candidate-06
-bundle (see `docs/plans/audit-remediation-2026-09-22/00-findings.md` and
-`AUDIT_REMEDIATION_2026_09_22.md`). candidate-07 was rebuilt once after this
-pin repair exposed a stale packaged frontend. GAP-06
+The 2026-09-22 gap state below is historical as of the 2026-09-23
+hardening batch: the S3A `current_observed_frontend_dist` pin still
+resolves via the preserved candidate-06 bytes (that artifact remains
+volatile by nature), but the *delivery* path no longer trusts
+`apps/web/dist` — `build_completion_delivery.py` now runs `npm ci` +
+`npm run build` in-band and records the dist manifest in
+`build-receipt.json` (hardening Task 05, `289d631`). The launcher also
+probes storage ACL/EFS at start instead of hardcoding `UNVERIFIED`
+(Task 04, `068a7f1`); readiness gates are unchanged and still block on
+non-VERIFIED labels. Historical remediation note: candidate-07 was
+rebuilt once after the pin repair exposed a stale packaged frontend, and
+once more on 2026-09-23 through the new in-builder stage. GAP-06
 (`CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT`) is closed by the
 candidate-07 SOURCE_MANIFEST/receipts; GAP-08
-(`CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT`) remains `OPEN` — deferred to Task 11.
+(`CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT`) remains `OPEN` — deferred to
+EXTERNAL_GATES.
 
 The full remediation receipt is `docs/ai/AUDIT_REMEDIATION_2026_09_22.md`.
 Everything that remains open for reasons code cannot close (clean machine,

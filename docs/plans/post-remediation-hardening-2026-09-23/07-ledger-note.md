@@ -38,3 +38,28 @@ ledgers honest after this batch without rewriting history.
 - RP2 tuple (if regenerated) recorded consistently in test constants +
   ledgers.
 - Working tree clean at the end; batch fully committed.
+
+## Execution note — 2026-09-23
+
+Batch close-out performed without rewriting history:
+
+- `QUALITY_GATES.md`, `CURRENT_TASK.md`, `ACCEPTANCE_GATES.md`: dated
+  2026-09-23 as-of annotations added above the 2026-09-22 blocks —
+  gate-runner PASS (`1125` Python tests, `85` frontend tests, ruff, mypy),
+  current tuple `ae02b69f…`/`60e65b93…`/`302dc815…`, candidate-07 exe
+  `e31a7f2e…` / zip `c3426f1c…`. Older notes kept as historical.
+- `CURRENT_TASK.md` gap paragraph annotated: the stale-dist delivery risk
+  is closed by the in-builder frontend stage (Task 05); storage labels
+  now probed (Task 04). GAP-08 still `OPEN` in EXTERNAL_GATES.
+- `RISK_REGISTER.md`: new `R-47` row records M2b mitigation (probe
+  upgrades evidence honesty; readiness gates unchanged).
+- `CANDIDATE_07_LINEAGE.md` already current from Task 05.
+- RP2: `--check` PASS; no regeneration needed beyond the in-task regens
+  (Task 01 `ca9e6118…` → superseded by Task 04 `ae02b69f…`, the current
+  value). Test constants consistent
+  (`test_m1_r1_governance_closure.py` 3/3 governance pinning tests pass).
+- Immutability spot-check: proposal `2CD5F6FD…` unchanged; candidate-06
+  zip `f5bd0add…` unchanged; working tree contains only intended files.
+- Ceilings untouched: `authority_status=AUTHORITY_NOT_ISSUED`,
+  `clean_machine_verified=false`, `d1_go=false`,
+  `collection_authorized=false`, `release_authorized=false`.

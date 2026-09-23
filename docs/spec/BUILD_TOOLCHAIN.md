@@ -1,6 +1,15 @@
 # Build Toolchain — `PDU-Workspace` candidates
 
-Version: 1.0 (2026-09-22)
+Version: 1.1 (2026-09-23)
+
+v1.1 change: `build_completion_delivery.py` now performs the frontend stage
+itself (`npm ci` + `npm run build` against the pinned lockfile, inside the
+build, logged into `build.log`). `apps/web/dist` is therefore a *derived*
+artifact of pinned inputs, not trusted pre-existing bytes — this closes the
+staleness failure mode that shipped candidate-07 with an outdated frontend
+once. The build receipt now records `node_version`, `npm_version`, and a
+`frontend_dist_manifest` (sha256 + size per file). Manual step 1 below is
+only needed when iterating on the frontend outside a delivery build.
 
 This document records the exact toolchain required to reproduce a
 `PDU-Workspace` delivery candidate via `scripts/build_completion_delivery.py`.
@@ -30,7 +39,8 @@ verified bundle non-rebuildable in principle. Evidence state for every entry:
 ## Build procedure
 
 ~~~powershell
-# 1. Frontend assets (spec packs apps/web/dist)
+# 1. Frontend assets — performed inside the builder since v1.1; manual
+#    equivalent (only needed when iterating on the UI outside a build):
 cd apps/web
 npm ci
 npm run build
@@ -58,8 +68,11 @@ uv pip install --python output/<build-date>/package-env/Scripts/python.exe `
 ~~~
 
 The build script refuses to overwrite an existing candidate directory,
-snapshots the source manifest before and after PyInstaller, and fails if the
-source tree changed during the build.
+requires `node` and `npm` on PATH (fails closed with
+`FRONTEND_TOOLCHAIN_UNAVAILABLE` otherwise), runs `npm ci` + `npm run build`
+inside the build before PyInstaller, snapshots the source manifest before
+and after all stages, and fails if the source tree changed during the
+build.
 
 ## FFmpeg acquisition recipe (DG-3 — recipe, not vendored)
 

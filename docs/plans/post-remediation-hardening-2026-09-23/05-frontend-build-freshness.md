@@ -70,3 +70,38 @@ Under DG-1(a) the builder produces dist itself from pinned inputs:
 - Rebuilt candidate-07 verifies PASS original + relocated, same host.
 - Lineage doc updated; execution note appended here; commit separately
   (docs + script + test; bundle stays gitignored).
+
+## Execution note — 2026-09-23
+
+Implemented per DG-1(a). `build_completion_delivery.py` now runs the
+frontend stage itself inside the build:
+
+- `frontend_build_commands()` — fixed argv `[npm, "ci", "--no-audit",
+  "--no-fund"]` then `[npm, "run", "build"]`, `cwd=apps/web`, no shell,
+  output appended to the shared `build.log`.
+- `node`/`npm` resolved via `shutil.which` before the manifest snapshot;
+  missing or non-reporting tools fail closed as
+  `FRONTEND_TOOLCHAIN_UNAVAILABLE` (argparse error, exit 2).
+- `build-receipt.json` now records `node_version`, `npm_version`, and
+  `frontend_dist_manifest` (sha256 + bytes per file, file_count).
+- `apps/web/dist` stays OUT of `source_manifest()` scope — it is a
+  derived artifact, so the before/after source-guard remains correct.
+
+`docs/spec/BUILD_TOOLCHAIN.md` bumped to v1.1 documenting the in-band
+stage; manual step retained for UI iteration only.
+
+candidate-07 rebuilt exactly once on 2026-09-23 through the new path
+(npm ci + vite build ran inside `build.log`): exe
+`e31a7f2e49acf3edde1be3d27b3b4b1dc046a3847656e1452376229c4141d48e`,
+zip `c3426f1c5e42711b3be812181a593c2a7af49e7d6292faf6ca5739ace8763eea`,
+delivery manifest `cf0af0ff8458e39d6a73b7557deffbd07fd92f4da91565be19221c29bd34486b`.
+`verify_completion_package.py` PASS on both original and relocated copies
+(receipt regenerated, bundle_manifest
+`b0d32de150d2c021ca0a9e44349310e3df5c4b538e92697cd99790cb0b45f0fe`).
+`CANDIDATE_07_LINEAGE.md` updated; 2026-09-22 digests kept as historical.
+
+Tests: `tests/packaging/test_completion_builder_frontend_stage.py`
+(6 tests — fixed argv contract, toolchain fail-closed, version probe,
+dist manifest hashing, missing/empty dist rejection). Gates:
+`tests/packaging` 62/62 PASS, ruff clean. RP2 untouched (the builder
+script is not in the RP2 inventory).

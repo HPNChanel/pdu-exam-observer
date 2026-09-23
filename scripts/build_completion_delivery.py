@@ -75,6 +75,46 @@ def write_json(path: Path, data: object) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _required_tool(executable: str) -> str:
+    resolved = shutil.which(executable)
+    if resolved is None:
+        raise RuntimeError(f"FRONTEND_TOOLCHAIN_UNAVAILABLE: {executable} not found on PATH")
+    return resolved
+
+
+def _tool_version(executable: str) -> str:
+    completed = subprocess.run(
+        [executable, "--version"], capture_output=True, text=True, check=False
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(f"FRONTEND_TOOLCHAIN_UNAVAILABLE: {executable} --version failed")
+    return completed.stdout.strip()
+
+
+def frontend_build_commands(npm: str) -> list[list[str]]:
+    return [
+        [npm, "ci", "--no-audit", "--no-fund"],
+        [npm, "run", "build"],
+    ]
+
+
+def _dist_manifest(dist: Path) -> dict[str, object]:
+    if not dist.is_dir():
+        raise RuntimeError("frontend build produced no dist directory")
+    files = [
+        {
+            "path": path.relative_to(dist).as_posix(),
+            "sha256": digest(path),
+            "bytes": path.stat().st_size,
+        }
+        for path in sorted(dist.rglob("*"))
+        if path.is_file()
+    ]
+    if not files:
+        raise RuntimeError("frontend dist is empty")
+    return {"file_count": len(files), "files": files}
+
+
 def inventory(bundle: Path) -> dict[str, object]:
     forbidden_suffixes = {".db", ".sqlite3", ".mp4", ".avi", ".partial", ".log", ".pem"}
     files = []
@@ -143,6 +183,13 @@ def main() -> None:
             f"{REQUIRED_PYINSTALLER_VERSION} (the verified candidate toolchain); "
             f"got: {probe.stdout.strip() or probe.stderr.strip() or 'not installed'}"
         )
+    try:
+        node = _required_tool("node")
+        npm = _required_tool("npm")
+        node_version = _tool_version(node)
+        npm_version = _tool_version(npm)
+    except RuntimeError as exc:
+        parser.error(str(exc))
     before = source_manifest()
     env = {
         **os.environ,
@@ -150,7 +197,19 @@ def main() -> None:
         "PDU_FFMPEG_BINARY": str(args.ffmpeg.resolve()),
         "PYTHONHASHSEED": "1",
     }
+    web_root = ROOT / "apps/web"
     with (target / "build.log").open("w", encoding="utf-8") as log:
+        # The packed frontend must be a derived artifact of the pinned
+        # lockfile, not whatever bytes happen to sit in apps/web/dist.
+        for command in frontend_build_commands(npm):
+            subprocess.run(
+                command,
+                cwd=web_root,
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
         subprocess.run(
             [
                 str(args.build_python.resolve()),
@@ -217,6 +276,9 @@ def main() -> None:
         "zip": str(archive_path),
         "zip_sha256": digest(archive_path),
         "manifest_sha256": digest(bundle / "DELIVERY_MANIFEST.json"),
+        "node_version": node_version,
+        "npm_version": npm_version,
+        "frontend_dist_manifest": _dist_manifest(web_root / "dist"),
         "status": "BUILT_RUNTIME_VERIFICATION_PENDING",
         "clean_machine_verified": False,
     }

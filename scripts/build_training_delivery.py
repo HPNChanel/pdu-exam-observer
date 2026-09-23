@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import sys
+import zipfile
 from pathlib import Path
 
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_FIXTURE_ROOT = ROOT / "research" / "training" / "fixtures"
 for import_root in (ROOT, ROOT / "src"):
     if str(import_root) not in sys.path:
         sys.path.insert(0, str(import_root))
@@ -20,13 +23,27 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build_preprocessing_fixture() -> tuple[Path, Path]:
+def _write_npz_deterministic(path: Path, **arrays: np.ndarray) -> None:
+    """np.savez embeds wall-clock ZipInfo timestamps; pin them for byte stability."""
+    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for name in arrays:
+            buffer = io.BytesIO()
+            np.lib.format.write_array(
+                buffer, np.asanyarray(arrays[name]), allow_pickle=False
+            )
+            info = zipfile.ZipInfo(f"{name}.npy", date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            archive.writestr(info, buffer.getvalue())
+
+
+def build_preprocessing_fixture(fixture_root: Path | None = None) -> tuple[Path, Path]:
     from pdu_exam_observer.showcase.preprocessing import (
         PREPROCESSING_ID,
         resample_pose_window,
     )
 
-    fixture_root = ROOT / "research" / "training" / "fixtures"
+    fixture_root = fixture_root or DEFAULT_FIXTURE_ROOT
     fixture_root.mkdir(parents=True, exist_ok=True)
     frames = 46
     timestamps = np.arange(frames, dtype=np.int64) * 133_333_333
@@ -42,7 +59,7 @@ def build_preprocessing_fixture() -> tuple[Path, Path]:
     present[20, 7] = False
     prepared = resample_pose_window(timestamps, landmarks, present)
     fixture_path = fixture_root / "preprocessing_golden.npz"
-    np.savez_compressed(
+    _write_npz_deterministic(
         fixture_path,
         timestamps_ns=timestamps,
         landmarks=landmarks,
@@ -66,14 +83,14 @@ def build_preprocessing_fixture() -> tuple[Path, Path]:
     return fixture_path, manifest_path
 
 
-def build_synthetic_smoke_fixture() -> tuple[Path, Path]:
+def build_synthetic_smoke_fixture(fixture_root: Path | None = None) -> tuple[Path, Path]:
     from research.training.showcase.v3.pipeline import SEED, build_synthetic_corpus
 
-    fixture_root = ROOT / "research" / "training" / "fixtures"
+    fixture_root = fixture_root or DEFAULT_FIXTURE_ROOT
     fixture_root.mkdir(parents=True, exist_ok=True)
     corpus = build_synthetic_corpus(samples_per_class_participant=1)
     fixture_path = fixture_root / "synthetic_smoke_input.npz"
-    np.savez_compressed(
+    _write_npz_deterministic(
         fixture_path,
         tensors=corpus.tensors,
         labels=corpus.labels,
@@ -99,11 +116,14 @@ def build_synthetic_smoke_fixture() -> tuple[Path, Path]:
     return fixture_path, manifest_path
 
 
-def build_colab_delivery(destination: Path) -> Path:
+def build_colab_delivery(
+    destination: Path, *, fixture_root: Path | None = None
+) -> Path:
     from research.training.showcase.v3.export_bundle import _write_zip
 
+    fixture_root = fixture_root or DEFAULT_FIXTURE_ROOT
     training_root = ROOT / "research" / "training" / "showcase" / "v3"
-    synthetic, synthetic_manifest = build_synthetic_smoke_fixture()
+    synthetic, synthetic_manifest = build_synthetic_smoke_fixture(fixture_root)
     files = {
         "pdu_stgcn_training_colab.ipynb": training_root / "pdu_stgcn_training_colab.ipynb",
         "requirements-colab.txt": training_root / "requirements-colab.txt",
@@ -113,14 +133,10 @@ def build_colab_delivery(destination: Path) -> Path:
         "NOTICE.md": training_root / "NOTICE.md",
         "TRAINING_README.md": training_root / "TRAINING_README.md",
         "fixtures/preprocessing_golden.npz": (
-            ROOT / "research" / "training" / "fixtures" / "preprocessing_golden.npz"
+            fixture_root / "preprocessing_golden.npz"
         ),
         "fixtures/preprocessing_golden.manifest.json": (
-            ROOT
-            / "research"
-            / "training"
-            / "fixtures"
-            / "preprocessing_golden.manifest.json"
+            fixture_root / "preprocessing_golden.manifest.json"
         ),
         "fixtures/synthetic_smoke_input.npz": synthetic,
         "fixtures/synthetic_smoke_input.manifest.json": synthetic_manifest,

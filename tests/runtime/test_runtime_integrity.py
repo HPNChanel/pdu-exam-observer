@@ -234,6 +234,11 @@ def test_revoked_session_bound_authority_allows_owned_deletion_but_not_collectio
         "institutional_approval_sha256": "b" * 64,
         "retention_record_sha256": "c" * 64,
         "retention_expires_at": time.time() + 3600,
+        "protocol_version": "protocol-2026-v1",
+        "consent_receipt_id": "receipt-2026-001",
+        "consent_version": "consent-v1",
+        "operator_pseudonym": "operator-7f2a",
+        "device_gate_decision": "UNVERIFIED",
     }
     service = ResearchRuntimeService(
         tmp_path,

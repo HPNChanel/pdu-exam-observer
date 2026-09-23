@@ -278,7 +278,7 @@ def create_monitor_app(config: AppConfig) -> FastAPI:
         result = config.reviewer_auth.authenticate(
             payload.pin,
             f"{client_host}|{request.headers.get('origin', '')}",
-            config.backend.clock(),
+            config.backend.monotonic_clock(),
         )
         if result.retry_after is not None:
             raise HTTPException(
@@ -348,6 +348,8 @@ def create_monitor_app(config: AppConfig) -> FastAPI:
     ) -> StreamingResponse:
         if config.backend.snapshot(payload.session_id) is None:
             raise HTTPException(status_code=404, detail="Session not found")
+        if not config.backend.subscriber_slots_available(payload.session_id):
+            raise HTTPException(status_code=429, detail="Too many event subscribers")
 
         async def body() -> AsyncIterator[str]:
             async for event in config.backend.stream_reviewer_events(

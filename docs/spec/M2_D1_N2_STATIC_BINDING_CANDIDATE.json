@@ -107,8 +107,8 @@
         "M2_S3B_BUILD_SCRIPT": {
           "artifact_id": "M2_S3B_BUILD_SCRIPT",
           "path": "scripts/build_m2_s3b_candidate.py",
-          "sha256": "383700e8292c3013d16c1bb0d08c495a4c5dd095e6628c48ec405b6386dcf7ad",
-          "size_bytes": 32277
+          "sha256": "8eefa586a9942422de2b594c032e39961c79c36c1d0da85e9fc5a076985f71d4",
+          "size_bytes": 33011
         },
         "M2_S3B_CANDIDATE_README": {
           "artifact_id": "M2_S3B_CANDIDATE_README",
@@ -185,14 +185,14 @@
         "SRC_API_FACTORIES_PY": {
           "artifact_id": "SRC_API_FACTORIES_PY",
           "path": "src/pdu_exam_observer/api/factories.py",
-          "sha256": "9680db5fa350799a342f11c2f299ebca0260c0b34d473944d61714348be4c724",
-          "size_bytes": 32768
+          "sha256": "2a7f2974b8ff669d1672074c5c6d2c097b8ad23288453456cdf4dd793d3b59ed",
+          "size_bytes": 32942
         },
         "SRC_LAUNCHER_PY": {
           "artifact_id": "SRC_LAUNCHER_PY",
           "path": "src/pdu_exam_observer/launcher.py",
-          "sha256": "54fe93d6b98562971daf3e66bd9ecf08a907041fd07b34e1a26befd4a06c0c67",
-          "size_bytes": 6486
+          "sha256": "b38c6a7a15e688513de2eb3bcd9ccdac25ab29c6fea3b1ca63bf03aa19e1e07c",
+          "size_bytes": 6630
         },
         "SRC_M2_D1_N2_A0_PY": {
           "artifact_id": "SRC_M2_D1_N2_A0_PY",
@@ -281,8 +281,8 @@
         "SRC_M2_D1_NATIVE_PY": {
           "artifact_id": "SRC_M2_D1_NATIVE_PY",
           "path": "src/pdu_exam_observer/m2_d1_native.py",
-          "sha256": "b599e835f38b44df09b9ee751771f0d32e9a4c31f4b1536f445c7a53a98625df",
-          "size_bytes": 161835
+          "sha256": "91e2b150652c3ada667be017b52921e28341a38c426fdcc478cd7b376365367e",
+          "size_bytes": 161875
         },
         "SRC_M2_PACKAGED_REPRODUCTION_PY": {
           "artifact_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
@@ -341,14 +341,14 @@
         "SRC_PDU_MAIN_PY": {
           "artifact_id": "SRC_PDU_MAIN_PY",
           "path": "src/pdu_exam_observer/__main__.py",
-          "sha256": "60b8e13b5e7955427c46a57aaa3f1af72e6e61809bb59793451e73344284a299",
-          "size_bytes": 1164
+          "sha256": "168b6112cc00e2d47c3f8d3ca26165ebf4a08dad9e2abe0198769c7bd6827faf",
+          "size_bytes": 1368
         },
         "TEST_LAUNCHER_PY": {
           "artifact_id": "TEST_LAUNCHER_PY",
           "path": "tests/backend/test_launcher.py",
-          "sha256": "0cf76ddbd1eff1456d798af00d0cb57cd2a1b04bab1ac3dd99481778c0c62780",
-          "size_bytes": 3191
+          "sha256": "9f9153c2ad35e79ad45e2b1555fb1f6dea012e856233e2ab7879b1175423d156",
+          "size_bytes": 3180
         },
         "TEST_M2_D1_N2_A0_PY": {
           "artifact_id": "TEST_M2_D1_N2_A0_PY",
@@ -395,8 +395,8 @@
         "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY": {
           "artifact_id": "TEST_M2_S3A_PACKAGE_GAP_AUDIT_PY",
           "path": "tests/packaging/test_m2_s3a_package_gap_audit.py",
-          "sha256": "c8d90ff636da807257fea9e4b0e480558710964b8799d731ad4c9116b63d15ea",
-          "size_bytes": 9719
+          "sha256": "104617cc1889ba2e266a477b01743b062560347dc0af9f08a1b2d90c95eb21ba",
+          "size_bytes": 10277
         },
         "TEST_M2_S3B_PACKAGE_INTEGRATION_PY": {
           "artifact_id": "TEST_M2_S3B_PACKAGE_INTEGRATION_PY",
@@ -1510,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "167dc3dd03b60b8c44cbdec47b7050b1531a350b0f7bf647a3aac578f4223395",
+  "static_bindings_digest": "ae02b69f5d363936f2ba9b42d8eeb10fec29f5add52fb7169a0c421de8756a6f",
   "valid_for_native_launch": false
 }

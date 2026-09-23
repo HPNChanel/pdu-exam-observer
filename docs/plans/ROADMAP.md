@@ -1,6 +1,15 @@
 # Product and Research Roadmap
 
-## Current implementation — 2026-09-08
+## Current implementation — 2026-09-22
+
+The audit-remediation plan
+([audit-remediation-2026-09-22](audit-remediation-2026-09-22/00-README.md))
+is implemented; its reconciled evidence receipt is
+[AUDIT_REMEDIATION_2026_09_22.md](../ai/AUDIT_REMEDIATION_2026_09_22.md).
+Open items that require the physical world or user/institutional authority
+— not code — are tracked in [EXTERNAL_GATES.md](EXTERNAL_GATES.md).
+
+## Prior implementation — 2026-09-08
 
 USER_STATED: the approved workspace/Colab plan opens technical implementation
 across M2–M7. The current function-to-evidence ledger is

@@ -10,7 +10,35 @@ Windows 11 x64, standard user, offline, no installed Python or Node, no administ
 
 Build the React application first and copy immutable static assets into the Python package. Build Python with PyInstaller one-directory mode. One-file mode is intentionally excluded because native ML and media dependencies are easier to diagnose and verify in a visible bundle.
 
-The portable release has this conceptual shape:
+The verified workspace delivery (candidate-06, 2026-09-08) has this shape:
+
+~~~text
+PDU-Workspace/
+  PDUWorkspace.exe
+  _internal/
+    assets/web/                        built frontend
+    demo/                              deterministic demo fixture
+    pdu_exam_observer/assets/models/   pose/face task models
+    tools/ffmpeg.exe                   pinned encoder binary
+  START.cmd                            workspace entry point
+  HUONG_DAN.md                         Vietnamese operator guide
+  SOURCE_MANIFEST.json                 source byte inventory
+  DELIVERY_MANIFEST.json               bundle manifest
+  RELEASE_MANIFEST.json
+  THIRD_PARTY_NOTICES.txt
+  FFMPEG_LICENSE.txt
+~~~
+
+`PDU-Workspace-local.zip` ships beside a detached
+`RELEASE_MANIFEST.detached.json`; the historical M1 bundle
+(`PDU-Exam-Observer/PDUExamObserver.exe`, built by the legacy
+`packaging/PDU-Exam-Observer.spec` path) is retained for provenance and is
+not the current-source delivery.
+
+The exact pinned toolchain and FFmpeg acquisition recipe required to attempt
+a rebuild are recorded in `docs/spec/BUILD_TOOLCHAIN.md`.
+
+The historical portable release has this conceptual shape:
 
 ~~~text
 PDU-Exam-Observer/

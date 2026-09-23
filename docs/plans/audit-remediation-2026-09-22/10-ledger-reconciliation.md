@@ -60,3 +60,43 @@ only at this milestone.
 - New RP2 tuple recorded; old tuples untouched in history.
 - `AUDIT_REMEDIATION_2026_09_22.md` covers 100% of finding IDs.
 - Immutability sweep passes; no residual processes/listeners/temp roots.
+
+## Execution note — 2026-09-22
+
+Implemented and reconciled. Fresh gate outputs under
+`output/audit-remediation-2026-09-22/` (`pytest-full.txt` 1110 PASS,
+`frontend-gates.txt` 82 tests PASS, `ruff.txt` PASS, `mypy.txt` PASS).
+
+Three defects surfaced only under the full suite and were fixed without
+weakening any check:
+
+1. S3A `current_observed_frontend_dist` pinned a volatile, untracked build
+   artifact whose name changed after the Task 07 frontend rebuild. The
+   audited bytes are byte-identical inside the immutable candidate-06
+   bundle; the pin now resolves there in both
+   `test_m2_s3a_package_gap_audit.py` and
+   `build_m2_s3b_candidate._s3a_immutable_inputs`. Audit JSON untouched.
+2. `_DisabledMediaPipeAudio` raised `RuntimeError` on `__file__`, breaking
+   `inspect.getmodule` during PyTorch import. Dunder metadata is now
+   readable; audio namespace attributes remain sealed for D1-N1.
+3. `test_queue_pressure_reports_explicit_drops` producer/consumer race:
+   producer now fills the bounded queue before READY — deterministic drop,
+   unchanged assertion.
+
+Candidate-07 was rebuilt once after fix 1 exposed a stale packaged
+frontend; it now carries `index-Bl2iPLFx.js` and re-verified PASS
+(original + relocated, same host). New hashes recorded in
+`docs/ai/CANDIDATE_07_LINEAGE.md` and `docs/ai/CURRENT_TASK.md`.
+
+RP2 regenerated exactly once: digest `c7d87f4a…`, candidate
+`c6b39925…`, schema `302dc815…` (70 source / 60 policy). Test-side
+constants updated in `test_m1_r1_governance_closure.py`.
+
+Ledgers updated: QUALITY_GATES (as-of annotation), CURRENT_TASK
+(milestone block + ceilings + new gap state), ROADMAP header,
+RISK_REGISTER (R-44/R-45 → MITIGATED), ACCEPTANCE_GATES (as-of
+annotation). `AUDIT_REMEDIATION_2026_09_22.md` covers all 31 finding IDs.
+
+Immutability sweep: proposal SHA matches `2CD5F6FD…`; candidate-06 zip
+matches `f5bd0add…`; zero `docs/ai/M2_*` receipt changes;
+`PDU_PROCESS_COUNT=0`, `PDU_LISTENER_COUNT=0`, `PDU_TEMP_ROOT_COUNT=0`.

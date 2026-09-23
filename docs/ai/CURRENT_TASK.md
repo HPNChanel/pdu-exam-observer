@@ -1,5 +1,72 @@
 # Current task — full system and Colab completion
 
+Updated: 2026-09-23. Status:
+`POST_REMEDIATION_HARDENING_2026_09_23_TASKS_01_07_COMPLETED_LOCAL_GATES_GREEN_NO_NEW_AUTHORITY`.
+
+`OBSERVED`: audit remediation Tasks 01–11 are complete (through `2004fc4`);
+post-remediation hardening Tasks 01–07 are implemented and committed
+(`564dcd6`..`8da42c8` plus this ledger commit). One fresh canonical
+gate-runner invocation passed `1125` Python tests; frontend gates passed
+typecheck/lint/`85` tests/build; Ruff PASS; strict mypy PASS over `64`
+source files. Captured under `output/gates-2026-09-23/`
+(`gate-summary.json` status PASS). Prior remediation evidence retained
+under `output/audit-remediation-2026-09-22/`.
+
+```text
+static_bindings_digest=ae02b69f5d363936f2ba9b42d8eeb10fec29f5add52fb7169a0c421de8756a6f
+candidate_exact_bytes_sha256=60e65b931161eda5859ebfee41800b0b46c78ce3c16558dc5c5018e698cd27c6
+binding_schema_exact_bytes_sha256=302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003
+source_tool_inventory_count=70
+policy_preimage_count=60
+candidate_07_executable_sha256=e31a7f2e49acf3edde1be3d27b3b4b1dc046a3847656e1452376229c4141d48e
+candidate_07_zip_sha256=c3426f1c5e42711b3be812181a593c2a7af49e7d6292faf6ca5739ace8763eea
+candidate_07_packaged_synthetic_round_trip=PASS_SAME_HOST_ONLY
+candidate_06_zip_unchanged=true
+historical_m2_receipts_unchanged=true
+same_host_portable_verified=true
+clean_machine_verified=false
+release_authorized=false
+distribution_ready=false
+production_reconciler_implemented=false
+production_reconciler_real_storage_verified=false
+real_data_deletion_authorized=false
+execution_authorized=false
+physical_camera_access_authorized=false
+device_gate_decision=UNVERIFIED
+d1_go=false
+participant_collection_authorized=false
+research_ready=false
+collection_authorized=false
+authority_status=AUTHORITY_NOT_ISSUED
+```
+
+The 2026-09-22 gap state below is historical as of the 2026-09-23
+hardening batch: the S3A `current_observed_frontend_dist` pin still
+resolves via the preserved candidate-06 bytes (that artifact remains
+volatile by nature), but the *delivery* path no longer trusts
+`apps/web/dist` — `build_completion_delivery.py` now runs `npm ci` +
+`npm run build` in-band and records the dist manifest in
+`build-receipt.json` (hardening Task 05, `289d631`). The launcher also
+probes storage ACL/EFS at start instead of hardcoding `UNVERIFIED`
+(Task 04, `068a7f1`); readiness gates are unchanged and still block on
+non-VERIFIED labels. Historical remediation note: candidate-07 was
+rebuilt once after the pin repair exposed a stale packaged frontend, and
+once more on 2026-09-23 through the new in-builder stage. GAP-06
+(`CURRENT_SOURCE_MANIFEST_METADATA_AND_RECEIPTS_ABSENT`) is closed by the
+candidate-07 SOURCE_MANIFEST/receipts; GAP-08
+(`CLEAN_MACHINE_OR_VM_RECEIPT_ABSENT`) remains `OPEN` — deferred to
+EXTERNAL_GATES.
+
+The full remediation receipt is `docs/ai/AUDIT_REMEDIATION_2026_09_22.md`.
+Everything that remains open for reasons code cannot close (clean machine,
+camera/displays, institutional approval, consent/retention/storage, research
+performance, push/distribution) is tracked in
+`docs/plans/EXTERNAL_GATES.md` — no item there is authorized or verified.
+Historical ceilings below describe their original milestones. They do not
+cancel the remediation scope or grant research authority.
+
+---
+
 Updated: 2026-09-08. Status: LOCAL_TECHNICAL_DELIVERY_VERIFIED.
 The current-source application ZIP and self-contained Colab bundle are delivered;
 the final EXE passed synthetic model import/inference, browser workflow and
@@ -14,6 +81,12 @@ verification is user-deferred and remains UNVERIFIED.
 The current scope and acceptance ledger are in COMPLETION_2026_09_08.md.
 Historical ceilings below describe their original milestones. They do not
 cancel the newly authorized implementation scope or grant research authority.
+
+Note on scopes: `physical_camera_access_authorized=false` in the ceiling
+fields refers to the D1/D1-N2 collection-device authorization ladder. The
+user-authorized current-device technical camera diagnostic
+(`scripts/check_workspace_camera.py`, `workspace-camera.json`) is a separate
+scope and does not open any collection gate.
 
 ## Historical task record
 # Current Task

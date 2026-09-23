@@ -52,7 +52,7 @@ All mutating research requests use `Idempotency-Key`. Candidate exam routes rema
 
 ## 5. Typed state and readiness gates
 
-Supported session states are `DRAFT`, `CONSENT_CONFIRMED`, `PREFLIGHT_READY`, `RECORDING`, `SEALED`, `FAILED`, and `WITHDRAWN`. M1 research sessions may be created and governed but cannot transition to `RECORDING`; `RESEARCH_COLLECTION_NOT_IMPLEMENTED` is unconditional.
+Supported session states are `DRAFT`, `CONSENT_CONFIRMED`, `PREFLIGHT_READY`, `RECORDING`, `SEALED`, `FAILED`, and `WITHDRAWN`. M1 research sessions may be created and governed but cannot transition to `RECORDING`; `RESEARCH_COLLECTION_NOT_IMPLEMENTED` is unconditional. This gate is scoped to the M1 research-session store: the separately governed workspace runtime (`runtime_sessions`) implements its own collection path under a distinct authority record and remains closed pending the same external approvals.
 
 Readiness has this shape:
 

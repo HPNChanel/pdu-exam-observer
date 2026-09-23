@@ -96,3 +96,52 @@ pattern in `m1.py:501-578` first). Split into sub-commits if the diff grows.
   task still load (or a migration fills defaults).
 - Update `TRACEABILITY_MATRIX.md` rows touched by this task (keeps Task 02's
   work accurate).
+
+## Execution note (2026-09-22, DG-2 = implement)
+
+All seven sub-items landed; `tests/runtime` + `tests/backend` green (incl. 10
+new tests in `tests/runtime/test_data_model_governance.py`), Ruff + strict
+mypy clean, frontend typecheck/lint/82 tests green.
+
+- 07.1 `ingest_frame(..., dropped_frames=N)` validates (bool/negative/NaN →
+  `CAPTURE_ACCOUNTING_INVALID`/`CAPTURE_TIMESTAMP_INVALID`), persists
+  `dropped_frames`/`gap_events`/`max_gap_frames`; `_write_frame_locked`
+  returns the fill count so write-side holes are accounted; >45-frame gaps
+  fail `FRAME_GAP_EXCEEDED`; counters survive root reopen.
+- 07.2 `mark_contamination` (RECORDING-only, first call wins) persists
+  `contaminated_from_seq`/`contaminated_at`; `_export_records` emits the real
+  flag for `frame_seq >= boundary`; wired as workspace action
+  `mark-contamination` + monitor-panel button; `record_focus_context` events
+  carry the flag.
+- 07.3 `consent_receipt_id`/`consent_version` required by
+  `authority_cli._validate_record` and `service._validate_authority`
+  (`_is_reference` shape); template emits placeholders.
+- 07.4 `operator_pseudonym` required in authority; stamped onto
+  `runtime_reviews`/`runtime_exports` rows and `detail()` (never the export
+  envelope). Reviewer login/logout emit audit via hook list: M1Backend →
+  `audit_events`, WorkspaceService → runtime `reviewer_audit`; hooks receive
+  the event kind only (no PIN/token/digest); closed-store write skipped
+  narrowly (`sqlite3.ProgrammingError`).
+- 07.5 `protocol_version` populated from authority at
+  `start_real_collection`; surfaced in `detail()` and the report block.
+- 07.6 `withdraw()` inserts one `runtime_withdrawal_tasks` row per existing
+  export (`EXTERNAL_EXPORT_FOLLOW_UP`, PENDING); second withdraw is rejected
+  by the terminal-state guard so no duplicates; receipt gains
+  `follow_up_task_count`.
+- 07.7 `device_gate_decision` required at install and collection; allowlist
+  = UNVERIFIED/NO_GO/BACKEND_CONTRACT_PASS/D1_N1_PREFLIGHT_PASS/
+  D1_N2_PREFLIGHT_PASS — no GO-equivalent accepted.
+
+Additional fix surfaced by the suite: `service._analyze_frame` now installs
+the D1 audio-import seal before importing mediapipe. Without it, the runtime
+process pulled `sounddevice` into `sys.modules`, which permanently poisoned
+`_runtime_prerequisites()` (`POSE_ENGINE_UNAVAILABLE`) for any later
+native-preflight call in the same process — an order-dependent failure
+latent since the runtime existed. The seal also makes the no-audio posture
+real inside the runtime process.
+
+Docs: `TRACEABILITY_MATRIX.md` gained the seven rows above;
+`WORKSPACE_GUIDE_VI.md` documents the new required record fields, the
+contamination marker, and the drop/gap counters. `DATASET_SCHEMA.md`
+unchanged — the envelope already specified `contaminated_by_operator` as
+"True during locked mask interval"; the implementation now honors it.

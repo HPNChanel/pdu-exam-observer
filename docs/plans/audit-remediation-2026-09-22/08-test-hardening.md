@@ -59,3 +59,61 @@ that masks drift instead of detecting it.
   now fails on drift by construction.
 - `pytest tests/training tests/runtime tests/backend/test_workspace* tests/backend/test_auth.py -q` green.
 - Ruff + strict mypy clean on all touched files.
+
+## Execution note (2026-09-22)
+
+- **08.1 (M6):** `build_self_contained_notebook.py` and
+  `scripts/build_training_delivery.py` now emit deterministic bytes (fixed
+  ZIP metadata, deterministic NPZ writer). `build_preprocessing_fixture` and
+  `build_synthetic_smoke_fixture` accept an optional `fixture_root`.
+  `test_notebook_contract.py` builds into `tmp_path` and byte-compares the
+  committed `preprocessing_golden.npz` + manifest + `.ipynb`, so committed
+  drift fails by construction. The checked-in artifacts were **deliberately
+  regenerated once** to remove accumulated timestamp drift — that
+  regeneration is recorded here, not silent.
+- **08.2 (M12):** pure helpers `_camera_profile_ready(height, width, fps)`
+  and `_evaluate_native_preflight(camera_ready, display_count, disk_ok)`
+  extracted in `research_runtime/service.py`; hardware probes unchanged.
+  `tests/runtime/test_preflight_governance.py` covers fps below/at/above the
+  12–18 band, NaN/inf, wrong dimensions, 0/1/2+ displays, disk failure.
+- **08.3 (M12):** REAL-session test writes `frozen-rules.v1.json` with a
+  mismatched `protocol_version` (valid self-hash) and asserts a
+  `TECHNICAL_STATE` event with `reason=RULE_POLICY_NOT_FROZEN` and no
+  `RULE_POLICY_BOUND`; a matching-protocol control asserts `RULE_POLICY_BOUND`.
+- **08.4 (M12):** quarantine test asserts the owned artifact directory is
+  renamed to `<dir>.withdrawn.quarantine`, the original path is gone, and
+  the `WITHDRAWAL_RECORDED` receipt carries the decision + artifact inventory.
+- **08.5 (M12):** `test_workspace_api.py` now covers malformed bearer
+  (garbage token, `Basic` scheme, bare `Bearer`), expired bearer (clock
+  advanced past `REVIEWER_BEARER_TTL_SECONDS`), and revoked bearer (post-
+  logout). Missing-bearer and exam-origin-with-valid-token cases were
+  already covered.
+- **08.6 (M12):** new `tests/backend/test_cli_surfaces.py` — subprocess
+  dispatch for `authority-template`/`authority`/`workspace --help`; in-process
+  `workspace_cli` tests for relative-root rejection, PIN<6 rejection,
+  launcher invocation with `PDU_RUNTIME_MODE=m2research`, and
+  `PDU_REVIEWER_PIN` cleanup in `finally` on both success and launcher
+  failure; subprocess gate that `RESEARCH` mode without `--export` /
+  `--protocol-freeze` exits 2.
+- **08.7 (M12):** new `tests/training/test_calibration_sanity.py` —
+  softmax normalization/shift-invariance/overflow safety, temperature
+  monotonicity + direction of `fit_temperature` on known fixtures, fusion
+  shape/roundtrip checks, abstention minimum-coverage bound, and the
+  `ConfidenceStatus` enum boundary. Correctness only; no performance claims.
+- **08.8 (M8 follow-up):** `test_sse_stream_terminates_for_stalled_consumer`
+  runs a slow consumer against a flooded bounded queue: the stream closes
+  after the stale-marker heartbeat check and detaches the subscriber,
+  instead of buffering without bound.
+- **Test hygiene found during 08.6:** `workspace_cli.main()` writes
+  `PDU_WORKSPACE_ROOT`/`PDU_RUNTIME_MODE`/`PDU_OPEN_BROWSER` into the real
+  process environment, so in-process tests leaked `PDU_WORKSPACE_ROOT` into
+  `test_launcher.py` and produced a `RUNTIME_ROOT_ALREADY_OWNED` collision.
+  `test_cli_surfaces.py` now restores all `PDU_*` keys via a
+  `preserve_process_env` fixture; the leak is fixed at the test seam, not in
+  production code (the env mutation is the intended launcher contract).
+- **Verification:** gate command green (113 tests); full `tests/backend`
+  re-run green; `ruff` clean on all touched files; `mypy` (strict,
+  `pdu_exam_observer` package) clean — 64 source files.
+- **Residual:** NumPy degenerate-frame RuntimeWarnings persist (pre-existing,
+  cosmetic — frames fail closed). These tests do not prove real-camera,
+  two-monitor, deployment, portability, or research-performance behavior.

@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PARENT = ROOT / "packaging/candidates/completion-2026-09-08"
+REQUIRED_PYINSTALLER_VERSION = "6.10.0"
 
 
 def digest(path: Path) -> str:
@@ -74,6 +75,46 @@ def write_json(path: Path, data: object) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def _required_tool(executable: str) -> str:
+    resolved = shutil.which(executable)
+    if resolved is None:
+        raise RuntimeError(f"FRONTEND_TOOLCHAIN_UNAVAILABLE: {executable} not found on PATH")
+    return resolved
+
+
+def _tool_version(executable: str) -> str:
+    completed = subprocess.run(
+        [executable, "--version"], capture_output=True, text=True, check=False
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(f"FRONTEND_TOOLCHAIN_UNAVAILABLE: {executable} --version failed")
+    return completed.stdout.strip()
+
+
+def frontend_build_commands(npm: str) -> list[list[str]]:
+    return [
+        [npm, "ci", "--no-audit", "--no-fund"],
+        [npm, "run", "build"],
+    ]
+
+
+def _dist_manifest(dist: Path) -> dict[str, object]:
+    if not dist.is_dir():
+        raise RuntimeError("frontend build produced no dist directory")
+    files = [
+        {
+            "path": path.relative_to(dist).as_posix(),
+            "sha256": digest(path),
+            "bytes": path.stat().st_size,
+        }
+        for path in sorted(dist.rglob("*"))
+        if path.is_file()
+    ]
+    if not files:
+        raise RuntimeError("frontend dist is empty")
+    return {"file_count": len(files), "files": files}
+
+
 def inventory(bundle: Path) -> dict[str, object]:
     forbidden_suffixes = {".db", ".sqlite3", ".mp4", ".avi", ".partial", ".log", ".pem"}
     files = []
@@ -113,13 +154,42 @@ def main() -> None:
     parser.add_argument("--build-python", type=Path, required=True)
     parser.add_argument("--ffmpeg", type=Path, required=True)
     parser.add_argument("--name", default="candidate-01")
+    parser.add_argument(
+        "--parent",
+        type=Path,
+        default=DEFAULT_PARENT,
+        help="candidate parent directory; a new lineage must use a new parent",
+    )
     args = parser.parse_args()
     if not args.name.replace("-", "").isalnum():
         parser.error("name must contain only letters, digits and hyphens")
-    target = DEFAULT_PARENT / args.name
+    target = args.parent.resolve() / args.name
     if target.exists():
         parser.error("candidate already exists; choose a fresh name to preserve prior bytes")
     target.mkdir(parents=True)
+    probe = subprocess.run(
+        [
+            str(args.build_python.resolve()),
+            "-c",
+            "import PyInstaller; print(PyInstaller.__version__, end='')",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if probe.returncode != 0 or probe.stdout.strip() != REQUIRED_PYINSTALLER_VERSION:
+        parser.error(
+            "build python must provide PyInstaller "
+            f"{REQUIRED_PYINSTALLER_VERSION} (the verified candidate toolchain); "
+            f"got: {probe.stdout.strip() or probe.stderr.strip() or 'not installed'}"
+        )
+    try:
+        node = _required_tool("node")
+        npm = _required_tool("npm")
+        node_version = _tool_version(node)
+        npm_version = _tool_version(npm)
+    except RuntimeError as exc:
+        parser.error(str(exc))
     before = source_manifest()
     env = {
         **os.environ,
@@ -127,7 +197,19 @@ def main() -> None:
         "PDU_FFMPEG_BINARY": str(args.ffmpeg.resolve()),
         "PYTHONHASHSEED": "1",
     }
+    web_root = ROOT / "apps/web"
     with (target / "build.log").open("w", encoding="utf-8") as log:
+        # The packed frontend must be a derived artifact of the pinned
+        # lockfile, not whatever bytes happen to sit in apps/web/dist.
+        for command in frontend_build_commands(npm):
+            subprocess.run(
+                command,
+                cwd=web_root,
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
         subprocess.run(
             [
                 str(args.build_python.resolve()),
@@ -194,6 +276,9 @@ def main() -> None:
         "zip": str(archive_path),
         "zip_sha256": digest(archive_path),
         "manifest_sha256": digest(bundle / "DELIVERY_MANIFEST.json"),
+        "node_version": node_version,
+        "npm_version": npm_version,
+        "frontend_dist_manifest": _dist_manifest(web_root / "dist"),
         "status": "BUILT_RUNTIME_VERIFICATION_PENDING",
         "clean_machine_verified": False,
     }

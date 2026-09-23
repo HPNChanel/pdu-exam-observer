@@ -82,6 +82,21 @@ EXPECTED_HASHES = {
         "9c4dde09bce5833ceaac4eb863171ba0b524368c329d6254e4c360d10d77c256",
     ),
 }
+# `apps/web/dist` is an untracked build artifact: the audited bytes are
+# preserved byte-identical inside the immutable candidate-06 bundle. The pin
+# still verifies the audited SHA-256, resolved at its durable location.
+PRESERVED_INPUT_PATHS = {
+    "current_observed_frontend_dist": (
+        "packaging/candidates/completion-2026-09-08/candidate-06/"
+        "PDU-Workspace/_internal/assets/web/assets/index-DB9w6fTP.js"
+    ),
+}
+
+
+def _pinned_path(key: str) -> Path:
+    return ROOT / PRESERVED_INPUT_PATHS.get(key, EXPECTED_HASHES[key][0])
+
+
 EXPECTED_AUTHORITY = {
     "authority_status": "AUTHORITY_NOT_ISSUED",
     "clean_machine_verified": False,
@@ -190,8 +205,8 @@ def test_audit_pins_current_source_and_historical_package_bytes() -> None:
         key: {"path": path, "sha256": digest}
         for key, (path, digest) in EXPECTED_HASHES.items()
     }
-    for path, digest in EXPECTED_HASHES.values():
-        assert _sha256(ROOT / path) == digest
+    for key, (_path, digest) in EXPECTED_HASHES.items():
+        assert _sha256(_pinned_path(key)) == digest
 
     bundled = ROOT / EXPECTED_HASHES["bundled_release_manifest"][0]
     detached = ROOT / EXPECTED_HASHES["detached_release_manifest"][0]
@@ -225,7 +240,7 @@ def test_audit_has_exact_open_gap_matrix_and_historical_current_separation() -> 
     assert body["audit_result"] == "PACKAGE_GAP_CONFIRMED"
     assert body["next_task"] == "M2_S3B_DETERMINISTIC_PACKAGE_INTEGRATION"
 
-    current_frontend = (ROOT / EXPECTED_HASHES["current_observed_frontend_dist"][0]).read_text(
+    current_frontend = _pinned_path("current_observed_frontend_dist").read_text(
         encoding="utf-8"
     )
     packaged_frontend = (ROOT / EXPECTED_HASHES["packaged_frontend_bundle"][0]).read_text(
@@ -270,6 +285,6 @@ def test_audit_keeps_full_authority_ceiling_and_package_inputs_immutable() -> No
         "DISTRIBUTION_READY",
         "RELEASE_AUTHORIZED",
     ]
-    for path, digest in EXPECTED_HASHES.values():
-        assert _sha256(ROOT / path) == digest
+    for key, (_path, digest) in EXPECTED_HASHES.items():
+        assert _sha256(_pinned_path(key)) == digest
 

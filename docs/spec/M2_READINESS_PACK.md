@@ -39,7 +39,7 @@ M2_PARTICIPANT_COLLECTION_AUTHORIZED=false
 M2_MODEL_TRAINING_OR_EVALUATION_AUTHORIZED=false
 ```
 
-These booleans are non-transitive and revision-scoped. D1-C1 remains injected-only evidence. The active D1-N1 slice permits exactly one server-owned video camera and one 60-second preflight after dependency/model/FFmpeg/privacy/owner gates. It requests no audio, retains no raw frame, and has no HTTP/UI, SQLite/M1/P1, seal/export, participant, or research model-evaluation surface. It may return at most `D1_N1_PREFLIGHT_PASS` with `device_gate_decision=UNVERIFIED`, never `D1_GO`.
+These booleans are non-transitive and revision-scoped. `M2_MODEL_TRAINING_OR_EVALUATION_AUTHORIZED=false` refers to research (participant-data) training and evaluation; the synthetic training code delivered under the separate 2026-09-08 user-approved scope (`docs/ai/COMPLETION_2026_09_08.md`) exercises no participant data and does not consume this authorization. D1-C1 remains injected-only evidence. The active D1-N1 slice permits exactly one server-owned video camera and one 60-second preflight after dependency/model/FFmpeg/privacy/owner gates. It requests no audio, retains no raw frame, and has no HTTP/UI, SQLite/M1/P1, seal/export, participant, or research model-evaluation surface. It may return at most `D1_N1_PREFLIGHT_PASS` with `device_gate_decision=UNVERIFIED`, never `D1_GO`.
 
 Participant consideration is an M4 decision only after accepted M2 and M3 evidence plus institutional approval, documented consent, retention authority, storage authority, accepted no-human device evidence, frozen protocol controls, and explicit user authorization. A synthetic fixture, a green test, or a device run cannot transitively authorize a participant.
 

@@ -670,12 +670,10 @@ def test_backlog_threshold_is_exact_and_cannot_promote_a_pass() -> None:
 
 
 def test_outbound_python_network_guard_denies_without_native_connection() -> None:
-    native._OUTBOUND_NETWORK_ATTEMPTS = 0
     assert native._install_network_guard()
     with pytest.raises(OSError, match="denies outbound"):
         socket.socket().connect(("198.51.100.1", 443))
     assert native._OUTBOUND_NETWORK_ATTEMPTS == 1
-    native._OUTBOUND_NETWORK_ATTEMPTS = 0
 
 
 def test_timeout_cleanup_is_fail_closed_and_releases_the_mutex() -> None:
@@ -793,6 +791,28 @@ else:
     else:
         assert completed.returncode == 0, completed.stdout + completed.stderr
         assert "VISION_AUDIO_SEAL=PASS" in completed.stdout
+
+
+def test_disabled_mediapipe_audio_surface_is_read_only_metadata() -> None:
+    disabled = native._DisabledMediaPipeAudio("mediapipe.tasks.python.audio")
+    disabled.__package__ = "mediapipe.tasks.python"
+    disabled.DISABLED = True
+
+    # Module metadata reads must not raise RuntimeError — inspect.getmodule
+    # (and PyTorch's fake-op registration) depends on this.
+    assert getattr(disabled, "__file__", None) is None
+    assert disabled.__name__ == "mediapipe.tasks.python.audio"
+    assert disabled.DISABLED is True
+
+    # Audio namespace attributes stay sealed.
+    with pytest.raises(RuntimeError, match="audio namespace is disabled"):
+        disabled.AudioClassifier  # noqa: B018 - intentional attribute access
+    with pytest.raises(RuntimeError, match="audio namespace is sealed"):
+        disabled.anything = object()  # type: ignore[attr-defined]
+    # Dunder writes outside the install allowlist stay sealed — a writable
+    # __path__ would let the stub pose as a package.
+    with pytest.raises(RuntimeError, match="audio namespace is sealed"):
+        disabled.__path__ = []  # type: ignore[attr-defined]
 
 
 @pytest.mark.parametrize("failure", ("read", "face", "pose", "close", "terminate", "release"))

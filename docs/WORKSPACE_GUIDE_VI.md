@@ -36,6 +36,11 @@ không nhận đường dẫn lưu trữ, URL tùy ý hay lệnh hệ thống.
    skeleton trực tiếp, chất lượng và trạng thái phiên; bài thi không nhận nhãn
    nghiên cứu, confidence hay điều khiển reviewer.
 5. Bấm **Dừng**, rồi **Niêm phong**. Chỉ sau seal mới xem được video cục bộ.
+   Nếu reviewer đã thao tác vào máy trong lúc phiên đang RECORDING, bấm **Đánh
+   dấu nhiễm thao tác** trước khi dừng: mọi quan sát sau điểm đánh dấu sẽ mang
+   cờ `contaminated_by_operator` trong export. Đây là siêu dữ liệu provenance,
+   không phải đánh giá hành vi. Bộ đếm `Khung mất`/`Đứt đoạn` trên panel là
+   kế toán chất lượng dữ liệu đã lưu; khoảng đứt quá lớn làm phiên FAILED.
 6. Duyệt từng sự kiện: sửa biên thời gian tính bằng mili giây, chọn nhãn và
    xác nhận/từ chối/chưa đủ bằng chứng, ghi lý do. Mỗi lần sửa thêm một phiên
    bản. **Gán nhãn đoạn video khác** cho phép ghi nhận đoạn bỏ sót hoặc đoạn
@@ -54,6 +59,11 @@ Chế độ REAL cần đủ màn hình vật lý, camera đúng profile, lưu t
 native gắn đúng participant/session/root. Hai cửa sổ trên một màn hình không
 đáp ứng điều kiện hai màn hình. Camera dùng device 0, 1280×720, yêu cầu 15 FPS,
 không mở audio. Một tiến trình riêng sở hữu camera; khởi tạo/đọc/đóng có timeout.
+Bản đóng gói dùng `tools/ffmpeg.exe` đi kèm để kết xuất video. Khi chạy từ mã
+nguồn, runtime không tự tìm ffmpeg trên PATH — phải chỉ định rõ
+`PDU_FFMPEG_PATH` (đường dẫn tuyệt đối, không UNC, không symlink) cùng
+`PDU_FFMPEG_SHA256` khớp băm của binary; thiếu hoặc sai băm sẽ báo
+`ENCODER_FFMPEG_UNAVAILABLE` thay vì dùng binary lạ.
 
 Trước khi thu bất kỳ người tham gia nào, người có thẩm quyền phải cung cấp
 phê duyệt tổ chức, consent, retention và bằng chứng storage. Không sửa JSON để
@@ -62,13 +72,23 @@ băm tài liệu và ràng buộc bản ghi; nó không chứng minh tính xác 
 của tài liệu do người vận hành cung cấp.
 
 Tạo phiên REAL trước để lấy `session_id`. Bản ghi native nằm trong thư mục
-`research` của workspace. Mẫu và danh sách trường được cung cấp bởi
-`research_runtime/authority_cli.py`; mẫu chỉ chứa placeholder. Công cụ đóng gói
-có lệnh `PDUWorkspace.exe authority --help`. Cài hồ sơ bằng các đối số
+`research` của workspace. Mẫu draft được tạo bằng
+`PDUWorkspace.exe authority-template --root <thư-mục> --session-id <uuid>`
+(mẫu chỉ chứa placeholder, không cấp quyền). Công cụ
+đóng gói có lệnh `PDUWorkspace.exe authority --help`. Cài hồ sơ bằng các đối số
 `--root`, `--record`, `--approval-file`, `--consent-file`, `--retention-file`,
 `--storage-evidence-file`; tất cả chỉ được nhập ở terminal native. Khi thay hồ
 sơ cũ, bắt buộc `--expected-current-sha256`. Cấu hình
 `PDU_COLLECTION_AUTHORITY_REF` trong môi trường launcher khớp hồ sơ được cài.
+
+Bản ghi JSON trong `--record` bắt buộc đủ trường quản trị: `protocol_version`
+(phiên bản protocol đã đóng băng), `cohort` (`PILOT`/`CONFIRMATORY`),
+`consent_receipt_id` + `consent_version` (biên nhận và phiên bản consent),
+`operator_pseudonym` (bí danh vận hành, không phải tên thật — gắn vào review
+và export nội bộ, không lọt vào gói Colab) và `device_gate_decision` — chỉ nhận
+các giá trị trung thực (`UNVERIFIED`, `NO_GO`, `BACKEND_CONTRACT_PASS`,
+`D1_N1_PREFLIGHT_PASS`, `D1_N2_PREFLIGHT_PASS`); ghi `UNVERIFIED` khi chưa có
+bằng chứng cổng thiết bị, không tự chế giá trị GO.
 
 Nguồn REAL chỉ được export khi consent còn hiệu lực, retention chưa hết hạn,
 phiên đã seal và khóa. `timing.phase` được lấy từ cohort PILOT/CONFIRMATORY

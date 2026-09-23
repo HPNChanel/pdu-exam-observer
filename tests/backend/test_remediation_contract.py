@@ -18,7 +18,7 @@ class Clock:
 
 
 def _apps(clock: Callable[[], float]) -> tuple[TestClient, TestClient, M0Backend]:
-    backend = M0Backend(clock=clock)
+    backend = M0Backend(clock=clock, monotonic_clock=clock)
     config = AppConfig(
         "123456",
         "http://exam.local",

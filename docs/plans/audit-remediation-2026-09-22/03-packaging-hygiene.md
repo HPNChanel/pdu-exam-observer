@@ -60,3 +60,24 @@ handoff for the verified 2026-09-08 delivery.
 - Ruff + strict mypy clean (script/comment changes only — should be trivial).
 - candidate-06 zip SHA-256 and historical exe SHA-256 identical to step 1.
 - `git status` shows only intended file additions/edits; no artifacts deleted.
+
+## Execution note (2026-09-22, DG-4 = keep + label)
+
+In-place banners/guards on `build_release.ps1`, `PDU-Exam-Observer.spec`, and
+`packaging/README.txt` were NOT applied: all three are hash-pinned by
+`docs/ai/M2_S3A_PACKAGE_GAP_AUDIT.json` (`immutable_inputs`), and
+`packaging/README_M2_S3E_HANDOFF.txt` is bound by the RP2 source inventory.
+Editing them would falsify hash-bound historical receipts. Equivalent
+outcome achieved without touching pinned bytes:
+
+- NEW `packaging/HISTORICAL_LINEAGE.md` maps every packaging path to
+  current vs historical and names the live build path
+  (`build_completion_delivery.py` + `PDU-Workspace.spec`).
+- NEW `packaging/release/HISTORICAL.txt` sits beside the old bundle,
+  outside its closed manifest file set.
+- NEW `SUPERSEDED.txt` in candidate-04 and candidate-05 roots.
+- NEW `NOT_THE_DELIVERED_HANDOFF.txt` in all `m2-s3e-failed-*` dirs and
+  `m2-s3e-diagnostic-fourth`.
+- `.gitignore` now covers `packaging/manifest-metadata.json`.
+- Steps 7 (S3A re-pin) and 8 (release-pipeline assertion) became no-ops:
+  no pinned file was modified, so no digest changed.

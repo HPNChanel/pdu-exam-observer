@@ -85,6 +85,8 @@ class RuntimePort(Protocol):
     def withdraw_test_artifacts(self, session_id: str) -> dict[str, Any]: ...
     def withdraw(self, session_id: str, authority_reference: str) -> dict[str, Any]: ...
     def record_focus_context(self, session_id: str, focus_enum: str) -> Any: ...
+    def mark_contamination(self, session_id: str) -> dict[str, Any]: ...
+    def record_reviewer_audit(self, event_kind: str) -> None: ...
     def close(self) -> None: ...
 
 
@@ -129,6 +131,12 @@ class WorkspaceService:
         self.db.commit()
         if isinstance(backend, WorkspaceBackend):
             backend.runtime_state = self.runtime_state
+        # Reviewer lifecycle events persist locally in the research store; the
+        # hook never receives PIN, token, or digest material.
+        audit = getattr(self.runtime, "record_reviewer_audit", None)
+        register = getattr(backend, "register_reviewer_audit_hook", None)
+        if callable(audit) and callable(register):
+            register(audit)
 
     def runtime_state(self, exam_session_id: str) -> str | None:
         with self._lock:
@@ -187,6 +195,12 @@ class WorkspaceService:
             "failure_reason",
             "capture_profile",
             "inference_state",
+            "dropped_frames",
+            "gap_events",
+            "max_gap_frames",
+            "contaminated_by_operator",
+            "protocol_version",
+            "operator_pseudonym",
         }
         return {key: value for key, value in row.items() if key in fields}
 
@@ -230,6 +244,14 @@ class WorkspaceService:
                         str(event.get("label", event.get("research_label"))) for event in event_rows
                     }
                 },
+                "capture_integrity": {
+                    "dropped_frames": row.get("dropped_frames", 0),
+                    "gap_events": row.get("gap_events", 0),
+                    "max_gap_frames": row.get("max_gap_frames", 0),
+                    "contaminated_by_operator": bool(row.get("contaminated_by_operator")),
+                },
+                "protocol_version": row.get("protocol_version"),
+                "operator_pseudonym": row.get("operator_pseudonym"),
                 "research_performance": "UNVERIFIED",
                 "interpretation": "HUMAN_REVIEW_ONLY",
             }
@@ -277,6 +299,8 @@ class WorkspaceService:
                 except Exception:
                     self.runtime.stop(session_id)
                     raise
+            elif action == "mark-contamination":
+                self.runtime.mark_contamination(session_id)
             elif action in {"stop", "seal"}:
                 if self.runtime.get_session(session_id)["state"] == "RECORDING":
                     self.runtime.stop(session_id)

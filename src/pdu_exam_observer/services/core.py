@@ -13,11 +13,19 @@ from secrets import token_bytes, token_urlsafe
 
 from pdu_exam_observer.contracts import ConfidenceStatus, SessionSnapshot, SessionState
 from pdu_exam_observer.domain.state import InvalidTransition, transition
-from pdu_exam_observer.repositories.in_memory import InMemorySessionRepository, SessionRecord
+from pdu_exam_observer.repositories.in_memory import (
+    MAX_ANSWERS_PER_SESSION,
+    InMemorySessionRepository,
+    SessionRecord,
+)
 
 
 class IdempotencyConflict(InvalidTransition):
     """An idempotency key was reused for a different request body."""
+
+
+class SubscriberLimitExceeded(RuntimeError):
+    """The per-session SSE subscriber cap was reached."""
 
 
 class ReviewerClockInvalid(RuntimeError):
@@ -51,10 +59,10 @@ class ReviewerAuthenticator:
         )
         self.pin = ""
 
-    def authenticate(self, pin: str, client_key: str, now: float) -> LoginResult:
+    def authenticate(self, pin: str, client_key: str, monotonic_now: float) -> LoginResult:
         attempts, blocked_until = self._failures.get(client_key, (0, 0.0))
-        if blocked_until > now:
-            return LoginResult(False, max(1, math.ceil(blocked_until - now)))
+        if blocked_until > monotonic_now:
+            return LoginResult(False, max(1, math.ceil(blocked_until - monotonic_now)))
         candidate_hash = hashlib.scrypt(
             pin.encode("utf-8"), salt=self._salt, n=2**14, r=8, p=1, dklen=32
         )
@@ -63,7 +71,7 @@ class ReviewerAuthenticator:
             return LoginResult(True)
         attempts += 1
         if attempts >= self.max_failures:
-            self._failures[client_key] = (attempts, now + self.cooldown_seconds)
+            self._failures[client_key] = (attempts, monotonic_now + self.cooldown_seconds)
             return LoginResult(False, self.cooldown_seconds)
         self._failures[client_key] = (attempts, 0.0)
         return LoginResult(False)
@@ -96,14 +104,31 @@ class M0Backend:
     _reviewer_session_revocation_callback: Callable[[str], None] | None = field(
         default=None, init=False, repr=False
     )
+    _reviewer_audit_hooks: list[Callable[[str], None]] = field(
+        default_factory=list, init=False, repr=False
+    )
+    subscriber_queue_size: int = 512
+    max_subscribers_per_session: int = 8
     _subscribers: dict[str, list[asyncio.Queue[dict[str, object]]]] = field(default_factory=dict)
+    _stale_subscribers: set[asyncio.Queue[dict[str, object]]] = field(
+        default_factory=set, init=False, repr=False
+    )
+
+    def _fanout(self, session_id: str, event: dict[str, object]) -> None:
+        for subscriber in self._subscribers.get(session_id, []):
+            try:
+                subscriber.put_nowait(event)
+            except asyncio.QueueFull:
+                self._stale_subscribers.add(subscriber)
+
+    def subscriber_slots_available(self, session_id: str) -> bool:
+        return len(self._subscribers.get(session_id, [])) < self.max_subscribers_per_session
 
     def append_event(
         self, session_id: str, event_type: str, payload: dict[str, object]
     ) -> dict[str, object]:
         event = self.sessions.append_event(session_id, event_type, payload).as_dict()
-        for subscriber in self._subscribers.get(session_id, []):
-            subscriber.put_nowait(event)
+        self._fanout(session_id, event)
         return event
 
     def append_demo_event(self, session_id: str, payload: dict[str, object]) -> dict[str, object]:
@@ -127,6 +152,7 @@ class M0Backend:
         self._reviewer_token_expiry = expiry
         self._reviewer_token_monotonic_issued = monotonic_issued
         self._reviewer_token_monotonic_expiry = monotonic_expiry
+        self._emit_reviewer_audit("REVIEWER_LOGIN")
         return token
 
     def register_reviewer_session_revocation(
@@ -134,13 +160,25 @@ class M0Backend:
     ) -> None:
         self._reviewer_session_revocation_callback = callback
 
-    def _invalidate_reviewer_session(self) -> None:
+    def register_reviewer_audit_hook(self, callback: Callable[[str], None]) -> None:
+        """Audit sinks receive a fixed event kind only; bearer material never leaves."""
+        self._reviewer_audit_hooks.append(callback)
+
+    def _emit_reviewer_audit(self, event_kind: str) -> None:
+        for callback in self._reviewer_audit_hooks:
+            callback(event_kind)
+
+    def _invalidate_reviewer_session(
+        self, audit_kind: str = "REVIEWER_SESSION_ENDED"
+    ) -> None:
         digest = self._reviewer_token_digest
         try:
             if digest is not None and self._reviewer_session_revocation_callback is not None:
                 self._reviewer_session_revocation_callback(digest.hex())
         finally:
             self._clear_reviewer_token()
+            if digest is not None:
+                self._emit_reviewer_audit(audit_kind)
 
     def _clear_reviewer_token(self) -> None:
         self._reviewer_token_digest = None
@@ -204,7 +242,7 @@ class M0Backend:
             return
         candidate_digest = hashlib.sha256(token.encode("utf-8")).digest()
         if hmac.compare_digest(self._reviewer_token_digest, candidate_digest):
-            self._invalidate_reviewer_session()
+            self._invalidate_reviewer_session("REVIEWER_LOGOUT")
 
     def create_session(self) -> tuple[SessionRecord, str]:
         session_id = token_urlsafe(18)
@@ -284,6 +322,8 @@ class M0Backend:
             return record.answer_results[idempotency_key]
         if record.state is not SessionState.RECORDING or record.submitted:
             raise InvalidTransition("Answers are accepted only while the session is recording")
+        if len(record.answers) >= MAX_ANSWERS_PER_SESSION:
+            raise InvalidTransition("ANSWER_LIMIT_REACHED")
         result: dict[str, object] = {"schema_version": 1, "accepted": True}
         record.answers[idempotency_key] = payload
         record.answer_results[idempotency_key] = result
@@ -313,8 +353,12 @@ class M0Backend:
     async def stream_events(
         self, session_id: str, event_seq: int, heartbeat_seconds: float = 15.0
     ) -> AsyncGenerator[dict[str, object] | None, None]:
-        queue: asyncio.Queue[dict[str, object]] = asyncio.Queue()
+        queue: asyncio.Queue[dict[str, object]] = asyncio.Queue(
+            maxsize=self.subscriber_queue_size
+        )
         subscribers = self._subscribers.setdefault(session_id, [])
+        if not self.subscriber_slots_available(session_id):
+            raise SubscriberLimitExceeded("SSE_SUBSCRIBER_LIMIT")
         subscribers.append(queue)
         try:
             snapshot = self.snapshot(session_id)
@@ -336,9 +380,15 @@ class M0Backend:
                         last_delivered = sequence
                         yield event
                 except TimeoutError:
+                    if queue in self._stale_subscribers:
+                        # The queue overflowed; end the stream so the client
+                        # reconnects and resyncs via after_event_seq.
+                        return
                     yield None
         finally:
-            subscribers.remove(queue)
+            if queue in subscribers:
+                subscribers.remove(queue)
+            self._stale_subscribers.discard(queue)
 
     async def stream_reviewer_events(
         self,

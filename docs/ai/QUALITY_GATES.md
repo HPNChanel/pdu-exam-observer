@@ -6,6 +6,32 @@ Updated: `2026-08-30`
 
 This ledger separates local observations from user and external acceptance. Final local verifier status for the current M1-R1 governance revision is `OBSERVED`/`VERIFIED`; it is not a release or production receipt.
 
+> **As-of 2026-09-22 (audit remediation, Tasks 01–10):** one fresh full
+> invocation passed `1110` Python tests; frontend gates passed
+> typecheck/lint/`82` tests/build; repository-wide Ruff PASS (the pre-existing
+> `UP038` note in G1 is resolved); strict mypy PASS over `64` source files.
+> Fresh outputs are retained under `output/audit-remediation-2026-09-22/`.
+> RP2 was regenerated exactly once for this reconciliation:
+> `static_bindings_digest=c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456`,
+> `candidate_exact_bytes_sha256=c6b3992519222ae33e85f6cb33c073b561631c95b98534e23ea565d76c0dcd9c`,
+> `binding_schema_exact_bytes_sha256=302dc8156c0da4bee47b39f0c42d2cc91b09ea0bb3eeb49853413d52bff30003`
+> (70 source/tool entries, 60 policy preimages). Counts in G1/G2/G5 below are
+> historical and superseded by this note; per-gate sections are unchanged.
+>
+> **As-of 2026-09-23 (post-remediation hardening, Tasks 01–06):** one fresh
+> invocation of the canonical gate-runner passed `1125` Python tests; frontend
+> gates passed typecheck/lint/`85` tests/build; repository-wide Ruff PASS;
+> strict mypy PASS over `64` source files. Captured under
+> `output/gates-2026-09-23/` (`gate-summary.json` status PASS). RP2 was
+> regenerated once during the batch (Tasks 01+04 source changes):
+> `static_bindings_digest=ae02b69f5d363936f2ba9b42d8eeb10fec29f5add52fb7169a0c421de8756a6f`,
+> `candidate_exact_bytes_sha256=60e65b931161eda5859ebfee41800b0b46c78ce3c16558dc5c5018e698cd27c6`,
+> schema digest unchanged. candidate-07 rebuilt once through the new
+> in-builder frontend stage (exe
+> `e31a7f2e49acf3edde1be3d27b3b4b1dc046a3847656e1452376229c4141d48e`); packaged
+> verification PASS same-host. The 2026-09-22 note above is historical;
+> per-gate sections unchanged; no authority ceiling moved.
+
 ## G0 - Source and workspace
 
 - Canonical source is `SOURCE_VERIFIED`; project copy and archive witness retain SHA-256 `2CD5F6FDB17D70FD5593E50B8387BC38DABF70430DFFFECDBE64439DC884AFD5`.

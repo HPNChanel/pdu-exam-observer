@@ -38,3 +38,23 @@ the "what's left before real research" page for the thesis/IRB narrative.
 - The tracker exists, every row cites its evidence artifact, and no row
   claims more than the evidence supports.
 - No code changes; no authority ceiling moved.
+
+## Execution note — 2026-09-23
+
+Implemented as `docs/plans/EXTERNAL_GATES.md` — 8 gates, each row cites its
+smallest-sufficient evidence artifact and current state; no row claims more
+than the evidence supports.
+
+Honest adjustments vs the draft table:
+
+- Commit/push row updated: commit authority was exercised (baseline +
+  Tasks 01–10 committed, `4e52921`..`3b9a9ad`); only push remains
+  unauthorized.
+- Clean-machine row notes the existing handoff zip packs the historical
+  S3D-candidate exe — a current-source handoff must be rebuilt if the
+  gate is attempted for candidate-07.
+- Camera/display rows cite the OBSERVED current-host readings
+  (10.076 fps, 1 display) as the reason REAL capture fails closed today.
+
+Cross-linked from `docs/ai/CURRENT_TASK.md` (Task-10 block) and
+`docs/plans/ROADMAP.md` header. No code changed; no ceiling moved.

@@ -18,7 +18,7 @@ import uuid
 from collections.abc import Mapping
 from pathlib import Path
 
-from .service import ResearchRuntimeService
+from .service import DEVICE_GATE_DECISIONS, ResearchRuntimeService
 
 
 class AuthorityInstallError(ValueError):
@@ -99,6 +99,10 @@ def _validate_record(root: Path, record: Mapping[str, object]) -> dict[str, obje
         "institutional_approval_sha256",
         "retention_record_sha256",
         "retention_expires_at",
+        "consent_receipt_id",
+        "consent_version",
+        "operator_pseudonym",
+        "device_gate_decision",
     }
     if not required.issubset(record) or record.get("schema_version") != 1:
         raise AuthorityInstallError("RECORD_SCHEMA_INVALID")
@@ -114,6 +118,14 @@ def _validate_record(root: Path, record: Mapping[str, object]) -> dict[str, obje
     protocol_version = record.get("protocol_version")
     if not isinstance(protocol_version, str) or not _REFERENCE.fullmatch(protocol_version):
         raise AuthorityInstallError("PROTOCOL_VERSION_INVALID")
+    for field in ("consent_receipt_id", "consent_version", "operator_pseudonym"):
+        value = record.get(field)
+        if not isinstance(value, str) or not _REFERENCE.fullmatch(value):
+            raise AuthorityInstallError(f"{field.upper()}_INVALID")
+    # The recorded gate outcome must be an honest vocabulary value; a
+    # fabricated GO is not accepted at install or at collection time.
+    if record.get("device_gate_decision") not in DEVICE_GATE_DECISIONS:
+        raise AuthorityInstallError("DEVICE_GATE_DECISION_INVALID")
     if not isinstance(session, str):
         raise AuthorityInstallError("SESSION_PSEUDONYM_INVALID")
     try:
@@ -245,6 +257,10 @@ def authority_template(root: Path, session_id: str) -> dict[str, object]:
         "session_pseudonym": session,
         "native_root_digest": ResearchRuntimeService.root_digest(root),
         "consent_status": "DRAFT",
+        "consent_receipt_id": "REPLACE_WITH_RECEIPT_ID",
+        "consent_version": "REPLACE_WITH_CONSENT_VERSION",
+        "operator_pseudonym": "REPLACE_WITH_OPERATOR_PSEUDONYM",
+        "device_gate_decision": "UNVERIFIED",
         "consent_policy_sha256": "REPLACE_WITH_SHA256",
         "institutional_approval_sha256": "REPLACE_WITH_SHA256",
         "retention_record_sha256": "REPLACE_WITH_SHA256",

@@ -96,6 +96,121 @@ def _status(value: object) -> VerificationStatus:
     return value  # type: ignore[return-value]
 
 
+# Well-known SIDs that represent "any local user" rather than the owner,
+# SYSTEM, or Administrators. An allow-ACE on a broad SID means the storage
+# root's confidentiality/integrity cannot be called restrictive.
+_BROAD_SIDS = frozenset(
+    {
+        "S-1-1-0",  # Everyone
+        "S-1-5-2",  # Network
+        "S-1-5-3",  # Batch
+        "S-1-5-4",  # Interactive
+        "S-1-5-7",  # Anonymous Logon
+        "S-1-5-11",  # Authenticated Users
+        "S-1-5-32-545",  # BUILTIN\Users
+        "S-1-5-32-546",  # BUILTIN\Guests
+    }
+)
+
+
+def _probe_acl(root: Path) -> VerificationStatus:
+    """VERIFIED iff the root DACL grants nothing to broad local-user SIDs.
+
+    Standard-user safe (GetNamedSecurityInfoW needs no elevation for an
+    owner-readable DACL). Any unreadable or ambiguous result is UNKNOWN;
+    DENY ACEs are ignored, which only ever biases toward UNKNOWN.
+    """
+    import ctypes
+    from ctypes import wintypes
+
+    class _AclSizeInformation(ctypes.Structure):
+        _fields_ = [
+            ("AceCount", wintypes.DWORD),
+            ("AclBytesInUse", wintypes.DWORD),
+            ("AclBytesFree", wintypes.DWORD),
+        ]
+
+    advapi32 = ctypes.windll.advapi32
+    kernel32 = ctypes.windll.kernel32
+    descriptor = ctypes.c_void_p()
+    dacl = ctypes.c_void_p()
+    status = advapi32.GetNamedSecurityInfoW(
+        str(root), 1, 0x0004, None, None, ctypes.byref(dacl), None, ctypes.byref(descriptor)
+    )
+    if status != 0 or not descriptor:
+        return "UNKNOWN"
+    try:
+        if not dacl:
+            return "UNKNOWN"  # NULL DACL: unrestricted
+        info = _AclSizeInformation()
+        if not advapi32.GetAclInformation(
+            dacl, ctypes.byref(info), ctypes.sizeof(info), 2
+        ):
+            return "UNKNOWN"
+        for index in range(info.AceCount):
+            ace = ctypes.c_void_p()
+            if not advapi32.GetAce(dacl, index, ctypes.byref(ace)):
+                return "UNKNOWN"
+            ace_address = ace.value
+            if ace_address is None:
+                return "UNKNOWN"
+            ace_type = ctypes.c_uint8.from_address(ace_address).value
+            if ace_type != 0x00:  # ACCESS_ALLOWED_ACE only
+                continue
+            mask = ctypes.c_uint32.from_address(ace_address + 4).value
+            sid_out = ctypes.c_void_p()
+            if not advapi32.ConvertSidToStringSidW(
+                ctypes.c_void_p(ace_address + 8), ctypes.byref(sid_out)
+            ):
+                return "UNKNOWN"
+            try:
+                sid_address = sid_out.value
+                if sid_address is None:
+                    return "UNKNOWN"
+                sid = ctypes.wstring_at(sid_address)
+            finally:
+                kernel32.LocalFree(sid_out)
+            if sid in _BROAD_SIDS and mask != 0:
+                return "UNKNOWN"
+        return "VERIFIED"
+    finally:
+        kernel32.LocalFree(descriptor)
+
+
+def _probe_encryption(root: Path) -> VerificationStatus:
+    """VERIFIED iff EFS encryption is observed on the root (inherited by
+    children). Volume-level BitLocker is not determinable as a standard
+    user, so absence of the flag is honestly UNKNOWN, never a denial."""
+    attributes = getattr(root.stat(), "st_file_attributes", None)
+    if attributes is not None and bool(attributes & 0x4000):
+        return "VERIFIED"
+    return "UNKNOWN"
+
+
+def probe_storage_controls(root: Path) -> dict[str, VerificationStatus]:
+    """Best-effort, standard-user, offline probe of storage controls.
+
+    `VERIFIED` is emitted only for directly observed evidence; every error,
+    non-Windows platform, or undeterminable condition degrades to
+    `UNKNOWN`. Never raises.
+    """
+    result: dict[str, VerificationStatus] = {
+        "encryption_status": "UNKNOWN",
+        "acl_status": "UNKNOWN",
+    }
+    if os.name != "nt":
+        return result
+    try:
+        resolved = Path(root).resolve()
+        if not resolved.is_dir():
+            return result
+        result["encryption_status"] = _probe_encryption(resolved)
+        result["acl_status"] = _probe_acl(resolved)
+    except Exception:
+        return {"encryption_status": "UNKNOWN", "acl_status": "UNKNOWN"}
+    return result
+
+
 def validate_storage_root(
     root: Path,
     *,

@@ -55,3 +55,29 @@ between candidate-06 (2026-09-08 source) and the post-remediation source.
   check — recompute the zip SHA).
 - All gates green on the final tree.
 - No claim of clean-machine verification — that's Task 11's external item.
+
+## Execution note (2026-09-22)
+
+- `docs/spec/BUILD_TOOLCHAIN.md` created and linked from
+  `PACKAGING_DISTRIBUTION.md`: exact pinned toolchain (Python 3.11.9,
+  PyInstaller 6.10.0, hooks-contrib 2026.7, uv-locked deps, npm ci) plus the
+  full `package-env` recreation procedure that was missing for candidate-06.
+- FFmpeg recipe (DG-3) recorded in `M2_D1_NATIVE_ASSET_PROVENANCE.md`:
+  `8.0.1-essentials_build-www.gyan.dev`, sha256 `5af82a0d…`; binary not
+  vendored — recoverable from the immutable candidate-06 bundle or upstream.
+- `build_completion_delivery.py` gained `--parent` (default unchanged) so a
+  new lineage writes to `packaging/candidates/remediation-2026-09-22/`.
+- Build env recreated at `output/remediation-2026-09-22/package-env` (uv venv
+  + `uv export --locked` + pyinstaller pins); ffmpeg staged with LICENSE.
+- First build attempt failed correctly: the before/after source-manifest
+  guard caught documentation edited mid-build (`source changed during
+  build`). Rebuilt on a quiescent tree — receipt PASS.
+- `verify_completion_package.py` on candidate-07: PASS for original and
+  relocated ("Relocated folder with spaces") runs — model import READY,
+  90-record AI_RENDERED session, export + withdrawal clean, child PATH
+  restricted, external proxy unreachable. Receipt at
+  `output/remediation-2026-09-22/package-verification.json`. This also
+  satisfies the optional same-host relocation step.
+- candidate-06 zip SHA recomputed — byte-identical (`f5bd0add…`).
+- Lineage receipt: `docs/ai/CANDIDATE_07_LINEAGE.md` (exe + zip + manifest
+  SHA-256 recorded). No clean-machine or release claims made.

@@ -99,7 +99,16 @@ def register_workspace_routes(
     @router.post("/sessions/{session_id}/{action}")
     def action(
         session_id: str,
-        action: Literal["preflight", "start", "stop", "seal", "lock", "withdraw-test", "withdraw"],
+        action: Literal[
+            "preflight",
+            "start",
+            "stop",
+            "seal",
+            "lock",
+            "withdraw-test",
+            "withdraw",
+            "mark-contamination",
+        ],
         idempotency_key: str | None = Header(default=None),
     ) -> dict[str, object]:
         request_key = key(idempotency_key)

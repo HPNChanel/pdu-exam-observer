@@ -3,6 +3,13 @@ from typing import Protocol
 
 from pdu_exam_observer.contracts import SessionState
 
+MAX_EVENTS_PER_SESSION = 10_000
+MAX_ANSWERS_PER_SESSION = 1_000
+
+
+class EventLogLimitExceeded(RuntimeError):
+    """The in-memory session event log reached its hard ceiling."""
+
 
 @dataclass
 class SessionRecord:
@@ -56,6 +63,8 @@ class InMemorySessionRepository:
         self, session_id: str, event_type: str, payload: dict[str, object]
     ) -> EventRecord:
         record = self._sessions[session_id]
+        if len(record.events) >= MAX_EVENTS_PER_SESSION:
+            raise EventLogLimitExceeded("EVENT_LOG_LIMIT_REACHED")
         record.event_seq += 1
         event = EventRecord(record.event_seq, event_type, payload)
         record.events.append(event)

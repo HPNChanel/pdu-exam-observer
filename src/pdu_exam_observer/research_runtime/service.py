@@ -13,7 +13,6 @@ import hashlib
 import json
 import math
 import os
-import shutil
 import sqlite3
 import subprocess
 import sys
@@ -43,7 +42,75 @@ except ImportError:  # pragma: no cover - package gate covers it
 
 
 SCHEMA_VERSION = 1
+# The internal store schema is versioned independently of the export envelope.
+RUNTIME_DB_VERSION = 2
 CAPTURE_PROFILE = "capture.v1.1280x720@15fps.no-audio"
+MAX_POSE_TIMELINE_BYTES = 256 * 1024 * 1024
+# Honest recorded device-gate outcomes; a fabricated GO-equivalent is never accepted.
+DEVICE_GATE_DECISIONS = frozenset(
+    {
+        "UNVERIFIED",
+        "NO_GO",
+        "BACKEND_CONTRACT_PASS",
+        "D1_N1_PREFLIGHT_PASS",
+        "D1_N2_PREFLIGHT_PASS",
+    }
+)
+
+
+def _camera_profile_ready(height: int, width: int, fps: float) -> bool:
+    """Pure capture-profile gate: 1280x720 within the 12-18 fps band."""
+    return (height, width) == (720, 1280) and math.isfinite(fps) and 12 <= fps <= 18
+
+
+def _evaluate_native_preflight(
+    *, camera_ready: bool, display_count: int, disk_ok: bool
+) -> dict[str, str]:
+    """Pure evaluation of measured facts; hardware probes stay in the caller."""
+    return {
+        "camera": "READY" if camera_ready else "UNAVAILABLE",
+        "display": "READY" if display_count >= 2 else "UNAVAILABLE",
+        "disk": "READY" if disk_ok else "UNAVAILABLE",
+    }
+_SESSION_COLUMNS = frozenset(
+    {
+        "source_kind",
+        "participant_pseudonym",
+        "state",
+        "revision",
+        "created_at",
+        "started_at",
+        "stopped_at",
+        "sealed_at",
+        "failure_code",
+        "locked",
+        "frame_seq",
+        "focus_state",
+        "quality_state",
+        "authority_reference",
+        "artifact_directory",
+        "dropped_frames",
+        "gap_events",
+        "max_gap_frames",
+        "contaminated_from_seq",
+        "contaminated_at",
+        "protocol_version",
+        "operator_pseudonym",
+    }
+)
+_MIGRATED_COLUMNS: dict[str, dict[str, str]] = {
+    "runtime_sessions": {
+        "dropped_frames": "INTEGER NOT NULL DEFAULT 0",
+        "gap_events": "INTEGER NOT NULL DEFAULT 0",
+        "max_gap_frames": "INTEGER NOT NULL DEFAULT 0",
+        "contaminated_from_seq": "INTEGER",
+        "contaminated_at": "REAL",
+        "protocol_version": "TEXT",
+        "operator_pseudonym": "TEXT",
+    },
+    "runtime_reviews": {"operator_pseudonym": "TEXT"},
+    "runtime_exports": {"operator_pseudonym": "TEXT"},
+}
 ALLOWED_SOURCE_KINDS = frozenset({"REAL", "AI_RENDERED", "AUGMENTED"})
 ALLOWED_FOCUS = frozenset({"EXAM_FOCUSED", "EXAM_NOT_FOCUSED", "FOCUS_UNKNOWN"})
 ALLOWED_LABELS = frozenset(
@@ -130,6 +197,14 @@ def _sha256(value: bytes) -> str:
 def _is_digest(value: object) -> bool:
     return (
         isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _is_reference(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and 1 <= len(value) <= 128
+        and all(c.isascii() and (c.isalnum() or c in "._-") for c in value)
     )
 
 
@@ -256,7 +331,7 @@ class ResearchRuntimeService:
 
     def _initialize(self) -> None:
         version = self._connection.execute("PRAGMA user_version").fetchone()[0]
-        if version not in {0, SCHEMA_VERSION}:
+        if version not in {0, 1, RUNTIME_DB_VERSION}:
             self._connection.close()
             self._root_lease.close()
             raise ValueError("RUNTIME_SCHEMA_INCOMPATIBLE")
@@ -271,7 +346,14 @@ class ResearchRuntimeService:
                   failure_code TEXT, locked INTEGER NOT NULL DEFAULT 0,
                   frame_seq INTEGER NOT NULL DEFAULT 0, focus_state TEXT NOT NULL,
                   quality_state TEXT NOT NULL, authority_reference TEXT,
-                  artifact_directory TEXT NOT NULL
+                  artifact_directory TEXT NOT NULL,
+                  dropped_frames INTEGER NOT NULL DEFAULT 0,
+                  gap_events INTEGER NOT NULL DEFAULT 0,
+                  max_gap_frames INTEGER NOT NULL DEFAULT 0,
+                  contaminated_from_seq INTEGER,
+                  contaminated_at REAL,
+                  protocol_version TEXT,
+                  operator_pseudonym TEXT
                 );
                 CREATE TABLE IF NOT EXISTS runtime_events(
                   event_id TEXT PRIMARY KEY, session_id TEXT NOT NULL,
@@ -284,12 +366,13 @@ class ResearchRuntimeService:
                   review_id TEXT PRIMARY KEY, session_id TEXT NOT NULL, event_id TEXT NOT NULL,
                   label TEXT NOT NULL, review_status TEXT NOT NULL, start_ms INTEGER NOT NULL,
                   end_ms INTEGER NOT NULL, reason TEXT NOT NULL, revision INTEGER NOT NULL,
-                  created_at REAL NOT NULL,
+                  created_at REAL NOT NULL, operator_pseudonym TEXT,
                   FOREIGN KEY(session_id) REFERENCES runtime_sessions(session_id)
                 );
                 CREATE TABLE IF NOT EXISTS runtime_exports(
                   export_id TEXT PRIMARY KEY, session_id TEXT NOT NULL,
                   manifest_sha256 TEXT NOT NULL, created_at REAL NOT NULL,
+                  operator_pseudonym TEXT,
                   FOREIGN KEY(session_id) REFERENCES runtime_sessions(session_id)
                 );
                 CREATE TABLE IF NOT EXISTS runtime_artifacts(
@@ -297,11 +380,35 @@ class ResearchRuntimeService:
                   size_bytes INTEGER NOT NULL, PRIMARY KEY(session_id,name),
                   FOREIGN KEY(session_id) REFERENCES runtime_sessions(session_id)
                 );
+                CREATE TABLE IF NOT EXISTS runtime_withdrawal_tasks(
+                  task_id TEXT PRIMARY KEY, session_id TEXT NOT NULL,
+                  task_kind TEXT NOT NULL, target_id TEXT NOT NULL,
+                  status TEXT NOT NULL CHECK(status IN ('PENDING','COMPLETED')),
+                  created_at REAL NOT NULL,
+                  UNIQUE(session_id,task_kind,target_id),
+                  FOREIGN KEY(session_id) REFERENCES runtime_sessions(session_id)
+                );
+                CREATE TABLE IF NOT EXISTS reviewer_audit(
+                  audit_id TEXT PRIMARY KEY, event_kind TEXT NOT NULL,
+                  session_id TEXT, created_at REAL NOT NULL
+                );
                 CREATE UNIQUE INDEX IF NOT EXISTS runtime_single_recording
                   ON runtime_sessions((1)) WHERE state='RECORDING';
-                PRAGMA user_version=1;
                 """
             )
+            # Pre-v2 stores gain the governance columns additively; the export
+            # envelope version is intentionally unchanged.
+            for table, columns in _MIGRATED_COLUMNS.items():
+                existing = {
+                    str(column[1])
+                    for column in self._connection.execute(f"PRAGMA table_info({table})")
+                }
+                for column, ddl in columns.items():
+                    if column not in existing:
+                        self._connection.execute(
+                            f"ALTER TABLE {table} ADD COLUMN {column} {ddl}"
+                        )
+            self._connection.execute(f"PRAGMA user_version={RUNTIME_DB_VERSION}")
 
     def create_session(
         self, source_kind: str = "AI_RENDERED", participant_pseudonym: str | None = None
@@ -315,7 +422,11 @@ class ResearchRuntimeService:
         now = self._clock()
         with self._lock, self._connection:
             self._connection.execute(
-                "INSERT INTO runtime_sessions VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO runtime_sessions("
+                "session_id,source_kind,participant_pseudonym,state,revision,"
+                "created_at,started_at,stopped_at,sealed_at,failure_code,locked,"
+                "frame_seq,focus_state,quality_state,authority_reference,"
+                "artifact_directory) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
                     session_id,
                     source_kind,
@@ -445,6 +556,8 @@ class ResearchRuntimeService:
                 started_at=self._clock(),
                 authority_reference=authority_reference,
                 participant_pseudonym=authority["participant_pseudonym"],
+                protocol_version=authority["protocol_version"],
+                operator_pseudonym=authority["operator_pseudonym"],
             )
             self._append_event_locked(
                 session_id, "COLLECTION_STARTED", {"capture_profile": CAPTURE_PROFILE}
@@ -462,7 +575,12 @@ class ResearchRuntimeService:
         return self.get_session(session_id)
 
     def ingest_frame(
-        self, session_id: str, frame: Any, captured_at: float | None = None
+        self,
+        session_id: str,
+        frame: Any,
+        captured_at: float | None = None,
+        *,
+        dropped_frames: int = 0,
     ) -> dict[str, object]:
         """Stores a frame locally and emits a technical-insufficient failure on bad input."""
         captured_at = time.perf_counter() if captured_at is None else captured_at
@@ -476,6 +594,13 @@ class ResearchRuntimeService:
                     return self.get_session(session_id)
             if not math.isfinite(captured_at):
                 self._fail_locked(session_id, "CAPTURE_TIMESTAMP_INVALID")
+                return self.get_session(session_id)
+            if (
+                not isinstance(dropped_frames, int)
+                or isinstance(dropped_frames, bool)
+                or dropped_frames < 0
+            ):
+                self._fail_locked(session_id, "CAPTURE_ACCOUNTING_INVALID")
                 return self.get_session(session_id)
             if (
                 np is None
@@ -521,17 +646,38 @@ class ResearchRuntimeService:
                 "focus_age_ms": min(focus_age, 6001.0),
             }
             try:
-                self._write_frame_locked(
+                missing = self._write_frame_locked(
                     session_id,
                     frame,
                     observation,
                 )
-            except (OSError, RuntimeErrorBase):
+            except OSError:
                 self._fail_locked(session_id, "ARTIFACT_WRITE_FAILED")
                 return self.get_session(session_id)
-            self._update_session_locked(
-                session_id, frame_seq=frame_seq, quality_state=quality["state"]
-            )
+            except RuntimeErrorBase as exc:
+                code = str(exc)
+                safe = (
+                    code
+                    and len(code) < 80
+                    and all(character in "ABCDEFGHIJKLMNOPQRSTUVWXYZ_" for character in code)
+                )
+                self._fail_locked(
+                    session_id, code if safe else "ARTIFACT_WRITE_FAILED"
+                )
+                return self.get_session(session_id)
+            # One interval may be reported by the caller AND detected by the
+            # writer; count the larger, never both. Writer-side fill frames are
+            # real frame slots without capture, so they join dropped_frames.
+            hole = max(dropped_frames, missing)
+            changes: dict[str, object] = {
+                "frame_seq": frame_seq,
+                "quality_state": quality["state"],
+                "dropped_frames": int(row["dropped_frames"]) + hole,
+            }
+            if hole:
+                changes["gap_events"] = int(row["gap_events"]) + 1
+                changes["max_gap_frames"] = max(int(row["max_gap_frames"]), hole)
+            self._update_session_locked(session_id, **changes)
             history.append(observation)
             payload = dict(observation)
             self._append_event_locked(session_id, "POSE_OBSERVATION", payload)
@@ -542,11 +688,57 @@ class ResearchRuntimeService:
         if focus_enum not in ALLOWED_FOCUS:
             raise ValueError("invalid focus state")
         with self._lock, self._connection:
-            self._require_state(session_id, {"PREFLIGHT_READY", "RECORDING"})
+            row = self._require_state(session_id, {"PREFLIGHT_READY", "RECORDING"})
             self._focus_times[session_id] = self._clock()
             self._update_session_locked(session_id, focus_state=focus_enum)
-            self._append_event_locked(session_id, "FOCUS_CONTEXT", {"state": focus_enum})
+            self._append_event_locked(
+                session_id,
+                "FOCUS_CONTEXT",
+                {
+                    "state": focus_enum,
+                    "contaminated_by_operator": row["contaminated_from_seq"] is not None,
+                },
+            )
         return self.get_session(session_id)
+
+    def mark_contamination(self, session_id: str) -> dict[str, object]:
+        """Reviewer marks operator contamination; frames after the mark are flagged.
+
+        The locked mask interval starts at the next frame: earlier observations
+        stay clean, later ones export ``contaminated_by_operator=True``.
+        """
+        with self._lock, self._connection:
+            row = self._require_state(session_id, {"RECORDING"})
+            if row["contaminated_from_seq"] is None:
+                boundary = int(row["frame_seq"]) + 1
+                self._update_session_locked(
+                    session_id,
+                    contaminated_from_seq=boundary,
+                    contaminated_at=self._clock(),
+                )
+                self._append_event_locked(
+                    session_id,
+                    "OPERATOR_CONTAMINATION_MARKED",
+                    {"from_frame_seq": boundary},
+                )
+        return self.get_session(session_id)
+
+    def record_reviewer_audit(self, event_kind: str) -> None:
+        """Persist a local-only reviewer lifecycle record; no token or PIN data."""
+        if (
+            not isinstance(event_kind, str)
+            or not 1 <= len(event_kind) <= 64
+            or not all(
+                character in "ABCDEFGHIJKLMNOPQRSTUVWXYZ_" for character in event_kind
+            )
+        ):
+            raise ValueError("invalid reviewer audit event kind")
+        with self._lock, self._connection:
+            self._connection.execute(
+                "INSERT INTO reviewer_audit(audit_id,event_kind,session_id,created_at) "
+                "VALUES(?,?,?,?)",
+                (str(uuid.uuid4()), event_kind, None, self._clock()),
+            )
 
     def stop(self, session_id: str) -> dict[str, object]:
         with self._lock:
@@ -594,10 +786,15 @@ class ResearchRuntimeService:
             if self._camera_factory is None:
                 with NativeCapture() as native:
                     while not stop.is_set():
-                        frame, captured_ns, _dropped = native.read()
+                        frame, captured_ns, dropped = native.read()
                         if stop.is_set():
                             return
-                        self.ingest_frame(session_id, frame, captured_ns / 1_000_000_000)
+                        self.ingest_frame(
+                            session_id,
+                            frame,
+                            captured_ns / 1_000_000_000,
+                            dropped_frames=dropped,
+                        )
                         if self.get_session(session_id)["state"] != "RECORDING":
                             return
                 return
@@ -716,7 +913,10 @@ class ResearchRuntimeService:
             revision = expected_revision + 1
             review_id = str(uuid.uuid4())
             self._connection.execute(
-                "INSERT INTO runtime_reviews VALUES(?,?,?,?,?,?,?,?,?,?)",
+                "INSERT INTO runtime_reviews("
+                "review_id,session_id,event_id,label,review_status,start_ms,end_ms,"
+                "reason,revision,created_at,operator_pseudonym) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?)",
                 (
                     review_id,
                     session_id,
@@ -728,6 +928,7 @@ class ResearchRuntimeService:
                     reason.strip(),
                     revision,
                     self._clock(),
+                    row["operator_pseudonym"],
                 ),
             )
             self._update_session_locked(session_id, revision=revision)
@@ -818,8 +1019,16 @@ class ResearchRuntimeService:
         manifest_sha256 = str(manifest["manifest_sha256"])
         with self._lock, self._connection:
             self._connection.execute(
-                "INSERT INTO runtime_exports VALUES(?,?,?,?)",
-                (export_id, session_id, manifest_sha256, self._clock()),
+                "INSERT INTO runtime_exports("
+                "export_id,session_id,manifest_sha256,created_at,operator_pseudonym) "
+                "VALUES(?,?,?,?,?)",
+                (
+                    export_id,
+                    session_id,
+                    manifest_sha256,
+                    self._clock(),
+                    row["operator_pseudonym"],
+                ),
             )
         return ExportBundle(payload, manifest, export_id)
 
@@ -880,17 +1089,33 @@ class ResearchRuntimeService:
                 directory.rmdir()
             elif decision == "QUARANTINE_RUNTIME_ARTIFACTS" and directory.exists():
                 directory.replace(directory.with_name(directory.name + ".withdrawn.quarantine"))
-            exported = int(
+            export_rows = self._connection.execute(
+                "SELECT export_id FROM runtime_exports WHERE session_id=?", (session_id,)
+            ).fetchall()
+            for export_row in export_rows:
+                # Idempotent: an exported bundle outside this root needs manual
+                # reconciliation; the task row survives even if replayed.
                 self._connection.execute(
-                    "SELECT COUNT(*) FROM runtime_exports WHERE session_id=?", (session_id,)
-                ).fetchone()[0]
-            )
+                    "INSERT OR IGNORE INTO runtime_withdrawal_tasks("
+                    "task_id,session_id,task_kind,target_id,status,created_at) "
+                    "VALUES(?,?,?,?,?,?)",
+                    (
+                        str(uuid.uuid4()),
+                        session_id,
+                        "EXTERNAL_EXPORT_FOLLOW_UP",
+                        str(export_row["export_id"]),
+                        "PENDING",
+                        self._clock(),
+                    ),
+                )
+            exported = len(export_rows)
             receipt: dict[str, object] = {
                 "authority_reference": authority_reference,
                 "withdrawal_authority_sha256": authority["withdrawal_authority_sha256"],
                 "decision": decision,
                 "external_export_follow_up_required": exported > 0,
                 "export_count": exported,
+                "follow_up_task_count": exported,
                 "artifacts": inventory,
             }
             receipt["receipt_sha256"] = _sha256(_canonical(receipt))
@@ -953,7 +1178,9 @@ class ResearchRuntimeService:
                         timestamps.append(timestamp)
                 elapsed = (timestamps[-1] - timestamps[0]) / 1_000_000_000
                 fps = 15 / elapsed if elapsed > 0 else 0.0
-                profile_ok = frame.shape[:2] == (720, 1280) and 12 <= fps <= 18
+                profile_ok = _camera_profile_ready(
+                    int(frame.shape[0]), int(frame.shape[1]), fps
+                )
                 return {
                     "camera": "READY" if profile_ok else "UNAVAILABLE",
                     "recording": False,
@@ -974,26 +1201,28 @@ class ResearchRuntimeService:
 
     def _native_preflight(self) -> Mapping[str, object]:
         camera = self.diagnose_current_camera()
-        display = "UNAVAILABLE"
+        display_count = 0
         if os.name == "nt":
             try:
                 import ctypes
 
-                display = (
-                    "READY" if ctypes.windll.user32.GetSystemMetrics(80) >= 2 else "UNAVAILABLE"
-                )
+                display_count = int(ctypes.windll.user32.GetSystemMetrics(80))
             except Exception:
-                display = "UNAVAILABLE"
+                display_count = 0
         try:
             probe = self.root / ".runtime-disk-probe"
             probe.write_bytes(b"pdu")
             with probe.open("r+b") as handle:
                 os.fsync(handle.fileno())
             probe.unlink()
-            disk = "READY"
+            disk_ok = True
         except OSError:
-            disk = "UNAVAILABLE"
-        return {"camera": camera["camera"], "display": display, "disk": disk}
+            disk_ok = False
+        return _evaluate_native_preflight(
+            camera_ready=camera["camera"] == "READY",
+            display_count=display_count,
+            disk_ok=disk_ok,
+        )
 
     def _validate_authority(
         self, reference: str, *, withdrawal: bool = False
@@ -1005,6 +1234,12 @@ class ResearchRuntimeService:
             "consent_policy_sha256",
             "institutional_approval_sha256",
             "retention_record_sha256",
+        )
+        required_references = (
+            "protocol_version",
+            "consent_receipt_id",
+            "consent_version",
+            "operator_pseudonym",
         )
         retention_expires_at = record.get("retention_expires_at")
         if (
@@ -1020,6 +1255,10 @@ class ResearchRuntimeService:
             or not math.isfinite(retention_expires_at)
             or (not withdrawal and float(retention_expires_at) <= self._clock())
             or any(not _is_digest(record.get(field)) for field in required)
+            or any(
+                not _is_reference(record.get(field)) for field in required_references
+            )
+            or record.get("device_gate_decision") not in DEVICE_GATE_DECISIONS
         ):
             raise AuthorityDenied(
                 "native collection authority is incomplete or does not bind this root"
@@ -1057,12 +1296,18 @@ class ResearchRuntimeService:
         grayscale = frame[..., :3].mean(axis=2)
         blur = float(np.var(np.diff(grayscale, axis=0)))
         exposure = float(grayscale.mean())
+        if not (math.isfinite(blur) and math.isfinite(exposure)):
+            return {"state": "INSUFFICIENT"}, [], 0, "POSE_SCHEMA_FAILED"
         quality: dict[str, object] = {
             "state": "SUFFICIENT" if blur >= 1.0 and 10.0 <= exposure <= 245.0 else "INSUFFICIENT",
             "blur": blur,
             "exposure": exposure,
         }
         try:
+            from pdu_exam_observer.m2_d1_native import _install_audio_import_seal
+
+            if not _install_audio_import_seal():
+                return quality, [], 0, "POSE_ENGINE_FAILED"
             import mediapipe as mp  # type: ignore[import-untyped]
             from mediapipe.tasks import python  # type: ignore[import-untyped]
             from mediapipe.tasks.python import vision  # type: ignore[import-untyped]
@@ -1335,7 +1580,8 @@ class ResearchRuntimeService:
 
     def _write_frame_locked(
         self, session_id: str, frame: Any, observation: Mapping[str, object]
-    ) -> None:
+    ) -> int:
+        """Write one frame; return the count of repeated frames used to fill a gap."""
         stream = self._streams.get(session_id)
         if stream is None:
             directory = Path(str(self._session_row(session_id)["artifact_directory"]))
@@ -1367,7 +1613,8 @@ class ResearchRuntimeService:
         target_index = round(
             (int(cast(int, observation["captured_ns"])) - stream.origin_ns) * 15 / 1_000_000_000
         )
-        if target_index - stream.written_frames > 45:
+        missing = target_index - stream.written_frames
+        if missing > 45:
             raise RuntimeErrorBase("FRAME_GAP_EXCEEDED")
         while stream.written_frames < target_index and stream.last_frame is not None:
             stream.video_writer.write(stream.last_frame)
@@ -1377,6 +1624,7 @@ class ResearchRuntimeService:
         stream.written_frames += 1
         stream.pose_handle.write(_canonical(dict(observation)).decode("utf-8") + "\n")
         stream.pose_handle.flush()
+        return max(0, missing)
 
     def _write_synthetic_fixture_locked(self, session_id: str) -> None:
         """Emit a tiny drawn skeleton clip, never a camera frame or generated person image."""
@@ -1605,6 +1853,8 @@ class ResearchRuntimeService:
 
     def _duration_ms_locked(self, row: sqlite3.Row) -> int:
         timeline = self._owned_artifact_directory(row) / "pose_timeline.jsonl"
+        if timeline.is_file() and timeline.stat().st_size > MAX_POSE_TIMELINE_BYTES:
+            raise InvalidTransition("ARTIFACT_TOO_LARGE")
         first: int | None = None
         last = 0
         with open_regular_read(timeline) as handle:
@@ -1628,8 +1878,27 @@ class ResearchRuntimeService:
         bundled = Path(getattr(sys, "_MEIPASS", "")) / "tools" / "ffmpeg.exe"
         if bundled.is_file():
             return bundled.resolve()
-        discovered = shutil.which("ffmpeg")
-        return Path(discovered).resolve() if discovered else None
+        configured = os.environ.get("PDU_FFMPEG_PATH")
+        expected = os.environ.get("PDU_FFMPEG_SHA256", "").lower()
+        if (
+            configured is None
+            or len(expected) != 64
+            or any(character not in "0123456789abcdef" for character in expected)
+        ):
+            return None
+        candidate = Path(configured)
+        if (
+            not candidate.is_absolute()
+            or str(candidate).startswith("\\\\")
+            or candidate.is_symlink()
+            or not candidate.is_file()
+        ):
+            return None
+        digest = hashlib.sha256()
+        with candidate.open("rb") as handle:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+        return candidate.resolve() if digest.hexdigest() == expected else None
 
     def _export_records(
         self, row: sqlite3.Row, reviews: list[dict[str, object]], events: list[dict[str, object]]
@@ -1639,6 +1908,8 @@ class ResearchRuntimeService:
             raise InvalidTransition("POSE_TIMELINE_UNAVAILABLE")
         observations: list[dict[str, object]] = []
         if timeline.is_file():
+            if timeline.stat().st_size > MAX_POSE_TIMELINE_BYTES:
+                raise InvalidTransition("ARTIFACT_TOO_LARGE")
             with open_regular_read(timeline) as handle:
                 content = handle.read()
                 expected = self._connection.execute(
@@ -1666,6 +1937,8 @@ class ResearchRuntimeService:
             if not isinstance(first_ns, int):
                 raise InvalidTransition("POSE_TIMELINE_INVALID")
             origin_ns = first_ns
+        contaminated_from_seq = row["contaminated_from_seq"]
+        contaminated_at = row["contaminated_at"]
         result: list[dict[str, object]] = []
         for observation in observations:
             captured_ns = observation.get("captured_ns")
@@ -1708,7 +1981,12 @@ class ResearchRuntimeService:
                     "focus": {
                         "state": observation["focus"],
                         "signal_age_ms": observation.get("focus_age_ms", 6001),
-                        "contaminated_by_operator": False,
+                        "contaminated_by_operator": (
+                            contaminated_from_seq is not None
+                            and isinstance(observation.get("frame_seq"), int)
+                            and cast(int, observation["frame_seq"])
+                            >= int(cast(int, contaminated_from_seq))
+                        ),
                     },
                     "timing": {
                         "captured_ns": observation["captured_ns"],
@@ -1736,7 +2014,15 @@ class ResearchRuntimeService:
                         "pose": {"topology": "synthetic-fixture"},
                         "label": "UNCERTAIN",
                         "quality": {"state": "SYNTHETIC"},
-                        "focus": {"state": "FOCUS_UNKNOWN"},
+                        "focus": {
+                            "state": "FOCUS_UNKNOWN",
+                            "contaminated_by_operator": bool(
+                                contaminated_at is not None
+                                and isinstance(event.get("created_at"), int | float)
+                                and float(cast(float, event["created_at"]))
+                                >= float(cast(float, contaminated_at))
+                            ),
+                        },
                         "timing": {"start_ms": 0, "end_ms": 0},
                     }
                 )
@@ -1768,6 +2054,9 @@ class ResearchRuntimeService:
     def _update_session_locked(self, session_id: str, **changes: object) -> None:
         if not changes:
             return
+        unknown = set(changes) - _SESSION_COLUMNS
+        if unknown:
+            raise RuntimeErrorBase(f"runtime_sessions column not allowed: {sorted(unknown)}")
         columns = ", ".join(f"{name}=?" for name in changes)
         self._connection.execute(
             f"UPDATE runtime_sessions SET {columns} WHERE session_id=?",
@@ -1848,4 +2137,11 @@ class ResearchRuntimeService:
             "focus_state": row["focus_state"],
             "failure_reason": row["failure_code"],
             "capture_profile": CAPTURE_PROFILE,
+            "dropped_frames": row["dropped_frames"],
+            "gap_events": row["gap_events"],
+            "max_gap_frames": row["max_gap_frames"],
+            "contaminated_by_operator": row["contaminated_from_seq"] is not None,
+            "contaminated_from_seq": row["contaminated_from_seq"],
+            "protocol_version": row["protocol_version"],
+            "operator_pseudonym": row["operator_pseudonym"],
         }

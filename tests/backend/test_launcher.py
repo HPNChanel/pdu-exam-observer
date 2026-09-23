@@ -33,7 +33,7 @@ def test_launcher_allows_headless_mode_without_opening_browser(
     assert should_open_browser() is True
 
 
-def test_launcher_binds_monitor_server_to_its_canonical_localhost_origin(
+def test_launcher_binds_both_servers_to_literal_ipv4_loopback(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     configs = []
@@ -68,7 +68,7 @@ def test_launcher_binds_monitor_server_to_its_canonical_localhost_origin(
 
     launcher.main()
 
-    assert [config.host for config in configs] == ["localhost", "127.0.0.1"]
+    assert [config.host for config in configs] == ["127.0.0.1", "127.0.0.1"]
 
 
 def test_launcher_m2synthetic_injects_monitor_only_service_and_closes_it(

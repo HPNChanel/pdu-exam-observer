@@ -1,7 +1,7 @@
 [project]
 name = "pdu-exam-observer"
 version = "0.2.0"
-description = "Local research-only PDU examination observer with M1 governance persistence"
+description = "Local research-only PDU examination observer — M0–M7 technical delivery; collection gated by recorded native authority"
 requires-python = ">=3.11,<3.13"
 dependencies = [
   "fastapi==0.116.1",

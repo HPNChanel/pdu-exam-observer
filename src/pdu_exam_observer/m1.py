@@ -634,6 +634,20 @@ class M1Backend(M0Backend):
                 (encryption_status, acl_status, self.clock()),
             )
         self._recover_pending_intents()
+        self.register_reviewer_audit_hook(self._record_reviewer_audit)
+
+    def _record_reviewer_audit(self, event_kind: str) -> None:
+        """Local-only reviewer lifecycle audit; event kind and timestamp only."""
+        try:
+            with self.store.transaction() as connection:
+                connection.execute(
+                    "INSERT INTO audit_events(id,event_type,session_id,payload_json,created_at) VALUES(?,?,?,?,?)",
+                    (f"reviewer-audit-{token_urlsafe(8)}", event_kind, None, "{}", self.clock()),
+                )
+        except sqlite3.ProgrammingError:
+            # Closed store: no persistence target exists, so nothing can be
+            # audited. Other failures (constraint, I/O) still propagate.
+            pass
 
     def _record(self, session_id: str) -> SessionRecord | None:
         with self.store._lock:
@@ -681,8 +695,7 @@ class M1Backend(M0Backend):
         return {"event_seq": sequence, "type": event_type, **payload}
 
     def _publish(self, session_id: str, event: dict[str, object]) -> None:
-        for subscriber in self._subscribers.get(session_id, []):
-            subscriber.put_nowait(event)
+        self._fanout(session_id, event)
 
     def _key(self, key: str | None, fallback: str) -> str:
         value = key or fallback

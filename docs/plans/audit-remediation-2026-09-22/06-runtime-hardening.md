@@ -115,3 +115,44 @@ reviewable. Each sub-item = one RED test + one fix + focused test run.
 - No endpoint, schema, or export-envelope shape changes beyond what's listed
   (export fields unchanged; caps are internal).
 - Fail-closed review: every new failure mode maps to an existing typed code.
+
+## Execution note (2026-09-22)
+
+All ten sub-items landed; ~1050 backend+runtime tests green, Ruff + strict
+mypy clean. New coverage in `tests/backend/test_runtime_hardening.py` (12
+tests) plus `tests/conftest.py`.
+
+- 06.1 `launcher.py` binds monitor to literal `127.0.0.1`; Host allowlist and
+  `monitor_origin` (`localhost` URL) unchanged; test assertion updated.
+- 06.2 SSE: `asyncio.Queue(maxsize=512)`, per-session cap 8 → route returns
+  429 via `subscriber_slots_available`; queue overflow marks the subscriber
+  stale and the stream ends so the client resyncs via `after_event_seq`
+  (no silent event drop). M1 `_publish` shares the `_fanout` path.
+  In-memory ceilings: `MAX_EVENTS_PER_SESSION=10_000` →
+  `EventLogLimitExceeded`; `MAX_ANSWERS_PER_SESSION=1_000` →
+  `InvalidTransition("ANSWER_LIMIT_REACHED")`.
+- 06.3 `MAX_POSE_TIMELINE_BYTES=256MiB` stat-gates both readers
+  (`_export_records`, `_duration_ms_locked`) → `ARTIFACT_TOO_LARGE`.
+- 06.4 `_ffmpeg_path`: bundled `tools/ffmpeg.exe` first; fallback REQUIRES
+  absolute non-UNC non-symlink `PDU_FFMPEG_PATH` + matching
+  `PDU_FFMPEG_SHA256` (streamed hash); PATH resolution removed. Callers
+  already map `None` → `ENCODER_FFMPEG_UNAVAILABLE`.
+- 06.5 `_SESSION_COLUMNS` frozenset gates `_update_session_locked` →
+  `RuntimeErrorBase` on unknown column (defense-in-depth assert).
+- 06.6 `extra="forbid"` added to all five flat request models (AnswerRequest
+  plus Pairing/ReviewerLogin/EventStream/DemoReplay for consistency);
+  api.ts verified to send only declared fields.
+- 06.7 `ReviewerAuthenticator.authenticate` now takes `monotonic_now`;
+  callers pass `monotonic_clock()` (factories login + reconciliation
+  step-up). `test_remediation_contract` injects the fake clock into both
+  `clock` and `monotonic_clock` — intended coverage preserved.
+- 06.8 `authority-template` wired in `__main__.py`; WORKSPACE_GUIDE_VI
+  updated (`PDUWorkspace.exe authority-template --root --session-id`).
+- 06.9 `start_workspace_preview.py --stop`: taskkill /T /F on recorded PID,
+  removes temp root only inside tempdir with `PDUWorkspace-preview-` prefix
+  + `.pdu-owned-verification` marker; refusal path tested.
+- 06.10 `_analyze_frame` rejects non-finite blur/exposure →
+  `POSE_SCHEMA_FAILED` before any NaN can reach canonical JSON.
+- `tests/conftest.py` autouse fixture pins `PDU_FFMPEG_PATH`+`SHA256` to the
+  machine's ffmpeg so the suite exercises the real transcode path under the
+  new explicit-pin contract (previously it relied on implicit PATH lookup).

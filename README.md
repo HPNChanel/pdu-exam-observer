@@ -4,7 +4,23 @@ PDU Exam Observer is a local-first Windows research instrument for studying obse
 
 The system does not identify people, infer intent, decide that cheating occurred, or apply discipline. Its operator outputs are limited to NORMAL, REVIEW_REQUIRED, and TECHNICAL_INSUFFICIENT.
 
-## Current milestone
+## Current state
+
+As of 2026-09-08 the technical delivery is `LOCAL_TECHNICAL_DELIVERY_VERIFIED`
+(`docs/ai/COMPLETION_2026_09_08.md`): the M2–M7 workspace path — capture,
+pose, focus, review, export, withdrawal, model import/inference, and
+evaluation code — plus a self-contained Colab training package are implemented
+and verified locally with synthetic evidence and a same-host packaged run.
+The operator UI is Vietnamese (`docs/WORKSPACE_GUIDE_VI.md`).
+
+External gates remain open and are recorded honestly: no institutional
+approval, consent, retention, or storage authority has been issued; no real
+participant has been collected; the current camera (~10 fps measured) and
+single-display host fail closed below the required 1280x720 @ 15 fps +
+two-display profile; clean-machine verification is deferred; no research
+performance is claimed.
+
+## Historical milestones
 
 M1 extends the locally verified M0 foundation with a pre-collection governance path:
 
@@ -61,10 +77,12 @@ Configuration is stored under `%LOCALAPPDATA%\PDUExamObserver\config.v1.json`. B
 ~~~text
 apps/web/                  React exam and reviewer surfaces
 src/pdu_exam_observer/     Python domain, API, runtime, and launcher
-research/                  Colab notebooks, experiment configs, reports
+research/                  Pre-collection governance packs, institutional
+                           submission drafts, and training/Colab code
 demo/                      Non-personal deterministic fixtures
-tests/                     Backend, frontend, integration, security, packaging
-packaging/                 PyInstaller and release assembly
+tests/                     Backend, runtime, training, packaging, and research
+packaging/                 PyInstaller and release assembly (lineage map:
+                           packaging/HISTORICAL_LINEAGE.md)
 scripts/                   Local development and verification commands
 docs/source/               Immutable proposal and provenance
 docs/spec/                 Binding product and research specifications

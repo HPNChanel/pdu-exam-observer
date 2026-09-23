@@ -10,7 +10,11 @@ import uvicorn
 from fastapi import FastAPI
 
 from pdu_exam_observer.api.factories import AppConfig, create_exam_app, create_monitor_app
-from pdu_exam_observer.configuration import load_native_config, validate_storage_root
+from pdu_exam_observer.configuration import (
+    load_native_config,
+    probe_storage_controls,
+    validate_storage_root,
+)
 from pdu_exam_observer.m1 import M1Backend
 from pdu_exam_observer.m1_r1 import M1R1Backend
 from pdu_exam_observer.m2_synthetic_review import SyntheticReviewService
@@ -78,8 +82,12 @@ def build_apps_from_environment() -> tuple[FastAPI, FastAPI]:
         models = ModelRegistry(root / "models")
         runtime = ResearchRuntimeService(root / "research", model_provider=models.model_provider)
         try:
-            backend = WorkspaceBackend(root / "exam", encryption_status="UNVERIFIED",
-                                       acl_status="UNVERIFIED")
+            controls = probe_storage_controls(root)
+            backend = WorkspaceBackend(
+                root / "exam",
+                encryption_status=controls["encryption_status"],
+                acl_status=controls["acl_status"],
+            )
             workspace = WorkspaceService(root / "metadata", backend, runtime, models,
                                          authority_reference=os.getenv("PDU_COLLECTION_AUTHORITY_REF"))
         except Exception:
@@ -130,7 +138,7 @@ def main() -> None:
     exam, monitor = build_apps_from_environment()
     exam_port = _port("PDU_EXAM_PORT", 8765)
     monitor_port = _port("PDU_MONITOR_PORT", 8766)
-    monitor_server = uvicorn.Server(uvicorn.Config(monitor, host="localhost", port=monitor_port))
+    monitor_server = uvicorn.Server(uvicorn.Config(monitor, host="127.0.0.1", port=monitor_port))
     exam_server = uvicorn.Server(uvicorn.Config(exam, host="127.0.0.1", port=exam_port))
     monitor_thread = Thread(target=monitor_server.run, name="pdu-monitor", daemon=True)
     exam_thread = Thread(target=exam_server.run, name="pdu-exam", daemon=True)

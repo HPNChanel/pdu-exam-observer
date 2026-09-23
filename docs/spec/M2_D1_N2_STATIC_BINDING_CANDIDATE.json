@@ -191,8 +191,8 @@
         "SRC_LAUNCHER_PY": {
           "artifact_id": "SRC_LAUNCHER_PY",
           "path": "src/pdu_exam_observer/launcher.py",
-          "sha256": "9b30b32a416ce7c545a4ca29236a097703e8ad67c39145fd2c5e95c21642c7be",
-          "size_bytes": 6486
+          "sha256": "b38c6a7a15e688513de2eb3bcd9ccdac25ab29c6fea3b1ca63bf03aa19e1e07c",
+          "size_bytes": 6630
         },
         "SRC_M2_D1_N2_A0_PY": {
           "artifact_id": "SRC_M2_D1_N2_A0_PY",
@@ -1510,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "ca9e611868f4fcd94fc1ce19c099d9a3b8574ce57906a478f60e20b67f9cb583",
+  "static_bindings_digest": "ae02b69f5d363936f2ba9b42d8eeb10fec29f5add52fb7169a0c421de8756a6f",
   "valid_for_native_launch": false
 }

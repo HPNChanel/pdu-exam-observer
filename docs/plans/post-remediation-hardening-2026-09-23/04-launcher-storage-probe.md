@@ -63,3 +63,33 @@ Task 07: make the launcher **attempt** an honest probe at startup.
 - Probe is standard-user-safe, offline, bounded; no new dependency unless
   `pywin32` is already locked.
 - Execution note appended here; commit separately.
+
+## Execution note — 2026-09-23
+
+Implemented per DG-2(a). `probe_storage_controls(root)` added to
+`configuration.py` (same module family as `validate_storage_root` /
+`_check_ntfs`), stdlib `ctypes` only — no new dependency:
+
+- `acl_status`: `GetNamedSecurityInfoW` DACL enumeration;
+  `VERIFIED` iff no ACCESS_ALLOWED ACE grants any rights to broad
+  local-user SIDs (Everyone, Authenticated Users, Builtin Users/Guests,
+  Anonymous, Network/Interactive/Batch). NULL/unreadable DACL or broad
+  grant → `UNKNOWN`. Verified on real ACLs via icacls (owner-only →
+  VERIFIED; Everyone:R → UNKNOWN).
+- `encryption_status`: `VERIFIED` iff `FILE_ATTRIBUTE_ENCRYPTED`
+  observed on the root (EFS — inherited by children). BitLocker is not
+  determinable as a standard user → `UNKNOWN` when the flag is absent
+  (EFS unsupported on this host confirmed — honest UNKNOWN).
+- Never raises; non-Windows or any error → both `UNKNOWN`.
+
+`launcher.py` now passes probed values to `WorkspaceBackend` instead of
+hardcoded `UNVERIFIED`. Readiness gates (`STORAGE_*_UNVERIFIED` when
+!= VERIFIED) are unchanged — the probe only upgrades honesty of the
+stored evidence label; on this host the observed result is UNKNOWN, so
+the gates still block exactly as before.
+
+Tests: `tests/backend/test_storage_probe.py` (6 tests — vocabulary,
+failure-degradation, real icacls ACL states, EFS flag, launcher wiring
+spy, workspace-shaped tree). Gates: backend+runtime+research PASS; ruff
+PASS; mypy PASS. RP2 regenerated: digest `ae02b69f…`, candidate
+`60e65b93…`.

@@ -795,6 +795,28 @@ else:
         assert "VISION_AUDIO_SEAL=PASS" in completed.stdout
 
 
+def test_disabled_mediapipe_audio_surface_is_read_only_metadata() -> None:
+    disabled = native._DisabledMediaPipeAudio("mediapipe.tasks.python.audio")
+    disabled.__package__ = "mediapipe.tasks.python"
+    disabled.DISABLED = True
+
+    # Module metadata reads must not raise RuntimeError — inspect.getmodule
+    # (and PyTorch's fake-op registration) depends on this.
+    assert getattr(disabled, "__file__", None) is None
+    assert disabled.__name__ == "mediapipe.tasks.python.audio"
+    assert disabled.DISABLED is True
+
+    # Audio namespace attributes stay sealed.
+    with pytest.raises(RuntimeError, match="audio namespace is disabled"):
+        disabled.AudioClassifier  # noqa: B018 - intentional attribute access
+    with pytest.raises(RuntimeError, match="audio namespace is sealed"):
+        disabled.anything = object()  # type: ignore[attr-defined]
+    # Dunder writes outside the install allowlist stay sealed — a writable
+    # __path__ would let the stub pose as a package.
+    with pytest.raises(RuntimeError, match="audio namespace is sealed"):
+        disabled.__path__ = []  # type: ignore[attr-defined]
+
+
 @pytest.mark.parametrize("failure", ("read", "face", "pose", "close", "terminate", "release"))
 def test_lifecycle_failures_never_escape_or_promote_to_pass(failure: str) -> None:
     class BrokenPipe(FakePipe):

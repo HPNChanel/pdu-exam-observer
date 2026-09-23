@@ -281,8 +281,8 @@
         "SRC_M2_D1_NATIVE_PY": {
           "artifact_id": "SRC_M2_D1_NATIVE_PY",
           "path": "src/pdu_exam_observer/m2_d1_native.py",
-          "sha256": "783235cb77118126d8f5937af51f7afe2a97b8964621217a07495df7e624b6a0",
-          "size_bytes": 161981
+          "sha256": "91e2b150652c3ada667be017b52921e28341a38c426fdcc478cd7b376365367e",
+          "size_bytes": 161875
         },
         "SRC_M2_PACKAGED_REPRODUCTION_PY": {
           "artifact_id": "SRC_M2_PACKAGED_REPRODUCTION_PY",
@@ -1510,6 +1510,6 @@
       }
     }
   },
-  "static_bindings_digest": "c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456",
+  "static_bindings_digest": "ca9e611868f4fcd94fc1ce19c099d9a3b8574ce57906a478f60e20b67f9cb583",
   "valid_for_native_launch": false
 }

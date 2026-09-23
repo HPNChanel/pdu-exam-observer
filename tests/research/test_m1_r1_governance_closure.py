@@ -201,10 +201,10 @@ M2_S3E_A_RECEIPT_SHA256 = (
 # Current source binding was refreshed for the approved workspace implementation.
 # The S3E constants above remain pinned to the immutable historical receipt.
 WORKSPACE_STATIC_BINDINGS_DIGEST = (
-    "c7d87f4a8bd6f058faac11124dd5b70476b5cb076ab8fc1f6120126cb5dc8456"
+    "ca9e611868f4fcd94fc1ce19c099d9a3b8574ce57906a478f60e20b67f9cb583"
 )
 WORKSPACE_CANDIDATE_SHA256 = (
-    "c6b3992519222ae33e85f6cb33c073b561631c95b98534e23ea565d76c0dcd9c"
+    "905fb0544041eb16c08ae124309b22451b65363cf5b6c36716e1327f3c419736"
 )
 
 

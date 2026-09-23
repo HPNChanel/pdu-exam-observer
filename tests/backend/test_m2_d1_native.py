@@ -670,12 +670,10 @@ def test_backlog_threshold_is_exact_and_cannot_promote_a_pass() -> None:
 
 
 def test_outbound_python_network_guard_denies_without_native_connection() -> None:
-    native._OUTBOUND_NETWORK_ATTEMPTS = 0
     assert native._install_network_guard()
     with pytest.raises(OSError, match="denies outbound"):
         socket.socket().connect(("198.51.100.1", 443))
     assert native._OUTBOUND_NETWORK_ATTEMPTS == 1
-    native._OUTBOUND_NETWORK_ATTEMPTS = 0
 
 
 def test_timeout_cleanup_is_fail_closed_and_releases_the_mutex() -> None:

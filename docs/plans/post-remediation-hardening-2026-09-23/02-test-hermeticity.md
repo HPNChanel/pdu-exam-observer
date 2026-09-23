@@ -60,3 +60,22 @@ a reset afterward). Make the suite hermetic.
   value inside the test itself).
 - NaN test no longer emits RuntimeWarnings.
 - Execution note appended here; commit separately.
+
+## Execution note — 2026-09-23
+
+Implemented as planned, with two clarifications:
+
+- The autouse fixture in `tests/conftest.py` zeroes
+  `_OUTBOUND_NETWORK_ATTEMPTS` before each test and restores the previous
+  value afterward; it imports `m2_d1_native` lazily inside the fixture.
+- Redundant manual resets removed from
+  `test_outbound_python_network_guard_denies_without_native_connection`
+  (both were leak-undo; the subprocess script at :755+ keeps its own —
+  it runs in a separate interpreter outside conftest scope).
+- NaN test: `np.errstate` cannot catch the `Mean of empty slice`
+  RuntimeWarning (it is `warnings.warn`, not a float flag) — used
+  `@pytest.mark.filterwarnings("ignore::RuntimeWarning")` instead.
+  Production code untouched.
+
+Gates: `tests/runtime` + `tests/backend` in one process PASS (the
+historical pollution order); full suite PASS; ruff PASS.

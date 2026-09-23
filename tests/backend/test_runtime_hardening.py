@@ -229,6 +229,7 @@ def test_session_column_allowlist(tmp_path: Path) -> None:
         service.close()
 
 
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
 def test_degenerate_frame_fails_closed_without_nan(tmp_path: Path) -> None:
     import numpy as np
 

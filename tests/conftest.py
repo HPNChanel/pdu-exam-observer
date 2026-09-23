@@ -26,3 +26,21 @@ def _pinned_ffmpeg_env(monkeypatch: pytest.MonkeyPatch) -> None:
     digest = hashlib.sha256(binary.read_bytes()).hexdigest()
     monkeypatch.setenv("PDU_FFMPEG_PATH", str(binary))
     monkeypatch.setenv("PDU_FFMPEG_SHA256", digest)
+
+
+@pytest.fixture(autouse=True)
+def _reset_outbound_network_attempts() -> object:
+    """Keep the D1-N1 outbound-attempt counter hermetic per test.
+
+    ``_OUTBOUND_NETWORK_ATTEMPTS`` is process-global: one test tripping the
+    network guard would otherwise fail every later ``prepare()`` in the same
+    process (observed order-dependency during Task 07). The counter starts at
+    zero for every test; the prior value is restored afterward so deliberate
+    cross-test accounting is not silently erased.
+    """
+    from pdu_exam_observer import m2_d1_native as native
+
+    previous = native._OUTBOUND_NETWORK_ATTEMPTS
+    native._OUTBOUND_NETWORK_ATTEMPTS = 0
+    yield
+    native._OUTBOUND_NETWORK_ATTEMPTS = previous

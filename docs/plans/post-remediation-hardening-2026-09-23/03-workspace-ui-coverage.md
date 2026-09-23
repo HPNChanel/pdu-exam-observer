@@ -52,3 +52,24 @@ Anchors (`apps/web/src/WorkspacePanel.tsx`):
   a test exposes a real defect, stop and record it rather than editing the
   component silently.
 - Execution note appended here; commit separately.
+
+## Execution note — 2026-09-23
+
+Implemented as planned — no component changes needed; all assertions pass
+against the existing implementation.
+
+`WorkspacePanel.test.tsx` grew from 1 → 4 tests, sharing a `makeApi`/
+`openSession` helper:
+
+- metrics render: `Khung mất`/`Đứt đoạn` cells show session values;
+- button gating: enabled only under `RECORDING` and not already
+  contaminated (`DRAFT`/`STOPPED`/`SEALED`/contaminated-RECORDING all
+  disabled, per-state unmount loop);
+- action wiring: POST `/sessions/s1/mark-contamination` carries
+  `method: 'POST'` + `Idempotency-Key`, followed by a refetch;
+- contamination notice: `role="alert"` renders when
+  `contaminated_by_operator` is true.
+
+Gates: `npm run typecheck` PASS, `npm run lint` PASS, `npm test` 85/85
+PASS (82 + 3 new), `npm run build` PASS — dist bytes unchanged
+(`index-Bl2iPLFx.js`) since only the test file changed.
